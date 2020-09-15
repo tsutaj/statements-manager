@@ -4,6 +4,8 @@ import pathlib
 import shutil
 from logging import Logger, basicConfig, getLogger
 from typing import Any, MutableMapping
+from src.manager.docs_manager import DocsManager
+from src.manager.local_manager import LocalManager
 
 logger = getLogger(__name__)  # type: Logger
 
@@ -55,11 +57,14 @@ def run(project_path: str, default_project_path: str) -> None:
     # check mode
     mode = project.get_attr("mode").lower()  # type: str
     if mode == "docs":
-        raise NotImplementedError("docs mode is not supported yet")
+        manager = DocsManager(project)
     elif mode == "local":
-        raise NotImplementedError("local mode is not supported yet")
+        manager = LocalManager(project)
     else:
         raise ValueError("unknown mode: {}".format(mode))
+
+    # todo
+    manager.run()
 
 def create(project_path: str, default_project_path: str) -> None:
     if pathlib.Path(project_path).exists():

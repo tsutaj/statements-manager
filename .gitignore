@@ -133,3 +133,4 @@ credentials.json
 token.pickle
 *~
 #*
+output/

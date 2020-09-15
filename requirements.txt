@@ -1,6 +1,13 @@
+# google api
 google-api-python-client
 google-auth-httplib2
 google-auth-oauthlib
+
+# for markdown, html
+markdown
+jinja2
+
+# for testing
 toml
 mypy
 flake8
