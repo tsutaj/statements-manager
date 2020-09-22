@@ -29,9 +29,9 @@ $i$ 行目には $A_i + B_i$ の結果を出力してください。
 ## 入出力例
 
 ### 入力例 1
-{@sample_00.sample_in}
+{@samples.sample_00_in}
 
 ### 出力例 1
-{@sample_00.sample_out}
+{@samples.sample_00_out}
 
 末尾も改行が必要であることに注意してください。

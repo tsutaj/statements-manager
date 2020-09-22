@@ -3,6 +3,12 @@ name = "sample"
 # 問題文が存在する場所に応じてモードを選ぶ
 mode = "local"
 
+[style]
+    # HTML テンプレート
+    template_src = "./sample/assets/template.html"
+    # 出力ディレクトリにコピーすべきファイル
+    copied_files = [ "./sample/assets/style.css" ]
+
 # 問題ごとに定義を書く
 [[problem]]
     # 問題 ID (必須, 出力 html 名にも使用される)
@@ -12,29 +18,29 @@ mode = "local"
     statement_src = "./sample/A/A.md"
     # 問題制約を書く
     [problem.constraints]
-        MIN_N = 1
-        MAX_N = 1_000_000_000
+        MIN_AB = 1
+        MAX_AB = 1_000_000_000
         MIN_T = 1
         MAX_T = 100_000
         ALL_INPUTS_ARE_INTEGERS = "入力は全て整数で与えられる"
-    [problem.sample_00]
-        sample_in = "./sample/A/00_sample_00.in"
-        sample_out = "./sample/A/00_sample_00.out"
+    [problem.samples]
+        sample_00_in = "./sample/A/00_sample_00.in"
+        sample_00_out = "./sample/A/00_sample_00.out"
 
-# [[problem]]
-#     # 問題 ID (必須, 出力 html 名に使用される)
-#     id = "B"
-#     # 問題文が格納されている場所
-#     # mode が Docs である場合、[TODO] を記載する
-#     statement_src = "./sample/B/B.md"
-#     # 問題制約を書く
-#     [problem.constraints]
-#         MIN_N = 1
-#         MAX_N = 100_000
-#         N_IS_ODD = "$N$ は奇数であることが保証される"
-#     [problem.sample_00]
-#         sample_in = "./sample/B/00_sample_00.in"
-#         sample_out = "./sample/B/00_sample_00.out"
-#     [problem.sample_01]
-#         sample_in = "./sample/B/00_sample_01.in"
-#         sample_out = "./sample/B/00_sample_01.out"
+[[problem]]
+    # 問題 ID (必須, 出力 html 名に使用される)
+    id = "B"
+    # 問題文が格納されている場所
+    # mode が Docs である場合、[TODO] を記載する
+    statement_src = "./sample/B/B.md"
+    # 問題制約を書く
+    [problem.constraints]
+        MIN_N = 1
+        MAX_N = 100_000
+        N_IS_ODD = "$N$ は奇数であることが保証される"
+        GIVEN_STRING_IS_LOWERCASE = "与えられる文字列は英小文字のみからなる"
+    [problem.samples]
+        sample_00_in = "./sample/B/00_sample_00.in"
+        sample_00_out = "./sample/B/00_sample_00.out"
+        sample_01_in = "./sample/B/00_sample_01.in"
+        sample_01_out = "./sample/B/00_sample_01.out"

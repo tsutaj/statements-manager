@@ -8,5 +8,4 @@ class LocalManager(BaseManager):
 
     def get_contents(self, statement_src: pathlib.Path) -> List[str]:
         with open(statement_src) as f:
-            lines = f.readlines()
-            return lines
+            return f.read()
