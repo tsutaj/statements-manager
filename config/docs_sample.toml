@@ -1,0 +1,33 @@
+# プロジェクト名
+name = "docs_sample"
+# 問題文が存在する場所に応じてモードを選ぶ
+mode = "docs"
+
+# docs mode に関する設定
+[docs]
+    # credentials.json の場所
+    credentials_src = "./credentials.json"
+    # token.pickle の場所
+    token_src = "./token.pickle"
+
+# 出力される HTML のスタイルに関する設定
+[style]
+    # HTML テンプレート
+    template_src = "./sample/assets/template.html"
+    # 出力ディレクトリにコピーすべきファイル
+    copied_files = [ "./sample/assets/style.css" ]
+
+# 問題ごとに定義を書く
+[[problem]]
+    # 問題 ID (必須, 出力 html 名にも使用される)
+    id = "H"
+    # 問題文が格納されている場所
+    # mode が Docs である場合、[TODO] を記載する
+    statement_src = "1MoguVNpp2SgJvF0ncPbp_8_x2_GhClMijUjF3U3g8ns"
+    [problem.samples]
+        sample_00_in = "./sample/H/00_sample_00.in"
+        sample_00_out = "./sample/H/00_sample_00.out"
+        sample_01_in = "./sample/H/00_sample_01.in"
+        sample_01_out = "./sample/H/00_sample_01.out"
+        sample_02_in = "./sample/H/00_sample_02.in"
+        sample_02_out = "./sample/H/00_sample_02.out"
