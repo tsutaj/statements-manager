@@ -1,5 +1,5 @@
 # プロジェクト名
-name = "sample"
+name = "local_sample"
 # 問題文が存在する場所に応じてモードを選ぶ
 mode = "local"
 
