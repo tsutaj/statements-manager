@@ -3,6 +3,14 @@ name = "sample"
 # 問題文が存在する場所に応じてモードを選ぶ
 mode = "local"
 
+# docs mode に関する設定
+[docs]
+    # credentials.json の場所
+    credentials_src = "./credentials.json"
+    # token.pickle の場所
+    token_src = "./token.pickle"
+
+# 出力される HTML のスタイルに関する設定
 [style]
     # HTML テンプレート
     template_src = "./sample/assets/template.html"
