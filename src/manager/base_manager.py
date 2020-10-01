@@ -14,13 +14,31 @@ class VariantsManager:
             print(name, value)
             self.vars["constraints"][name] = self.to_string(value)
         
+            
         self.vars["samples"] = {}
-        for name, path in problem.get("samples", {}).items():
-            print(name, path)
-            with open(pathlib.Path(path), "r") as f:
-                sample_txt = f.read()
-            self.vars["samples"][name] = "<pre>\n" + sample_txt + "</pre>\n"
-
+        n_sample = 1
+        for sample in problem.get("samples", []):
+            name = sample["id"]
+            tp = sample.get("type", "default")
+            sample_text = ""
+            if (tp == "default") or (tp == "input_only"):
+                with open(pathlib.Path(sample["input_path"]), "r") as f:
+                    input_txt = f.read()
+                    sample_text += "### 入力例 {}\n".format(n_sample)
+                    sample_text += "<pre>\n" + input_txt + "</pre>\n"
+            if (tp == "default") or (tp == "output_only"):
+                with open(pathlib.Path(sample["output_path"]), "r") as f:
+                    output_txt = f.read()
+                    sample_text += "### 出力例 {}\n".format(n_sample)
+                    sample_text += "<pre>\n" + output_txt + "</pre>\n"
+            if (tp == "interactive"):
+                with open(pathlib.Path(sample["interactive_path"]), "r") as f:
+                    interactive_txt = f.read()
+                    sample_text += "### 入出力例 {}\n".format(n_sample)
+                    sample_text += interactive_txt
+            self.vars["samples"][name] = sample_text
+            n_sample += 1
+            
     def to_string(self, value: Any) -> str:
         if isinstance(value, int):
             if str(value).endswith("000000"):
@@ -114,6 +132,7 @@ class BaseManager:
             html = markdown(
                 contents, extensions=[
                     "md_in_html",
+                    "tables",
                     "markdown.extensions.fenced_code",
                 ]
             )

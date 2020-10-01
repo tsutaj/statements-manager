@@ -10,7 +10,7 @@
 
 ```bash
 # 初回のみ
-pip -r requirements.txt
+pip install -r requirements.txt
 
 # 実行後に output ディレクトリの中身を確認すること
 python3 statements_manager.py -p config/local_sample.toml run
@@ -26,7 +26,7 @@ python3 statements_manager.py -p config/local_sample.toml run
 
 ### 2. 必要なライブラリをダウンロードする
 
-`pip -r requirements.txt` で、スクリプトの動作に必要なライブラリをダウンロードできます。(環境を汚されたくない人は `venv` とかの仮想環境を適宜使ってください)
+`pip install -r requirements.txt` で、スクリプトの動作に必要なライブラリをダウンロードできます。(環境を汚されたくない人は `venv` とかの仮想環境を適宜使ってください)
 
 ### 3. プロジェクトファイルを作る
 
