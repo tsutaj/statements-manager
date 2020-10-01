@@ -26,7 +26,7 @@ mode = "local"
     statement_src = "./sample/A/A.md"
     # 制約ファイルの出力場所
     params_path = "./output/local_sample/A_params.cpp"
-# 問題制約を書く
+    # 問題制約を書く
     [problem.constraints]
         MIN_AB = 1
         MAX_AB = 1_000_000_000
