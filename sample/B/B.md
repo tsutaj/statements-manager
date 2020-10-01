@@ -24,14 +24,6 @@ $S$
 
 ## 入出力例
 
-### 入力例 1
-{@samples.sample_00_in}
+{@samples.sample_00}
 
-### 出力例 1
-{@samples.sample_00_out}
-
-### 入力例 2
-{@samples.sample_01_in}
-
-### 出力例 2
-{@samples.sample_01_out}
+{@samples.sample_01}

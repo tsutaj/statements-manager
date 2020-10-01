@@ -31,9 +31,12 @@ mode = "local"
         MIN_T = 1
         MAX_T = 100_000
         ALL_INPUTS_ARE_INTEGERS = "入力は全て整数で与えられる"
-    [problem.samples]
-        sample_00_in = "./sample/A/00_sample_00.in"
-        sample_00_out = "./sample/A/00_sample_00.out"
+    [[problem.samples]]
+        id = "sample_00"
+        # type は "default" なら省略可能
+        type = "default"
+        input_path = "./sample/A/00_sample_00.in"
+        output_path = "./sample/A/00_sample_00.out"
 
 [[problem]]
     # 問題 ID (必須, 出力 html 名に使用される)
@@ -47,8 +50,11 @@ mode = "local"
         MAX_N = 100_000
         N_IS_ODD = "$N$ は奇数であることが保証される"
         GIVEN_STRING_IS_LOWERCASE = "与えられる文字列は英小文字のみからなる"
-    [problem.samples]
-        sample_00_in = "./sample/B/00_sample_00.in"
-        sample_00_out = "./sample/B/00_sample_00.out"
-        sample_01_in = "./sample/B/00_sample_01.in"
-        sample_01_out = "./sample/B/00_sample_01.out"
+    [[problem.samples]]
+        id = "sample_00"
+        input_path = "./sample/B/00_sample_00.in"
+        output_path = "./sample/B/00_sample_00.out"
+    [[problem.samples]]
+        id = "sample_01"
+        input_path = "./sample/B/00_sample_01.in"
+        output_path = "./sample/B/00_sample_01.out"

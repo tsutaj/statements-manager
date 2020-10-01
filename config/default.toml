@@ -30,7 +30,20 @@ mode = "local"
         MIN_N = 1
         MAX_N = 1_000_000_000
         ALL_INPUTS_ARE_INTEGERS = "入力は全て整数で与えられる"
-    # 入出力例ファイルへのパスを書く
-    [problem.samples]
-        sample_00_in = "path/to/00_sample_00.in"
-        sample_00_out = "path/to/00_sample_00.out"
+    # 入出力例
+    [[problem.samples]]
+        # サンプル id (必須)
+        id = "sample_00"
+        # サンプルのタイプ
+        # 'default' (既定, この場合 type は省略可): 入出力例がある場合
+        # 'input_only': 入力例のみの場合
+        # 'output_only': 出力例のみの場合
+        # 'interactive': インタラクティブ問題の場合
+        type = "default"
+        # 入力例ファイルへのパス ('default', 'input_only' で必須)
+        input_path = "path/to/00_sample_00.in"
+        # 出力例ファイルへのパス ('default', 'output_only' で必須)
+        output_path = "path/to/00_sample_00.out"
+        # インタラクティブ問題サンプルへのパス ('interactive' で必須)
+        # Markdown 形式で書かれたものを指定
+        interactive_path = "path/to/00_sample_00.md"
