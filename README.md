@@ -13,7 +13,7 @@
 pip install -r requirements.txt
 
 # 実行後に output ディレクトリの中身を確認すること
-python3 statements_manager.py -p config/local_sample.toml run
+python3 statements_manager.py run -p config/local_sample.toml
 ```
 
 ### 1. 所有している Google アカウントについて、Google Docs API を使用可能にする (Google Docs にある問題文を変換する方のみ)
@@ -35,7 +35,7 @@ python3 statements_manager.py -p config/local_sample.toml run
 プロジェクトファイルの雛形は以下を実行することで生成されます。
 
 ```bash
-python3 statements_manager.py -p [path_to_project.toml] create
+python3 statements_manager.py create -p [path_to_project.toml]
 ```
 
 あとは、問題セットの都合に合わせてプロジェクトファイルを編集してください。プロジェクトファイルの書き方についてはそのうちリファレンスを書きます (TODO)。なお、[Google Docs ファイルに対するサンプル](https://github.com/tsutaj/statements-manager/blob/master/config/docs_sample.toml) や [ローカルファイルに対するサンプル](https://github.com/tsutaj/statements-manager/blob/master/config/local_sample.toml) が存在するので、これを参考にしながら書くとだいたいのことはできるはずです・・・
@@ -47,7 +47,7 @@ python3 statements_manager.py -p [path_to_project.toml] create
 - HTML 化される対象のプロジェクト名と同名のディレクトリが `output` 直下に存在する場合は実行できません (上書き防止)。その場合はディレクトリを適宜削除してください。
 
 ```bash
-python3 statements_manager.py -p [path_to_project.toml] run
+python3 statements_manager.py run -p [path_to_project.toml]
 ```
 
 ## Future Development
