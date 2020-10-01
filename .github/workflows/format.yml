@@ -20,7 +20,7 @@ jobs:
     - name: Run tests
       run: |
         python3 statements_manager.py -h
-        flake8 statements_manager.py src
+        flake8 --max-line-length=88 statements_manager.py src
         black --check statements_manager.py src
-        mypy statements_manager.py src
+        mypy --ignore-missing-imports statements_manager.py src
 

@@ -1,9 +1,10 @@
+from src.project_file import ProjectFile
 from src.manager.base_manager import BaseManager
-from typing import List
 import pathlib
 
+
 class LocalManager(BaseManager):
-    def __init__(self, project):
+    def __init__(self, project: ProjectFile) -> None:
         super().__init__(project)
 
     def get_contents(self, statement_src: pathlib.Path) -> str:
