@@ -13,13 +13,14 @@ jobs:
       uses: actions/setup-python@v1
 
     - name: Install dependencies
-      run: pip3 install .[dev]
+      run: |
+        pip3 install --upgrade.pip
+        pip install -r requirements.txt
 
     - name: Run tests
       run: |
         python3 statements_manager.py -h
-        pylint --disable=all --enable=unused-import statements_manager.py src
-        isort --check-only --diff statements_manager.py src
-        yapf --diff --recursive statements_manager.py src | tee yapf.patch && test ! -s yapf.patch
+        flake8 statements_manager.py src
+        black --check statements_manager.py src
         mypy statements_manager.py src
 

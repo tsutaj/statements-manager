@@ -6,9 +6,10 @@ google-auth-oauthlib
 # for markdown, html
 markdown
 jinja2
+toml
 
 # for testing
-toml
-mypy
 flake8
 black
+mypy
+
