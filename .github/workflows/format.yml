@@ -21,6 +21,6 @@ jobs:
       run: |
         python3 statements_manager.py -h
         flake8 --max-line-length=88 statements_manager.py src
-        black --check statements_manager.py src
+        black --check --diff statements_manager.py src
         mypy --ignore-missing-imports statements_manager.py src
 

@@ -5,9 +5,7 @@ from typing import MutableMapping, Any
 
 class ProjectFile:
     def __init__(self, project_path: str, default_project_path: str) -> None:
-        self._project = toml.load(
-            project_path
-        )  # type: MutableMapping[str, Any]
+        self._project = toml.load(project_path)  # type: MutableMapping[str, Any]
         self._default = toml.load(
             default_project_path
         )  # type: MutableMapping[str, Any]

@@ -2,14 +2,14 @@ import pathlib
 import math
 import shutil
 from abc import abstractmethod
-from typing import List, Dict, Any
+from typing import Dict, Any
 from jinja2 import Environment, DictLoader
 from markdown import markdown
 
 
 class VariantsManager:
-    def __init__(self, problem: Dict[str, Any]) -> None:        
-        self.vars = {} # type: Dict[str, Any]
+    def __init__(self, problem: Dict[str, Any]) -> None:
+        self.vars = {}  # type: Dict[str, Any]
         self.vars["constraints"] = {}  # Dict[str, str]
         for name, value in problem.get("constraints", {}).items():
             print(name, value)
