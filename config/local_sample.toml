@@ -24,6 +24,8 @@ mode = "local"
     # 問題文が格納されている場所
     # mode が Docs である場合、[TODO] を記載する
     statement_src = "./sample/A/A.md"
+    # 制約ファイルの出力場所
+    params_path = "./output/local_sample/A_params.cpp"
     # 問題制約を書く
     [problem.constraints]
         MIN_AB = 1
@@ -44,6 +46,8 @@ mode = "local"
     # 問題文が格納されている場所
     # mode が Docs である場合、[TODO] を記載する
     statement_src = "./sample/B/B.md"
+    # 制約ファイルの出力場所
+    params_path = "./output/local_sample/B_params.cpp"
     # 問題制約を書く
     [problem.constraints]
         MIN_N = 1

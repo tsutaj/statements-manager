@@ -5,6 +5,7 @@ from abc import abstractmethod
 from typing import Dict, Any
 from jinja2 import Environment, DictLoader
 from markdown import markdown
+from src.params_maker.lang_to_class import lang_to_class
 
 
 class VariantsManager:
@@ -120,6 +121,17 @@ class BaseManager:
         # for each tasks
         for problem in self.project.get_attr("problem"):
             print(problem)
+
+            # create params
+            ext = pathlib.Path(problem.get("params_path", "")).suffix  # type: str
+            if ext in lang_to_class:
+                params_maker = lang_to_class[ext](
+                    problem["constraints"],
+                    problem["params_path"],
+                )  # type: Any
+                params_maker.run()
+            else:
+                pass  # TODO: logger
 
             # get contents (main text)
             contents = self.get_contents(pathlib.Path(problem["statement_src"]))
