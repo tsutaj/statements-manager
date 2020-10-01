@@ -1,0 +1,25 @@
+name: format
+
+on: [push, pull_request]
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Set up Python
+      uses: actions/setup-python@v1
+
+    - name: Install dependencies
+      run: pip3 install .[dev]
+
+    - name: Run tests
+      run: |
+        python3 statements_manager.py -h
+        pylint --disable=all --enable=unused-import statements_manager.py src
+        isort --check-only --diff statements_manager.py src
+        yapf --diff --recursive statements_manager.py src | tee yapf.patch && test ! -s yapf.patch
+        mypy statements_manager.py src
+
