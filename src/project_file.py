@@ -17,7 +17,9 @@ class ProjectFile:
                 raise KeyError("a key is not in project:", attr)
             elif attr in self._default:
                 logger.warning(
-                    "'{}' key is not in project. use default value.".format(attr)
+                    "'{}' key is not in project. use default value '{}'.".format(
+                        attr, self._default[attr]
+                    )
                 )
                 return self._default[attr]
             else:
