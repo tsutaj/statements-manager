@@ -24,7 +24,6 @@ mode = "local"
         MAX_N = 10000
     # 入出力例
     [[problem.samples]]
-        id = "sample_00"
         # type は "default" なら省略可能
         type = "interactive"
         interactive_path = "./sample/I/00_sample_00.md"
