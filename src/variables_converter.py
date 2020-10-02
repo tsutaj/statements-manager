@@ -6,7 +6,7 @@ from logging import Logger, getLogger
 logger = getLogger(__name__)  # type: Logger
 
 
-class VariantsConverter:
+class VariablesConverter:
     def __init__(self, problem: Dict[str, Any]) -> None:
         self.vars = {}  # type: Dict[str, Any]
         self.vars["constraints"] = {}  # Dict[str, str]
@@ -23,6 +23,9 @@ class VariantsConverter:
             n_sample = 1
             for sample in problem["samples"]:
                 name = sample["id"]
+                if name in self.vars["samples"]:
+                    logger.error("sample id '{}' appears twice")
+                    raise ValueError("sample id '{}' appears twice")
                 tp = sample.get("type", "default")
                 logger.info("replace sample {} [type: {}]".format(n_sample, tp))
                 sample_text = ""

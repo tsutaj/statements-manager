@@ -5,8 +5,9 @@ from typing import Dict, Any
 from jinja2 import Environment, DictLoader
 from markdown import markdown
 from logging import Logger, getLogger
+from time import sleep
 from src.params_maker.lang_to_class import lang_to_class
-from src.variants_converter import VariantsConverter
+from src.variables_converter import VariablesConverter
 
 logger = getLogger(__name__)  # type: Logger
 
@@ -20,7 +21,7 @@ class BaseManager:
         pass
 
     def replace_vars(self, html: str, problem: Dict[str, Any]) -> str:
-        vars_manager = VariantsConverter(problem)
+        vars_manager = VariablesConverter(problem)
         env = Environment(
             variable_start_string="{@",
             variable_end_string="}",
@@ -58,8 +59,13 @@ class BaseManager:
             "./output/{}".format(self.project.get_attr("name", raise_error=True))
         )
 
-        # if output directory exists
-        if output_dir.exists():
+        # make directory
+        if self.project.get_attr("allow_rewrite"):
+            if output_dir.exists():
+                logger.warning("'{}' ALREADY EXISTS! rewrite...".format(output_dir))
+                sleep(3.0)
+            output_dir.mkdir(parents=True, exist_ok=True)
+        elif output_dir.exists():
             logger.error("{} exists".format(output_dir))
             raise FileExistsError(output_dir, "exists")
         else:
@@ -75,10 +81,15 @@ class BaseManager:
         logger.info("")
 
         # for each tasks
+        problem_ids = set()
         for problem in self.project.get_attr("problem"):
             if "id" not in problem:
                 logger.error("problem id is not set")
                 raise KeyError("problem id is not set")
+            if problem["id"] in problem_ids:
+                logger.error("problem id '{}' appears twice".format(problem["id"]))
+                raise ValueError("problem id '{}' appears twice".format(problem["id"]))
+            problem_ids.add(problem["id"])
             logger.info("rendering [problem id: {}]".format(problem["id"]))
 
             # create params

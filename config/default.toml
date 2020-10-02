@@ -2,6 +2,8 @@
 name = "default"
 # 問題文が存在する場所に応じてモードを選ぶ (必須: "docs" or "local")
 mode = "local"
+# 出力ディレクトリの上書きを許容するか
+allow_rewrite = false
 
 # docs mode に関する設定 (問題文が Google Docs 上にある場合は設定必須)
 [docs]
