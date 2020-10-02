@@ -29,7 +29,7 @@ class VariantsManager:
             for sample in problem["samples"]:
                 name = sample["id"]
                 tp = sample.get("type", "default")
-                logger.info("replace sample {} (type: {})".format(n_sample, tp))
+                logger.info("replace sample {} [type: {}]".format(n_sample, tp))
                 sample_text = ""
                 if (tp == "default") or (tp == "input_only"):
                     with open(pathlib.Path(sample["input_path"]), "r") as f:
@@ -134,12 +134,14 @@ class BaseManager:
         for path in style.get("copied_files", []):
             path = pathlib.Path(path)
             shutil.copyfile(path, output_dir / pathlib.Path(path.name))
+        logger.info("")
 
         # for each tasks
         for problem in self.project.get_attr("problem"):
             if "id" not in problem:
                 logger.error("problem id is not set")
                 raise KeyError("problem id is not set")
+            logger.info("rendering [problem id: {}]".format(problem["id"]))
 
             # create params
             logger.info("create params file")
@@ -161,7 +163,6 @@ class BaseManager:
                 logger.warning("skip: params_path is not set")
 
             # get contents (main text)
-            logger.info("rendering [problem id: {}]".format(problem["id"]))
             if "statement_src" not in problem:
                 logger.error("statement_src is not set")
                 raise KeyError("statement_src is not set")
@@ -183,3 +184,4 @@ class BaseManager:
             logger.info("saving replaced html")
             output_path = output_dir / pathlib.Path(problem["id"] + ".html")
             self.save_html(html, output_path)
+            logger.info("")
