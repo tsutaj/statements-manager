@@ -19,6 +19,6 @@ jobs:
     - name: Run tests
       run: |
         ss-manager -h
-        flake8 --max-line-length=88 statements_manager/ setup.py
+        flake8 statements_manager/ setup.py
         black --check --diff statements_manager/ setup.py
-        mypy --ignore-missing-imports statements_manager/ setup.py
+        mypy statements_manager/ setup.py
