@@ -22,10 +22,7 @@ class VariablesConverter:
         if "samples" in problem:
             n_sample = 1
             for sample in problem["samples"]:
-                name = sample["id"]
-                if name in self.vars["samples"]:
-                    logger.error("sample id '{}' appears twice")
-                    raise ValueError("sample id '{}' appears twice")
+                name = "s" + str(n_sample)
                 tp = sample.get("type", "default")
                 logger.info("replace sample {} [type: {}]".format(n_sample, tp))
                 sample_text = ""
