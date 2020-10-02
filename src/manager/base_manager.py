@@ -63,8 +63,12 @@ class BaseManager:
         if self.project.get_attr("allow_rewrite"):
             if output_dir.exists():
                 sleep_time = 4.0
-                logger.warning("'{}' ALREADY EXISTS! try to rewrite.".format(output_dir))
-                logger.warning("sleep {}s... (quit if you want to cancel)".format(sleep_time))
+                logger.warning(
+                    "'{}' ALREADY EXISTS! try to rewrite.".format(output_dir)
+                )
+                logger.warning(
+                    "sleep {}s... (quit if you want to cancel)".format(sleep_time)
+                )
                 sleep(sleep_time)
                 logger.warning("remove existing directory")
                 shutil.rmtree(output_dir)
