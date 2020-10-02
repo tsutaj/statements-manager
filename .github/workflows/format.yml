@@ -14,13 +14,11 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip3 install --upgrade pip
-        pip install -r requirements.txt
+        pip3 install .[dev]
 
     - name: Run tests
       run: |
-        python3 statements_manager.py -h
-        flake8 --max-line-length=88 statements_manager.py src
-        black --check --diff statements_manager.py src
-        mypy --ignore-missing-imports statements_manager.py src
-
+        ss-manager -h
+        flake8 statements_manager/ setup.py
+        black --check --diff statements_manager/ setup.py
+        mypy statements_manager/ setup.py

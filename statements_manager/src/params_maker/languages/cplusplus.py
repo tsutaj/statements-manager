@@ -1,4 +1,4 @@
-from src.params_maker.params_maker import ParamsMaker
+from statements_manager.src.params_maker.params_maker import ParamsMaker
 from typing import Dict, Any
 
 
