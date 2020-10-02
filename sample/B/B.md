@@ -24,6 +24,6 @@ $S$
 
 ## 入出力例
 
-{@samples.sample_00}
+{@samples.1}
 
-{@samples.sample_01}
+{@samples.2}

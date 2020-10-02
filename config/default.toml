@@ -36,8 +36,6 @@ allow_rewrite = false
         ALL_INPUTS_ARE_INTEGERS = "入力は全て整数で与えられる"
     # 入出力例
     [[problem.samples]]
-        # サンプル id (必須)
-        id = "sample_00"
         # サンプルのタイプ
         # 'default' (既定, この場合 type は省略可): 入出力例がある場合
         # 'input_only': 入力例のみの場合

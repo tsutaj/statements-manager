@@ -25,14 +25,11 @@ mode = "docs"
     # mode が Docs である場合、[TODO] を記載する
     statement_src = "1MoguVNpp2SgJvF0ncPbp_8_x2_GhClMijUjF3U3g8ns"
     [[problem.samples]]
-        id = "sample_00"
         input_path = "./sample/H/00_sample_00.in"
         output_path = "./sample/H/00_sample_00.out"
     [[problem.samples]]
-        id = "sample_01"
         input_path = "./sample/H/00_sample_01.in"
         output_path = "./sample/H/00_sample_01.out"
     [[problem.samples]]
-        id = "sample_02"
         input_path = "./sample/H/00_sample_02.in"
         output_path = "./sample/H/00_sample_02.out"
