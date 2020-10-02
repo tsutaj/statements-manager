@@ -8,8 +8,10 @@ markdown
 jinja2
 toml
 
+# for logger
+colorlog
+
 # for testing
 flake8
 black
 mypy
-

@@ -13,4 +13,4 @@ class CppParamsMaker(ParamsMaker):
         return "const double {} = {};".format(key, value)
 
     def parse_str(self, key: str, value: str) -> str:
-        return "const std::string {} = {};".format(key, value)
+        return 'const std::string {} = "{}";'.format(key, value)
