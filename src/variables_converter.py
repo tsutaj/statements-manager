@@ -19,6 +19,7 @@ class VariablesConverter:
             logger.warning("constraints are not set")
 
         self.vars["samples"] = {}
+        sample_paths = set()
         if "samples" in problem:
             n_sample = 1
             for sample in problem["samples"]:
@@ -27,16 +28,52 @@ class VariablesConverter:
                 logger.info("replace sample {} [type: {}]".format(n_sample, tp))
                 sample_text = ""
                 if (tp == "default") or (tp == "input_only"):
+                    if sample["input_path"] in sample_paths:
+                        logger.error(
+                            "sample_path '{}' appears twice".format(
+                                sample["input_path"]
+                            )
+                        )
+                        raise ValueError(
+                            "sample_path '{}' appears twice".format(
+                                sample["input_path"]
+                            )
+                        )
+                    sample_paths.add(sample["input_path"])
                     with open(pathlib.Path(sample["input_path"]), "r") as f:
                         input_txt = f.read()
                         sample_text += "### 入力例 {}\n".format(n_sample)
                         sample_text += "<pre>\n" + input_txt + "</pre>\n"
                 if (tp == "default") or (tp == "output_only"):
+                    if sample["output_path"] in sample_paths:
+                        logger.error(
+                            "sample_path '{}' appears twice".format(
+                                sample["output_path"]
+                            )
+                        )
+                        raise ValueError(
+                            "sample_path '{}' appears twice".format(
+                                sample["output_path"]
+                            )
+                        )
+                    sample_paths.add(sample["output_path"])
                     with open(pathlib.Path(sample["output_path"]), "r") as f:
                         output_txt = f.read()
                         sample_text += "### 出力例 {}\n".format(n_sample)
                         sample_text += "<pre>\n" + output_txt + "</pre>\n"
                 if tp == "interactive":
+                    if sample["interactive_path"] in sample_paths:
+                        logger.error(
+                            "sample_path '{}' appears twice".format(
+                                sample["interactive_path"]
+                            )
+                        )
+                        raise ValueError(
+                            "sample_path '{}' appears twice".format(
+                                sample["interactive_path"]
+                            )
+                        )
+                    sample_paths.add(sample["interactive_path"])
                     with open(pathlib.Path(sample["interactive_path"]), "r") as f:
                         interactive_txt = f.read()
                         sample_text += "### 入出力例 {}\n".format(n_sample)
