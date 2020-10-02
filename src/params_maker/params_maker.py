@@ -1,20 +1,23 @@
 from abc import abstractmethod
 from typing import List, Dict, Any
-import logging
+from logging import Logger, getLogger
+
+logger = getLogger(__name__)  # type: Logger
 
 
 class ParamsMaker:
     def __init__(self, params: Dict[str, Any], output_path: str) -> None:
         self.params = params
         self.output_path = output_path
-        self.log = logging.getLogger(__name__)
 
     def run(self) -> None:
         params_lines = []  # type: List[str]
         for key, value in self.params.items():
             if not all(ord(c) < 128 for c in str(value)):
+                logger.warning("ignored parameter: {} => {}".format(key, value))
                 continue
 
+            value = value.replace(r'"', r"\"")
             if isinstance(value, int):
                 params_lines.append(self.parse_int(key, value))
             elif isinstance(value, float):
@@ -22,7 +25,7 @@ class ParamsMaker:
             elif isinstance(value, str):
                 params_lines.append(self.parse_str(key, value))
             else:
-                self.log.info("ignored parameter: {}: {}".format(key, value))
+                logger.warning("ignored parameter: {} => {}".format(key, value))
 
         with open(self.output_path, "w") as f:
             for line in params_lines:

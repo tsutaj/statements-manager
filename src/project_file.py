@@ -1,6 +1,8 @@
 import toml
-import logging
+from logging import Logger, getLogger
 from typing import MutableMapping, Any
+
+logger = getLogger(__name__)  # type: Logger
 
 
 class ProjectFile:
@@ -9,18 +11,19 @@ class ProjectFile:
         self._default = toml.load(
             default_project_path
         )  # type: MutableMapping[str, Any]
-        self.log = logging.getLogger(__name__)
 
     def get_attr(self, attr: str, raise_error: bool = False) -> Any:
         if attr not in self._project:
             if raise_error:
+                logger.error("a key is not in project: {}".format(attr))
                 raise KeyError("a key is not in project:", attr)
             elif attr in self._default:
-                self.log.warning(
+                logger.warning(
                     "'{}' key is not in project. use default value.".format(attr)
                 )
                 return self._default[attr]
             else:
+                logger.error("unknown key: {}".format(attr))
                 raise KeyError("unknown key:", attr)
         else:
             return self._project[attr]
