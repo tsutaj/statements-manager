@@ -1,6 +1,6 @@
 import pathlib
 import pickle
-from src.manager.base_manager import BaseManager
+from statements_manager.src.manager.base_manager import BaseManager
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request

@@ -1,5 +1,5 @@
-from src.project_file import ProjectFile
-from src.manager.base_manager import BaseManager
+from statements_manager.src.project_file import ProjectFile
+from statements_manager.src.manager.base_manager import BaseManager
 import pathlib
 
 

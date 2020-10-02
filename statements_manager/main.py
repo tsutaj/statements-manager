@@ -2,11 +2,11 @@ import argparse
 import pathlib
 from typing import Union
 from logging import Logger, getLogger, basicConfig
-from src.project_file import ProjectFile
-from src.manager.docs_manager import DocsManager
-from src.manager.local_manager import LocalManager
-from src.config.default import default_toml
-from src.config.sample import sample_toml
+from statements_manager.src.project_file import ProjectFile
+from statements_manager.src.manager.docs_manager import DocsManager
+from statements_manager.src.manager.local_manager import LocalManager
+from statements_manager.src.config.default import default_toml
+from statements_manager.src.config.sample import sample_toml
 
 logger = getLogger(__name__)  # type: Logger
 
@@ -50,7 +50,7 @@ def get_parser() -> argparse.ArgumentParser:
         "-p",
         "--project",
         type=str,
-        default="./config/default.toml",
+        required=True,
         help="Path to project file",
     )
 
@@ -59,7 +59,7 @@ def get_parser() -> argparse.ArgumentParser:
         "-p",
         "--project",
         type=str,
-        default="./config/default.toml",
+        required=True,
         help="Path to project file",
     )
     return parser
@@ -92,8 +92,7 @@ def create(project_path: str) -> None:
     with open(project_path, "w") as f:
         f.write(sample_toml)
 
-
-if __name__ == "__main__":
+def main() -> None:
     parser = get_parser()
     args = parser.parse_args()
     set_logger(args.debug)
@@ -103,3 +102,6 @@ if __name__ == "__main__":
         create(project_path=args.project)
     else:
         parser.print_help()
+
+if __name__ == "__main__":
+    main()

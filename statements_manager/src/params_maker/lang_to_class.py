@@ -1,4 +1,4 @@
-from src.params_maker.languages.cplusplus import CppParamsMaker
+from statements_manager.src.params_maker.languages.cplusplus import CppParamsMaker
 from typing import Dict, Any
 
 
