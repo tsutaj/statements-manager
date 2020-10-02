@@ -92,6 +92,7 @@ def create(project_path: str) -> None:
     with open(project_path, "w") as f:
         f.write(sample_toml)
 
+
 def main() -> None:
     parser = get_parser()
     args = parser.parse_args()
@@ -102,6 +103,7 @@ def main() -> None:
         create(project_path=args.project)
     else:
         parser.print_help()
+
 
 if __name__ == "__main__":
     main()
