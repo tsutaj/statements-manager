@@ -12,10 +12,12 @@
 
 ```bash
 # 初回のみ
-pip install -r requirements.txt
+pip install statements-manager
+git clone https://github.com/tsutaj/statements-manager.git
 
+# on 'statements-manager' directory
 # 実行後に output ディレクトリの中身を確認すること
-python3 statements_manager.py run -p config/local_sample.toml
+ss-manager run -p config/local_sample.toml
 ```
 
 ### 1. 所有している Google アカウントについて、Google Docs API を使用可能にする (Google Docs にある問題文を変換する方のみ)
@@ -26,9 +28,9 @@ python3 statements_manager.py run -p config/local_sample.toml
 - うまくいけば "DOWNLOAD CLIENT CONFIGURATION" を押すようなダイアログに行くので、`credentials.json` を任意の場所にダウンロードします (このファイルはプロジェクトファイルの `docs.credentials_src` に、絶対パスまたはスクリプト実行元からの相対パスで設定する必要があります)
   - 一度認可に成功すると、`token.pickle` というファイルが生成されます。これをプロジェクトファイルに指定することで、毎回認可することなく高速に実行できます。
 
-### 2. 必要なライブラリをダウンロードする
+### 2. statements-manager をダウンロードする
 
-`pip install -r requirements.txt` で、スクリプトの動作に必要なライブラリをダウンロードできます。(環境を汚されたくない人は `venv` とかの仮想環境を適宜使ってください)
+`pip install statements-manager` で、`statements-manager` をダウンロードできます。(環境を汚されたくない人は `venv` とかの仮想環境を適宜使ってください)
 
 ### 3. プロジェクトファイルを作る
 
@@ -37,7 +39,7 @@ python3 statements_manager.py run -p config/local_sample.toml
 プロジェクトファイルの雛形は以下を実行することで生成されます。
 
 ```bash
-python3 statements_manager.py create -p [path_to_project.toml]
+ss-manager create -p [path_to_project.toml]
 ```
 
 あとは、問題セットの都合に合わせてプロジェクトファイルを編集してください。プロジェクトファイルの書き方についてはそのうちリファレンスを書きます (TODO)。なお、[Google Docs ファイルに対するサンプル](https://github.com/tsutaj/statements-manager/blob/master/config/docs_sample.toml) や [ローカルファイルに対するサンプル](https://github.com/tsutaj/statements-manager/blob/master/config/local_sample.toml) が存在するので、これを参考にしながら書くとだいたいのことはできるはずです・・・
@@ -46,10 +48,10 @@ python3 statements_manager.py create -p [path_to_project.toml]
 
 以下のコマンドで、プロジェクトファイルで定義された各問題を HTML 化できます。出力された HTML は `output` ディレクトリ内に格納されます。
 
-- HTML 化される対象のプロジェクト名と同名のディレクトリが `output` 直下に存在する場合は実行できません (上書き防止)。その場合はディレクトリを適宜削除してください。
+- HTML 化される対象のプロジェクト名と同名のディレクトリが `output` 直下に存在する場合は、上書き防止のため通常は実行できません。その場合はディレクトリを適宜削除してください (オプションをつけて強制的に実行することもできます)
 
 ```bash
-python3 statements_manager.py run -p [path_to_project.toml]
+ss-manager run -p [path_to_project.toml]
 ```
 
 ## Future Development
