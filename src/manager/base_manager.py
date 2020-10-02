@@ -2,7 +2,7 @@ import pathlib
 import shutil
 from abc import abstractmethod
 from typing import Dict, Any
-from jinja2 import Environment, DictLoader
+from jinja2 import Environment, DictLoader, StrictUndefined
 from markdown import markdown
 from logging import Logger, getLogger
 from time import sleep
@@ -26,6 +26,7 @@ class BaseManager:
             variable_start_string="{@",
             variable_end_string="}",
             loader=DictLoader({"task": html}),
+            undefined=StrictUndefined,
         )
         template = env.get_template("task")
         replaced_html = template.render(
