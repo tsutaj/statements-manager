@@ -63,7 +63,8 @@ class BaseManager:
         if self.project.get_attr("allow_rewrite"):
             if output_dir.exists():
                 logger.warning("'{}' ALREADY EXISTS! rewrite...".format(output_dir))
-                sleep(3.0)
+                sleep(4.0)
+            shutil.rmtree(output_dir)
             output_dir.mkdir(parents=True, exist_ok=True)
         elif output_dir.exists():
             logger.error("{} exists".format(output_dir))
