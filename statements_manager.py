@@ -1,11 +1,12 @@
 import argparse
 import pathlib
-import shutil
 from typing import Union
 from logging import Logger, getLogger, basicConfig
 from src.project_file import ProjectFile
 from src.manager.docs_manager import DocsManager
 from src.manager.local_manager import LocalManager
+from src.config.default import default_toml
+from src.config.sample import sample_toml
 
 logger = getLogger(__name__)  # type: Logger
 
@@ -64,13 +65,9 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def run(project_path: str, default_project_path: str) -> None:
-    logger.debug(
-        "run: project_path = '{}', default_project_path = '{}'".format(
-            project_path, default_project_path
-        )
-    )
-    project = ProjectFile(project_path, default_project_path)  # ProjectFile
+def run(project_path: str) -> None:
+    logger.debug("run: project_path = '{}'".format(project_path))
+    project = ProjectFile(project_path, default_toml)  # ProjectFile
 
     # check mode
     mode = project.get_attr("mode").lower()  # type: str
@@ -84,16 +81,16 @@ def run(project_path: str, default_project_path: str) -> None:
         logger.error("unknown mode: {}".format(mode))
         raise ValueError("unknown mode: {}".format(mode))
 
-    # todo
     manager.run()
 
 
-def create(project_path: str, default_project_path: str) -> None:
+def create(project_path: str) -> None:
     if pathlib.Path(project_path).exists():
         logger.error("file exists: {}".format(project_path))
         raise FileExistsError("file exists:", project_path)
     logger.info("create new project: {}".format(project_path))
-    shutil.copy(default_project_path, project_path)
+    with open(project_path, "w") as f:
+        f.write(sample_toml)
 
 
 if __name__ == "__main__":
@@ -101,8 +98,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     set_logger(args.debug)
     if args.subcommand == "run":
-        run(project_path=args.project, default_project_path="./config/default.toml")
+        run(project_path=args.project)
     elif args.subcommand == "create":
-        create(project_path=args.project, default_project_path="./config/default.toml")
+        create(project_path=args.project)
     else:
         parser.print_help()

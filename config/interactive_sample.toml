@@ -15,8 +15,7 @@ mode = "local"
     # 問題 ID (必須: 出力 html 名にも使用される)
     id = "I"
     # 問題文が格納されている場所
-    # mode が Docs である場合、Google Docs の Document ID を記載する
-    # (Document ID とは Docs の URL にあるランダムっぽい文字列のことです)
+    # mode が local である場合、Markdown ファイルへのパスを記載する
     statement_src = "./sample/I/I.md"
     # 問題制約を書く
     [problem.constraints]

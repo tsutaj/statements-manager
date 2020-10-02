@@ -1,8 +1,11 @@
-# プロジェクト名 (必須: 出力ディレクトリ名になります)
-name = "default"
-# 問題文が存在する場所に応じてモードを選ぶ (必須: "docs" or "local")
+sample_toml = """
+# プロジェクト名
+name = "sample"
+# 問題文が存在する場所に応じてモードを選ぶ ("docs" or "local")
+# default: "local"
 mode = "local"
 # 出力ディレクトリの上書きを許容するか
+# default: false
 allow_rewrite = false
 
 # docs mode に関する設定 (問題文が Google Docs 上にある場合は設定必須)
@@ -23,9 +26,10 @@ allow_rewrite = false
 [[problem]]
     # 問題 ID (必須: 出力 html 名にも使用される)
     id = "A"
-    # 問題文が格納されている場所
+    # 問題文が格納されている場所 (必須)
+    # mode が local である場合、Markdown ファイルへのパスを記載する
     # mode が Docs である場合、Google Docs の Document ID を記載する
-    # (Document ID とは Docs の URL にあるランダムっぽい文字列のことです)
+    # (Document ID とは Docs の URL にある、ランダムのような文字列のことです)
     statement_src = "path/to/A.md"
     # 制約ファイルの出力場所 (出力しなくて良い場合は指定不要)
     params_path = "path/to/params.hpp"
@@ -49,3 +53,4 @@ allow_rewrite = false
         # インタラクティブ問題サンプルへのパス ('interactive' で必須)
         # Markdown 形式で書かれたものを指定
         interactive_path = "path/to/00_sample_00.md"
+"""
