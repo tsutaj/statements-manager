@@ -29,7 +29,7 @@ class VariantsManager:
             for sample in problem["samples"]:
                 name = sample["id"]
                 tp = sample.get("type", "default")
-                logger.info("replace sample {} (type = {})".format(n_sample, tp))
+                logger.info("replace sample {} (type: {})".format(n_sample, tp))
                 sample_text = ""
                 if (tp == "default") or (tp == "input_only"):
                     with open(pathlib.Path(sample["input_path"]), "r") as f:

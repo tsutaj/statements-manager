@@ -17,12 +17,12 @@ class ParamsMaker:
                 logger.warning("ignored parameter: {} => {}".format(key, value))
                 continue
 
-            value = value.replace(r'"', r"\"")
             if isinstance(value, int):
                 params_lines.append(self.parse_int(key, value))
             elif isinstance(value, float):
                 params_lines.append(self.parse_float(key, value))
             elif isinstance(value, str):
+                value = value.replace(r'"', r"\"")
                 params_lines.append(self.parse_str(key, value))
             else:
                 logger.warning("ignored parameter: {} => {}".format(key, value))
