@@ -24,7 +24,7 @@ allow_rewrite = true
     # 問題 ID (必須, 出力 html 名にも使用される)
     id = "A"
     # 問題文が格納されている場所
-    # mode が Docs である場合、[TODO] を記載する
+    # mode が local である場合、Markdown ファイルへのパスを記載する
     statement_src = "./sample/A/A.md"
     # 制約ファイルの出力場所
     params_path = "./output/local_sample/A_params.cpp"
@@ -45,7 +45,7 @@ allow_rewrite = true
     # 問題 ID (必須, 出力 html 名に使用される)
     id = "B"
     # 問題文が格納されている場所
-    # mode が Docs である場合、[TODO] を記載する
+    # mode が local である場合、Markdown ファイルへのパスを記載する
     statement_src = "./sample/B/B.md"
     # 制約ファイルの出力場所
     params_path = "./output/local_sample/B_params.cpp"

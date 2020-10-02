@@ -21,8 +21,9 @@ mode = "docs"
 [[problem]]
     # 問題 ID (必須, 出力 html 名にも使用される)
     id = "H"
-    # 問題文が格納されている場所
-    # mode が Docs である場合、[TODO] を記載する
+    # 問題文が格納されている場所 (必須)
+    # mode が Docs である場合、Google Docs の Document ID を記載する
+    # (Document ID とは Docs の URL にある、ランダムのような文字列のことです)
     statement_src = "1MoguVNpp2SgJvF0ncPbp_8_x2_GhClMijUjF3U3g8ns"
     [[problem.samples]]
         input_path = "./sample/H/00_sample_00.in"
