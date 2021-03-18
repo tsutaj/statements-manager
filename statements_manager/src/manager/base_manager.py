@@ -6,7 +6,6 @@ from typing import Any
 from jinja2 import Environment, DictLoader, StrictUndefined
 from markdown import markdown
 from logging import Logger, getLogger
-from time import sleep
 from statements_manager.src.params_maker.lang_to_class import lang_to_class
 from statements_manager.src.variables_converter import VariablesConverter
 
@@ -82,9 +81,7 @@ class BaseManager:
                 params_maker.run()
             else:
                 logger.warning(
-                    "skip: there is no language config which matches '{}'".format(
-                        ext
-                    )
+                    "skip: there is no language config which matches '{}'".format(ext)
                 )
         else:
             logger.warning("skip: params_path is not set")

@@ -31,7 +31,7 @@ class VariablesConverter:
                 sample_names.add(md_filename.stem)
         if sample_names == set():
             logger.warning("samples are not set")
-        sample_names = sorted(list(sample_names))
+        sample_names = set(sorted(list(sample_names)))
 
         for n_sample, sample_name in enumerate(sample_names, start=1):
             in_name = problem_attr["sample_path"] / pathlib.Path(f"{sample_name}.in")
@@ -40,14 +40,23 @@ class VariablesConverter:
 
             # 入力 / 出力のいずれかが欠けている場合は警告だけにとどめる
             if (not in_name.exists()) and (not out_name.exists()):
-                logger.warning(f"{sample_name}: Neither input-file nor output-file exists. Recognized as interactive sample.")
-            elif (not in_name.exists()):
-                logger.warning(f"{sample_name}: Input file does not exist. Recognized as output-only sample.")
-            elif (not out_name.exists()):
-                logger.warning(f"{sample_name}: Output file does not exist. Recognized as input-only sample.")
+                logger.warning(
+                    f"{sample_name}: Neither input-file nor output-file exists. \
+                    Recognized as interactive sample."
+                )
+            elif not in_name.exists():
+                logger.warning(
+                    f"{sample_name}: Input file does not exist. \
+                    Recognized as output-only sample."
+                )
+            elif not out_name.exists():
+                logger.warning(
+                    f"{sample_name}: Output file does not exist. \
+                    Recognized as input-only sample."
+                )
 
             # 説明が無いことの報告
-            if (not md_name.exists()):
+            if not md_name.exists():
                 logger.info(f"{sample_name}: There is no explanation.")
 
             name = "s" + str(n_sample)

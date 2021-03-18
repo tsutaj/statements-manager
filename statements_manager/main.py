@@ -1,5 +1,4 @@
 import argparse
-import pathlib
 from typing import Union
 from logging import Logger, getLogger, basicConfig
 from statements_manager.src.project_file import ProjectFile
