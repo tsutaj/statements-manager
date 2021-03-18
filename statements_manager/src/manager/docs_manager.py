@@ -7,15 +7,15 @@ from google.auth.transport.requests import Request
 
 
 class DocsManager(BaseManager):
-    def __init__(self, project):
-        super().__init__(project)
+    def __init__(self, problem_attr):
+        super().__init__(problem_attr)
         self.creds = None
         self.SCOPES = ["https://www.googleapis.com/auth/documents.readonly"]
 
         # set credentials
-        docs_setting = project.get_attr("docs")
-        token_path = pathlib.Path(docs_setting.get("token_src", ""))
-        creds_path = pathlib.Path(docs_setting.get("credentials_src", ""))
+        docs_config = problem_attr["docs"]
+        token_path = pathlib.Path(docs_config.get("token_path", ""))
+        creds_path = pathlib.Path(docs_config.get("creds_path", ""))
         if token_path.exists():
             with open(token_path, "rb") as token:
                 self.creds = pickle.load(token)
@@ -34,8 +34,8 @@ class DocsManager(BaseManager):
         # launch a service
         self.service = build("docs", "v1", credentials=self.creds)
 
-    def get_contents(self, statement_src: pathlib.Path) -> str:
-        document = self.service.documents().get(documentId=statement_src).execute()
+    def get_contents(self, statement_path: pathlib.Path) -> str:
+        document = self.service.documents().get(documentId=statement_path).execute()
         text = ""
         for content in document.get("body")["content"]:
             if "paragraph" not in content:

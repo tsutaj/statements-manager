@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <title>Problem Statement</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css"
+        integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js"
+        integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ"
+        crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/auto-render.min.js"
+        integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(
+                document.body, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false }],
+                    ignoredTags: [],
+                })
+        });
+    </script>
+  </head>
+  <body>
+    <h1>A+B</h1>
+<h2>問題文</h2>
+<p>整数 $A$ と $B$ が与えられます。$A + B$ の計算結果を出力してください。</p>
+<p>ケースは $T$ 個与えられますので、$T$ 行出力してください。</p>
+<h2>入力</h2>
+<pre><code>$T$
+$A_1$ $B_1$
+$A_2$ $B_2$
+...
+$A_T$ $B_T$
+</code></pre>
+
+<ul>
+<li>入力は全て整数で与えられる</li>
+<li>$1 \leq T \leq 100{,}000$</li>
+<li>$1 \leq A, B \leq 10^{9}$</li>
+</ul>
+<h2>出力</h2>
+<p>$T$ 行出力してください。</p>
+<p>$i$ 行目には $A_i + B_i$ の結果を出力してください。</p>
+<h2>入出力例</h2>
+<h3>入力例 1</h3>
+<p><pre>
+3
+3 9
+100 101
+1 10
+</pre></p>
+<h3>出力例 1</h3>
+<p><pre>
+12
+201
+11
+</pre></p>
+<p>末尾も改行が必要であることに注意してください。</p>
+  </body>
+</html>

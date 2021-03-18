@@ -1,7 +1,8 @@
+from __future__ import annotations
 import pathlib
 import shutil
 from abc import abstractmethod
-from typing import Dict, Any
+from typing import Any
 from jinja2 import Environment, DictLoader, StrictUndefined
 from markdown import markdown
 from logging import Logger, getLogger
@@ -13,15 +14,16 @@ logger = getLogger(__name__)  # type: Logger
 
 
 class BaseManager:
-    def __init__(self, project):
-        self.project = project
+    def __init__(self, problem_attr):
+        self._cwd = pathlib.Path.cwd()
+        self.problem_attr = problem_attr  # type: dict[str, Any]
 
     @abstractmethod
-    def get_contents(self, statement_src: pathlib.Path) -> str:
+    def get_contents(self, statement_path: pathlib.Path) -> str:
         pass
 
-    def replace_vars(self, html: str, problem: Dict[str, Any]) -> str:
-        vars_manager = VariablesConverter(problem)
+    def replace_vars(self, html: str) -> str:
+        vars_manager = VariablesConverter(self.problem_attr)
         env = Environment(
             variable_start_string="{@",
             variable_end_string="}",
@@ -36,9 +38,9 @@ class BaseManager:
         return replaced_html
 
     def apply_template(self, html: str) -> str:
-        style = self.project.get_attr("style")
-        if pathlib.Path(style.get("template_src", "")).exists():
-            with open(style["template_src"]) as f:
+        style = self.problem_attr["style"]
+        if pathlib.Path(style.get("template_path", "")).exists():
+            with open(style["template_path"]) as f:
                 template = f.read()
         else:
             template = "{@task.statements}"
@@ -56,90 +58,57 @@ class BaseManager:
             f.write(html)
 
     def run(self):
-        output_dir = pathlib.Path(
-            "./output/{}".format(self.project.get_attr("name", raise_error=True))
-        )
-
-        # make directory
-        if self.project.get_attr("allow_rewrite"):
-            if output_dir.exists():
-                sleep_time = 4.0
-                logger.warning(
-                    "'{}' ALREADY EXISTS! try to rewrite.".format(output_dir)
-                )
-                logger.warning(
-                    "sleep {}s... (quit if you want to cancel)".format(sleep_time)
-                )
-                sleep(sleep_time)
-                logger.warning("remove existing directory")
-                shutil.rmtree(output_dir)
-            output_dir.mkdir(parents=True, exist_ok=True)
-        elif output_dir.exists():
-            logger.error("{} exists".format(output_dir))
-            raise FileExistsError(output_dir, "exists")
-        else:
-            logger.info("making directory: {}".format(output_dir))
-            output_dir.mkdir(parents=True)
+        # output directory
+        output_dir = self.problem_attr["output_dir"]
 
         # copy files
         logger.info("setting html style")
-        style = self.project.get_attr("style")
+        style = self.problem_attr["style"]
         for path in style.get("copied_files", []):
-            path = pathlib.Path(path)
+            path = self._cwd / pathlib.Path(path)
             shutil.copyfile(path, output_dir / pathlib.Path(path.name))
         logger.info("")
 
-        # for each tasks
-        problem_ids = set()
-        for problem in self.project.get_attr("problem"):
-            if "id" not in problem:
-                logger.error("problem id is not set")
-                raise KeyError("problem id is not set")
-            if problem["id"] in problem_ids:
-                logger.error("problem id '{}' appears twice".format(problem["id"]))
-                raise ValueError("problem id '{}' appears twice".format(problem["id"]))
-            problem_ids.add(problem["id"])
-            logger.info("rendering [problem id: {}]".format(problem["id"]))
-
-            # create params
-            logger.info("create params file")
-            if "params_path" in problem:
-                ext = pathlib.Path(problem["params_path"]).suffix  # type: str
-                if ext in lang_to_class:
-                    params_maker = lang_to_class[ext](
-                        problem["constraints"],
-                        problem["params_path"],
-                    )  # type: Any
-                    params_maker.run()
-                else:
-                    logger.warning(
-                        "skip: there is no language config which matches '{}'".format(
-                            ext
-                        )
-                    )
+        logger.info("rendering [problem id: {}]".format(self.problem_attr["id"]))
+        # create params
+        logger.info("create params file")
+        if "params_path" in self.problem_attr:
+            ext = pathlib.Path(self.problem_attr["params_path"]).suffix  # type: str
+            if ext in lang_to_class:
+                params_maker = lang_to_class[ext](
+                    self.problem_attr["constraints"],
+                    self.problem_attr["params_path"],
+                )  # type: Any
+                params_maker.run()
             else:
-                logger.warning("skip: params_path is not set")
+                logger.warning(
+                    "skip: there is no language config which matches '{}'".format(
+                        ext
+                    )
+                )
+        else:
+            logger.warning("skip: params_path is not set")
 
-            # get contents (main text)
-            if "statement_src" not in problem:
-                logger.error("statement_src is not set")
-                raise KeyError("statement_src is not set")
-            contents = self.get_contents(pathlib.Path(problem["statement_src"]))
-            contents = self.replace_vars(contents, problem)
+        # get contents (main text)
+        if "statement_path" not in self.problem_attr:
+            logger.error("statement_path is not set")
+            raise KeyError("statement_path is not set")
+        contents = self.get_contents(pathlib.Path(self.problem_attr["statement_path"]))
+        contents = self.replace_vars(contents)
 
-            # convert: markdown -> html
-            html = markdown(
-                contents,
-                extensions=[
-                    "md_in_html",
-                    "tables",
-                    "markdown.extensions.fenced_code",
-                ],
-            )
-            html = self.apply_template(html)
+        # convert: markdown -> html
+        html = markdown(
+            contents,
+            extensions=[
+                "md_in_html",
+                "tables",
+                "markdown.extensions.fenced_code",
+            ],
+        )
+        html = self.apply_template(html)
 
-            # save html
-            logger.info("saving replaced html")
-            output_path = output_dir / pathlib.Path(problem["id"] + ".html")
-            self.save_html(html, output_path)
-            logger.info("")
+        # save html
+        logger.info("saving replaced html")
+        output_path = output_dir / pathlib.Path(self.problem_attr["id"] + ".html")
+        self.save_html(html, output_path)
+        logger.info("")

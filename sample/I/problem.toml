@@ -1,0 +1,17 @@
+# 問題文が存在する場所に応じてモードを選ぶ (必須: "docs" or "local")
+mode = "local"
+
+# 問題 ID (必須: 出力 html 名にも使用される)
+id = "I"
+
+# 問題文が格納されている場所
+# mode が local である場合、Markdown ファイルへのパスを記載する
+statement_path = "./tests/I.md"
+
+# サンプルが存在する場所
+sample_path = "./tests/"
+
+# 問題制約を書く
+[constraints]
+    MIN_N = 1
+    MAX_N = 10000

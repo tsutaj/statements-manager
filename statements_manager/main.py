@@ -6,7 +6,6 @@ from statements_manager.src.project_file import ProjectFile
 from statements_manager.src.manager.docs_manager import DocsManager
 from statements_manager.src.manager.local_manager import LocalManager
 from statements_manager.src.config.default import default_toml
-from statements_manager.src.config.sample import sample_toml
 
 logger = getLogger(__name__)  # type: Logger
 
@@ -53,15 +52,6 @@ def get_parser() -> argparse.ArgumentParser:
         required=True,
         help="Path to project file",
     )
-
-    parser_create = subparsers.add_parser("create")
-    parser_create.add_argument(
-        "-p",
-        "--project",
-        type=str,
-        required=True,
-        help="Path to project file",
-    )
     return parser
 
 
@@ -70,27 +60,19 @@ def run(project_path: str) -> None:
     project = ProjectFile(project_path, default_toml)  # ProjectFile
 
     # check mode
-    mode = project.get_attr("mode").lower()  # type: str
-    if mode == "docs":
-        logger.info("running in 'docs' mode")
-        manager = DocsManager(project)  # type: Union[DocsManager, LocalManager]
-    elif mode == "local":
-        logger.info("running in 'local' mode")
-        manager = LocalManager(project)
-    else:
-        logger.error("unknown mode: {}".format(mode))
-        raise ValueError("unknown mode: {}".format(mode))
-
-    manager.run()
-
-
-def create(project_path: str) -> None:
-    if pathlib.Path(project_path).exists():
-        logger.error("file exists: {}".format(project_path))
-        raise FileExistsError("file exists:", project_path)
-    logger.info("create new project: {}".format(project_path))
-    with open(project_path, "w") as f:
-        f.write(sample_toml)
+    for project_id, config in project.problem_attr.items():
+        mode = config["mode"].lower()  # type: str
+        if mode == "docs":
+            logger.info("running in 'docs' mode")
+            manager = DocsManager(config)  # type: Union[DocsManager, LocalManager]
+        elif mode == "local":
+            logger.info("running in 'local' mode")
+            manager = LocalManager(config)
+        else:
+            logger.error("unknown mode: {}".format(mode))
+            raise ValueError("unknown mode: {}".format(mode))
+        manager.run()
+    logger.debug("run command ended successfully.")
 
 
 def main() -> None:
@@ -99,8 +81,6 @@ def main() -> None:
     set_logger(args.debug)
     if args.subcommand == "run":
         run(project_path=args.project)
-    elif args.subcommand == "create":
-        create(project_path=args.project)
     else:
         parser.print_help()
 

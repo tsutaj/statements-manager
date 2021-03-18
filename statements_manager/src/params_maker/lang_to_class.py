@@ -1,5 +1,6 @@
+from __future__ import annoattions
 from statements_manager.src.params_maker.languages.cplusplus import CppParamsMaker
-from typing import Dict, Any
+from typing import Any
 
 
 lang_to_class = {
@@ -7,4 +8,4 @@ lang_to_class = {
     ".cc": CppParamsMaker,
     ".hpp": CppParamsMaker,
     ".h": CppParamsMaker,
-}  # type: Dict[str, Any]
+}  # type: dict[str, Any]

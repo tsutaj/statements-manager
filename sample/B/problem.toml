@@ -1,0 +1,19 @@
+# 問題文が存在する場所に応じてモードを選ぶ
+mode = "local"
+
+# 問題 ID (必須, 出力 html 名に使用される)
+id = "B"
+
+# 問題文が格納されている場所
+# mode が local である場合、Markdown ファイルへのパスを記載する
+statement_path = "./tests/B.md"
+
+# サンプルが存在する場所
+sample_path = "./tests/"
+
+# 問題制約を書く
+[constraints]
+    MIN_N = 1
+    MAX_N = 100_000
+    N_IS_ODD = "$N$ は奇数であることが保証される"
+    GIVEN_STRING_IS_LOWERCASE = "与えられる文字列は英小文字のみからなる"
