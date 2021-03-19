@@ -8,6 +8,7 @@ from markdown import markdown
 from logging import Logger, getLogger
 from statements_manager.src.params_maker.lang_to_class import lang_to_class
 from statements_manager.src.variables_converter import VariablesConverter
+from ..utils import resolve_path
 
 logger = getLogger(__name__)  # type: Logger
 
@@ -64,7 +65,7 @@ class BaseManager:
         logger.info("setting html style")
         style = self.problem_attr["style"]
         for path in style.get("copied_files", []):
-            path = self._cwd / pathlib.Path(path)
+            path = resolve_path(self._cwd, pathlib.Path(path))
             shutil.copyfile(path, output_dir / pathlib.Path(path.name))
         logger.info("")
 

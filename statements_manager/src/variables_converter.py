@@ -20,18 +20,22 @@ class VariablesConverter:
         else:
             logger.warning("constraints are not set")
 
-        sample_names = set()
+        # sample_path 以下で、ファイル名に 'sample' を含むものはサンプルであるとする
+        sample_names = list()
         print("sample path:", problem_attr["sample_path"])
         for in_filename in problem_attr["sample_path"].glob("./**/*.in"):
-            sample_names.add(in_filename.stem)
+            if str(in_filename).lower().find("sample") >= 0:
+                sample_names.append(in_filename.stem)
         for out_filename in problem_attr["sample_path"].glob("./**/*.out"):
-            sample_names.add(out_filename.stem)
+            if str(out_filename).lower().find("sample") >= 0:
+                sample_names.append(out_filename.stem)
         for md_filename in problem_attr["sample_path"].glob("./**/*.md"):
-            if md_filename.resolve() != problem_attr["statement_path"].resolve():
-                sample_names.add(md_filename.stem)
-        if sample_names == set():
+            if md_filename.resolve() != problem_attr["statement_path"].resolve() \
+            and str(md_filename).lower().find("sample") >= 0:
+                sample_names.append(md_filename.stem)
+        if len(sample_names) == 0:
             logger.warning("samples are not set")
-        sample_names = set(sorted(list(sample_names)))
+        sample_names = sorted(list(set(sample_names)))
 
         for n_sample, sample_name in enumerate(sample_names, start=1):
             in_name = problem_attr["sample_path"] / pathlib.Path(f"{sample_name}.in")

@@ -3,6 +3,7 @@ import copy
 from logging import Logger, getLogger
 from typing import MutableMapping, Any
 from pathlib import Path
+from .utils import resolve_path
 
 logger = getLogger(__name__)  # type: Logger
 
@@ -38,17 +39,17 @@ class ProjectFile:
         result_dict = copy.deepcopy(setting_dict)
         for k, v in result_dict.items():
             if k.endswith("_path"):
-                result_dict[k] = base_path / Path(v)
+                result_dict[k] = resolve_path(base_path, Path(v))
         for k, v in result_dict.get("docs", {}).items():
             if k.endswith("_path"):
-                result_dict["docs"][k] = base_path / Path(v)
+                result_dict["docs"][k] = resolve_path(base_path, Path(v))
         for k, v in result_dict.get("style", {}).items():
             if k.endswith("_path"):
-                result_dict["style"][k] = base_path / Path(v)
+                result_dict["style"][k] = resolve_path(base_path, Path(v))
             if k == "copied_files":
                 for i in range(len(result_dict["style"][k])):
-                    result_dict["style"][k][i] = base_path / Path(
-                        result_dict["style"][k][i]
+                    result_dict["style"][k][i] = resolve_path(
+                        base_path, Path(result_dict["style"][k][i])
                     )
         return result_dict
 
