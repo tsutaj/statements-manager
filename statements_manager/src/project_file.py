@@ -10,6 +10,10 @@ logger = getLogger(__name__)  # type: Logger
 
 class ProjectFile:
     def __init__(self, project_path: str, default_toml: str) -> None:
+        if not Path(project_path).exists():
+            logger.error(f"project {project_path} does not exist.")
+            raise IOError(f"project {project_path} does not exist.")
+
         project = toml.load(project_path)  # type: MutableMapping[str, Any]
         default = toml.loads(default_toml)  # type: MutableMapping[str, Any]
         self._cwd = Path(project_path).parent.resolve()

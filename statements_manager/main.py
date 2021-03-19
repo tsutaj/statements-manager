@@ -1,4 +1,5 @@
 import argparse
+import pathlib
 from typing import Union
 from logging import Logger, getLogger, basicConfig
 from statements_manager.src.project_file import ProjectFile
@@ -45,16 +46,14 @@ def get_parser() -> argparse.ArgumentParser:
 
     parser_run = subparsers.add_parser("run")
     parser_run.add_argument(
-        "-p",
-        "--project",
-        type=str,
-        required=True,
+        "project",
         help="Path to project file",
     )
     return parser
 
 
 def run(project_path: str) -> None:
+    project_path = str(pathlib.Path(project_path, "project.toml").resolve())
     logger.debug("run: project_path = '{}'".format(project_path))
     project = ProjectFile(project_path, default_toml)  # ProjectFile
 
