@@ -33,7 +33,7 @@ class ProjectFile:
         self, setting_dict: MutableMapping[str, Any], base_path: Path
     ) -> MutableMapping[str, Any]:
         """setting_dict に含まれているキーの中で
-        '_path' で終わるもの全てに対して、値を絶対パスに変更
+        '_path' で終わるもの全てに対して、値を絶対パスに変更 (既に絶対パスなら何もしない)
         """
         base_path = base_path.resolve()
         result_dict = copy.deepcopy(setting_dict)
@@ -56,11 +56,11 @@ class ProjectFile:
     def _search_problem_attr(
         self,
     ) -> MutableMapping[str, Any]:
-        """problem.toml が含まれているディレクトリを問題ディレクトリとみなす
+        """ss-config.toml が含まれているディレクトリを問題ディレクトリとみなす
         問題ごとに設定ファイルを読み込む
         """
         result_dict = {}  # type: MutableMapping[str, Any]
-        for problem_file in sorted(self._cwd.glob("./**/problem.toml")):
+        for problem_file in sorted(self._cwd.glob("./**/ss-config.toml")):
             dir_name = problem_file.parent.resolve()
             problem_dict = toml.load(problem_file)
             if "id" not in problem_dict:
@@ -74,9 +74,12 @@ class ProjectFile:
             result_dict[problem_id] = self._to_absolute_path(
                 problem_dict, problem_file.parent
             )
+            result_dict[problem_id].update(self._common_attr)
             # docs モードのときはパスと解釈してはならない
             if problem_dict.get("mode") == "docs":
                 result_dict[problem_id]["statement_path"] = statement_path
-            result_dict[problem_id].update(self._common_attr)
-            result_dict[problem_id]["output_dir"] = dir_name
+            # sample_path のデフォルトは ss-config.toml 内の tests ディレクトリ
+            result_dict[problem_id].setdefault("sample_path", dir_name / Path("tests"))
+            # output_path のデフォルトは ss-config.toml 内の ss-out ディレクトリ
+            result_dict[problem_id].setdefault("output_path", dir_name / Path("ss-out"))
         return result_dict

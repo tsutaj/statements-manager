@@ -58,18 +58,22 @@ class BaseManager:
             f.write(html)
 
     def run(self):
-        # output directory
-        output_dir = self.problem_attr["output_dir"]
+        logger.info("rendering [problem id: {}]".format(self.problem_attr["id"]))
+
+        # make output directory
+        output_path = self.problem_attr["output_path"]
+        if output_path.exists():
+            logger.info(f"output directory '{output_path}' already exists.")
+        else:
+            output_path.mkdir()
 
         # copy files
         logger.info("setting html style")
         style = self.problem_attr["style"]
         for path in style.get("copied_files", []):
             path = resolve_path(self._cwd, pathlib.Path(path))
-            shutil.copyfile(path, output_dir / pathlib.Path(path.name))
-        logger.info("")
+            shutil.copyfile(path, output_path / pathlib.Path(path.name))
 
-        logger.info("rendering [problem id: {}]".format(self.problem_attr["id"]))
         # create params
         logger.info("create params file")
         if "params_path" in self.problem_attr:
@@ -107,6 +111,6 @@ class BaseManager:
 
         # save html
         logger.info("saving replaced html")
-        output_path = output_dir / pathlib.Path(self.problem_attr["id"] + ".html")
+        output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".html")
         self.save_html(html, output_path)
         logger.info("")

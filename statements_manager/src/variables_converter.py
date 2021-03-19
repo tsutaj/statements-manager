@@ -30,8 +30,11 @@ class VariablesConverter:
             if str(out_filename).lower().find("sample") >= 0:
                 sample_names.append(out_filename.stem)
         for md_filename in problem_attr["sample_path"].glob("./**/*.md"):
-            if md_filename.resolve() != problem_attr["statement_path"].resolve() \
-            and str(md_filename).lower().find("sample") >= 0:
+            if (
+                problem_attr["mode"] == "local"
+                and md_filename.resolve() != problem_attr["statement_path"].resolve()
+                and str(md_filename).lower().find("sample") >= 0
+            ):
                 sample_names.append(md_filename.stem)
         if len(sample_names) == 0:
             logger.warning("samples are not set")

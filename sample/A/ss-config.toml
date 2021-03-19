@@ -8,9 +8,6 @@ id = "A"
 # mode が local である場合、Markdown ファイルへのパスを記載する
 statement_path = "./tests/A.md"
 
-# サンプルが存在する場所
-sample_path = "./tests/"
-
 # 問題制約を書く
 [constraints]
     MIN_AB = 1
