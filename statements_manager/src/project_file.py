@@ -3,7 +3,7 @@ import copy
 from logging import Logger, getLogger
 from typing import MutableMapping, Any
 from pathlib import Path
-from .utils import resolve_path
+from statements_manager.src.utils import resolve_path
 
 logger = getLogger(__name__)  # type: Logger
 

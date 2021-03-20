@@ -8,7 +8,7 @@ from markdown import markdown
 from logging import Logger, getLogger
 from statements_manager.src.params_maker.lang_to_class import lang_to_class
 from statements_manager.src.variables_converter import VariablesConverter
-from ..utils import resolve_path
+from statements_manager.src.utils import resolve_path
 
 logger = getLogger(__name__)  # type: Logger
 

@@ -22,7 +22,6 @@ class VariablesConverter:
 
         # sample_path 以下で、ファイル名に 'sample' を含むものはサンプルであるとする
         sample_names = list()
-        print("sample path:", problem_attr["sample_path"])
         for in_filename in problem_attr["sample_path"].glob("./**/*.in"):
             if str(in_filename).lower().find("sample") >= 0:
                 sample_names.append(in_filename.stem)
