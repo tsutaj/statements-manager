@@ -21,9 +21,9 @@ class ReplaceSampleFormatExpr(Preprocessor):
         new_lines = []
         for line in lines:
             if line.strip().startswith("```"):
-                match = (line.strip() == "```")
+                match = line.strip() == "```"
                 if match and cnt_all % 2 == 0:
-                    new_lines.append('``` { .input-format .input-format }')
+                    new_lines.append("``` { .input-format .input-format }")
                 else:
                     new_lines.append(line)
                 cnt_all += 1
@@ -35,7 +35,9 @@ class ReplaceSampleFormatExpr(Preprocessor):
 
 class ReplaceSampleFormatExprExtension(Extension):
     def extendMarkdown(self, md):
-        md.preprocessors.register(ReplaceSampleFormatExpr(md), "replace_sample_format", 999)
+        md.preprocessors.register(
+            ReplaceSampleFormatExpr(md), "replace_sample_format", 999
+        )
 
 
 class BaseManager:
