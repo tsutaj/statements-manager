@@ -5,12 +5,37 @@ from abc import abstractmethod
 from typing import Any
 from jinja2 import Environment, DictLoader, StrictUndefined
 from markdown import markdown
+from markdown.extensions import Extension
+from markdown.preprocessors import Preprocessor
 from logging import Logger, getLogger
 from statements_manager.src.params_maker.lang_to_class import lang_to_class
 from statements_manager.src.variables_converter import VariablesConverter
 from statements_manager.src.utils import resolve_path
 
 logger = getLogger(__name__)  # type: Logger
+
+
+class ReplaceSampleFormatExpr(Preprocessor):
+    def run(self, lines):
+        cnt_all = 0
+        new_lines = []
+        for line in lines:
+            if line.strip().startswith("```"):
+                match = (line.strip() == "```")
+                if match and cnt_all % 2 == 0:
+                    new_lines.append('``` { .input-format .input-format }')
+                else:
+                    new_lines.append(line)
+                cnt_all += 1
+            else:
+                new_lines.append(line)
+        assert cnt_all % 2 == 0
+        return new_lines
+
+
+class ReplaceSampleFormatExprExtension(Extension):
+    def extendMarkdown(self, md):
+        md.preprocessors.register(ReplaceSampleFormatExpr(md), "replace_sample_format", 999)
 
 
 class BaseManager:
@@ -101,9 +126,11 @@ class BaseManager:
         contents = self.replace_vars(contents)
 
         # convert: markdown -> html
+        replace_sample_format = ReplaceSampleFormatExprExtension()
         html = markdown(
             contents,
             extensions=[
+                replace_sample_format,
                 "md_in_html",
                 "tables",
                 "markdown.extensions.fenced_code",
