@@ -58,7 +58,7 @@ class BaseManager:
             f.write(html)
 
     def run(self):
-        logger.info("rendering [problem id: {}]".format(self.problem_attr["id"]))
+        logger.info(f"rendering [problem id: {self.problem_attr["id"]}]")
 
         # make output directory
         output_path = self.problem_attr["output_path"]
@@ -86,7 +86,7 @@ class BaseManager:
                 params_maker.run()
             else:
                 logger.warning(
-                    "skip creating params: there is no language config which matches '{}'".format(ext)
+                    f"skip creating params: no language config which matches '{ext}'"
                 )
         elif "constraints" not in self.problem_attr:
             logger.warning("skip creating params: constraints are not set")

@@ -15,7 +15,7 @@ class VariablesConverter:
 
         if "constraints" in problem_attr:
             for name, value in problem_attr["constraints"].items():
-                logger.info("constraints: {} => {}".format(name, value))
+                logger.info(f"constraints: {name} => {value}")
                 self.vars["constraints"][name] = self.to_string(value)
         else:
             logger.warning("constraints are not set")
@@ -68,12 +68,12 @@ class VariablesConverter:
             if in_name.exists():
                 with open(in_name, "r") as f:
                     input_txt = f.read()
-                    sample_text += "### 入力例 {}\n".format(n_sample)
+                    sample_text += f"### 入力例 {n_sample}\n"
                     sample_text += "<pre>\n" + input_txt + "</pre>\n"
             if out_name.exists():
                 with open(out_name, "r") as f:
                     output_txt = f.read()
-                    sample_text += "### 出力例 {}\n".format(n_sample)
+                    sample_text += f"### 出力例 {n_sample}\n"
                     sample_text += "<pre>\n" + output_txt + "</pre>\n"
             if md_name.exists():
                 with open(md_name, "r") as f:
@@ -88,11 +88,11 @@ class VariablesConverter:
             if str(value).endswith("000000"):
                 k = math.floor(math.log10(abs(value)))
                 if value == 10 ** k:
-                    return "10^{{{}}}".format(k)
+                    return f"10^{{{k}}}"
                 elif value % (10 ** k) == 0:
-                    return "{} \times 10^{{{}}}".format(value // 10 ** k, k)
+                    return f"{value // 10 ** k} \times 10^{{{k}}}"
                 else:
-                    return "{} \times 10^{{{}}}".format(value / 10 ** k, k)
+                    return f"{value / 10 ** k} \times 10^{{{k}}}"
             else:
                 return format(value, ",").replace(",", "{,}")
         else:
@@ -100,6 +100,6 @@ class VariablesConverter:
 
     def __getitem__(self, key: str) -> dict[str, str]:
         if key not in self.vars:
-            logger.error("unknown key: {}".format(key))
-            raise KeyError("unknown key: {}".format(key))
+            logger.error(f"unknown key: {key}")
+            raise KeyError(f"unknown key: {key}")
         return self.vars[key]

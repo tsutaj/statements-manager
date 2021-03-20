@@ -8,10 +8,10 @@ class CppParamsMaker(ParamsMaker):
         super().__init__(params, output_path)
 
     def parse_int(self, key: str, value: int) -> str:
-        return "const long long int {} = {};".format(key, value)
+        return f"const long long int {key} = {value};"
 
     def parse_float(self, key: str, value: float) -> str:
-        return "const double {} = {};".format(key, value)
+        return f"const double {key} = {value};"
 
     def parse_str(self, key: str, value: str) -> str:
-        return 'const std::string {} = "{}";'.format(key, value)
+        return f'const std::string {key} = "{value}";'

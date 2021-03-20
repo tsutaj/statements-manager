@@ -15,7 +15,7 @@ class ParamsMaker:
         params_lines = []  # type: list[str]
         for key, value in self.params.items():
             if not all(ord(c) < 128 for c in str(value)):
-                logger.warning("ignored parameter: {} => {}".format(key, value))
+                logger.warning(f"ignored parameter: {key} => {value}")
                 continue
 
             if isinstance(value, int):
@@ -26,7 +26,7 @@ class ParamsMaker:
                 value = value.replace(r'"', r"\"")
                 params_lines.append(self.parse_str(key, value))
             else:
-                logger.warning("ignored parameter: {} => {}".format(key, value))
+                logger.warning(f"ignored parameter: {key} => {value}")
 
         with open(self.output_path, "w") as f:
             for line in params_lines:

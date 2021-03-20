@@ -52,23 +52,29 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def run(project_path: str) -> None:
+def run(project_path: str, debug_mode: bool) -> None:
     project_path = str(pathlib.Path(project_path, "project.toml").resolve())
-    logger.debug("run: project_path = '{}'".format(project_path))
+    logger.debug(f"run: project_path = '{project_path}'")
     project = ProjectFile(project_path, default_toml)  # ProjectFile
 
     # check mode
     for project_id, config in project.problem_attr.items():
         mode = config["mode"].lower()  # type: str
         if mode == "docs":
-            logger.info("running in 'docs' mode")
+            if not debug_mode:
+                print(f"{project_id}: running in 'docs' mode")
+            else:
+                logger.info("running in 'docs' mode")
             manager = DocsManager(config)  # type: Union[DocsManager, LocalManager]
         elif mode == "local":
-            logger.info("running in 'local' mode")
+            if not debug_mode:
+                print(f"{project_id}: running in 'local' mode")
+            else:
+                logger.info("running in 'local' mode")
             manager = LocalManager(config)
         else:
-            logger.error("unknown mode: {}".format(mode))
-            raise ValueError("unknown mode: {}".format(mode))
+            logger.error(f"unknown mode: {mode}")
+            raise ValueError(f"unknown mode: {mode}")
         manager.run()
     logger.debug("run command ended successfully.")
 
@@ -78,7 +84,7 @@ def main() -> None:
     args = parser.parse_args()
     set_logger(args.debug)
     if args.subcommand == "run":
-        run(project_path=args.project)
+        run(project_path=args.project, debug_mode=args.debug)
     else:
         parser.print_help()
 
