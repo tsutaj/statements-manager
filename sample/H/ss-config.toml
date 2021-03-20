@@ -8,3 +8,4 @@ id = "H"
 # mode が Docs である場合、Google Docs の Document ID を記載する
 # (Document ID とは Docs の URL にある、ランダムのような文字列のことです)
 statement_path = "1MoguVNpp2SgJvF0ncPbp_8_x2_GhClMijUjF3U3g8ns"
+params_path = "./tests/constraints.hpp"

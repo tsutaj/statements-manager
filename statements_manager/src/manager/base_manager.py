@@ -76,7 +76,7 @@ class BaseManager:
 
         # create params
         logger.info("create params file")
-        if "params_path" in self.problem_attr:
+        if "params_path" in self.problem_attr and "constraints" in self.problem_attr:
             ext = pathlib.Path(self.problem_attr["params_path"]).suffix  # type: str
             if ext in lang_to_class:
                 params_maker = lang_to_class[ext](
@@ -86,10 +86,12 @@ class BaseManager:
                 params_maker.run()
             else:
                 logger.warning(
-                    "skip: there is no language config which matches '{}'".format(ext)
+                    "skip creating params: there is no language config which matches '{}'".format(ext)
                 )
+        elif "constraints" not in self.problem_attr:
+            logger.warning("skip creating params: constraints are not set")
         else:
-            logger.warning("skip: params_path is not set")
+            logger.warning("skip creating params: params_path is not set")
 
         # get contents (main text)
         if "statement_path" not in self.problem_attr:
