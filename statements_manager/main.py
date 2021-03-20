@@ -52,7 +52,7 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def run(project_path: str, debug_mode: bool) -> None:
+def run(project_path: str) -> None:
     project_path = str(pathlib.Path(project_path, "project.toml").resolve())
     logger.debug(f"run: project_path = '{project_path}'")
     project = ProjectFile(project_path, default_toml)  # ProjectFile
@@ -61,16 +61,10 @@ def run(project_path: str, debug_mode: bool) -> None:
     for project_id, config in project.problem_attr.items():
         mode = config["mode"].lower()  # type: str
         if mode == "docs":
-            if not debug_mode:
-                print(f"{project_id}: running in 'docs' mode")
-            else:
-                logger.info("running in 'docs' mode")
+            logger.info("running in 'docs' mode")
             manager = DocsManager(config)  # type: Union[DocsManager, LocalManager]
         elif mode == "local":
-            if not debug_mode:
-                print(f"{project_id}: running in 'local' mode")
-            else:
-                logger.info("running in 'local' mode")
+            logger.info("running in 'local' mode")
             manager = LocalManager(config)
         else:
             logger.error(f"unknown mode: {mode}")
@@ -84,7 +78,7 @@ def main() -> None:
     args = parser.parse_args()
     set_logger(args.debug)
     if args.subcommand == "run":
-        run(project_path=args.project, debug_mode=args.debug)
+        run(project_path=args.project)
     else:
         parser.print_help()
 

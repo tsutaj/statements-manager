@@ -41,6 +41,8 @@ class VariablesConverter:
 
         sample_text_all = ""
         for n_sample, sample_name in enumerate(sample_names, start=1):
+            logger.info(f"replace sample {n_sample} ({sample_name})")
+
             in_name = problem_attr["sample_path"] / pathlib.Path(f"{sample_name}.in")
             out_name = problem_attr["sample_path"] / pathlib.Path(f"{sample_name}.out")
             md_name = problem_attr["sample_path"] / pathlib.Path(f"{sample_name}.md")
@@ -58,12 +60,11 @@ class VariablesConverter:
                 logger.warning(f"{sample_name}: Output file does not exist.")
                 logger.warning("Recognized as input-only sample.")
 
-            # 説明が無いことの報告
+            # サンプルに対する説明が無いことに対する警告 (Markdown があるか)
             if not md_name.exists():
-                logger.info(f"{sample_name}: There is no explanation.")
+                logger.warning(f"{sample_name}: There is no explanation.")
 
             name = "s" + str(n_sample)
-            logger.info(f"replace sample {n_sample}")
             sample_text = ""
             if in_name.exists():
                 with open(in_name, "r") as f:

@@ -58,7 +58,7 @@ class BaseManager:
             f.write(html)
 
     def run(self):
-        logger.info(f"rendering [problem id: {self.problem_attr["id"]}]")
+        logger.info(f"rendering [problem id: {self.problem_attr['id']}]")
 
         # make output directory
         output_path = self.problem_attr["output_path"]
