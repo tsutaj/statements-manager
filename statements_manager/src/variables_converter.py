@@ -39,6 +39,7 @@ class VariablesConverter:
             logger.warning("samples are not set")
         sample_names = sorted(list(set(sample_names)))
 
+        sample_text_all = ""
         for n_sample, sample_name in enumerate(sample_names, start=1):
             in_name = problem_attr["sample_path"] / pathlib.Path(f"{sample_name}.in")
             out_name = problem_attr["sample_path"] / pathlib.Path(f"{sample_name}.out")
@@ -47,19 +48,15 @@ class VariablesConverter:
             # 入力 / 出力のいずれかが欠けている場合は警告だけにとどめる
             if (not in_name.exists()) and (not out_name.exists()):
                 logger.warning(
-                    f"{sample_name}: Neither input-file nor output-file exists. \
-                    Recognized as interactive sample."
+                    f"{sample_name}: Neither input-file nor output-file exists."
                 )
+                logger.warning("Recognized as interactive sample.")
             elif not in_name.exists():
-                logger.warning(
-                    f"{sample_name}: Input file does not exist. \
-                    Recognized as output-only sample."
-                )
+                logger.warning(f"{sample_name}: Input file does not exist.")
+                logger.warning("Recognized as output-only sample.")
             elif not out_name.exists():
-                logger.warning(
-                    f"{sample_name}: Output file does not exist. \
-                    Recognized as input-only sample."
-                )
+                logger.warning(f"{sample_name}: Output file does not exist.")
+                logger.warning("Recognized as input-only sample.")
 
             # 説明が無いことの報告
             if not md_name.exists():
@@ -83,6 +80,8 @@ class VariablesConverter:
                     md_txt = f.read()
                     sample_text += md_txt + "\n"
             self.vars["samples"][name] = sample_text
+            sample_text_all += sample_text
+        self.vars["samples"]["all"] = sample_text_all
 
     def to_string(self, value: Any) -> str:
         if isinstance(value, int):

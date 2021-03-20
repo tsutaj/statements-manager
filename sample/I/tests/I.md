@@ -57,6 +57,6 @@ Java:
 
 ### 入出力例
 
-{@samples.s1}
+{@samples.all}
 
 
