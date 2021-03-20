@@ -14,7 +14,7 @@ setup(
         "google-api-python-client",
         "google-auth-httplib2",
         "google-auth-oauthlib",
-        "markdown",
+        "markdown>=3.3.1",
         "jinja2",
         "toml",
         "colorlog",
