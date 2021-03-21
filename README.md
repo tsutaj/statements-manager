@@ -1,6 +1,6 @@
 # statements-manager
 
-**English description is currently unavailable because this project is still beta-version. Sorry for inconvenience.**
+**English description is under preparation. Sorry for inconvenience.**
 
 競技プログラミングの作問時に使用する、問題文管理を便利にするツール
 
