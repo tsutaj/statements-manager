@@ -60,11 +60,11 @@ class ProjectFile:
     def _search_problem_attr(
         self,
     ) -> MutableMapping[str, Any]:
-        """ss-config.toml が含まれているディレクトリを問題ディレクトリとみなす
+        """problem.toml が含まれているディレクトリを問題ディレクトリとみなす
         問題ごとに設定ファイルを読み込む
         """
         result_dict = {}  # type: MutableMapping[str, Any]
-        for problem_file in sorted(self._cwd.glob("./**/ss-config.toml")):
+        for problem_file in sorted(self._cwd.glob("./**/problem.toml")):
             dir_name = problem_file.parent.resolve()
             problem_dict = toml.load(problem_file)
             if "id" not in problem_dict:
@@ -82,8 +82,8 @@ class ProjectFile:
             # docs モードのときはパスと解釈してはならない
             if problem_dict.get("mode") == "docs":
                 result_dict[problem_id]["statement_path"] = statement_path
-            # sample_path のデフォルトは ss-config.toml 内の tests ディレクトリ
+            # sample_path のデフォルトは problem.toml 内の tests ディレクトリ
             result_dict[problem_id].setdefault("sample_path", dir_name / Path("tests"))
-            # output_path のデフォルトは ss-config.toml 内の ss-out ディレクトリ
+            # output_path のデフォルトは problem.toml 内の ss-out ディレクトリ
             result_dict[problem_id].setdefault("output_path", dir_name / Path("ss-out"))
         return result_dict
