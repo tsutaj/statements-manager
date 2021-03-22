@@ -1,11 +1,14 @@
 import argparse
 import pathlib
+import pickle
+import shutil
 from typing import Union
 from logging import Logger, getLogger, basicConfig
 from statements_manager.src.project_file import ProjectFile
 from statements_manager.src.manager.docs_manager import DocsManager
 from statements_manager.src.manager.local_manager import LocalManager
 from statements_manager.src.config.default import default_toml
+from statements_manager.src.utils import ask_ok, create_token
 
 logger = getLogger(__name__)  # type: Logger
 
@@ -44,15 +47,25 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument("--debug", action="store_true", help="enable debug mode")
     subparsers = parser.add_subparsers(dest="subcommand")
 
-    parser_run = subparsers.add_parser("run")
-    parser_run.add_argument(
+    subparser = subparsers.add_parser("run")
+    subparser.add_argument(
         "project",
-        help="Path to project file",
+        help="Path to a directory which contains 'project.toml'",
+    )
+
+    subparser = subparsers.add_parser("reg-creds")
+    subparser.add_argument(
+        "project",
+        help="Path to a directory which contains 'project.toml'",
+    )
+    subparser.add_argument(
+        "creds",
+        help="Path to credentials file (json)"
     )
     return parser
 
 
-def run(project_path: str) -> None:
+def subcommand_run(project_path: str) -> None:
     project_path = str(pathlib.Path(project_path, "project.toml").resolve())
     logger.debug(f"run: project_path = '{project_path}'")
     project = ProjectFile(project_path, default_toml)  # ProjectFile
@@ -73,12 +86,43 @@ def run(project_path: str) -> None:
     logger.debug("run command ended successfully.")
 
 
+def subcommand_reg_creds(project_path: str, creds_path: str) -> None:
+    # 引数は実在するものでなければならない
+    if not pathlib.Path(project_path).exists():
+        logger.error(f"project {project_path} does not exist")
+        raise IOError(f"project {project_path} does not exist")
+    if not pathlib.Path(creds_path).exists():
+        logger.error(f"credentials {creds_path} does not exist")
+        raise IOError(f"credentials {creds_path} does not exist")
+
+    # 隠しディレクトリ (すでにディレクトリがある場合は更新するか確認)
+    hidden_dir = pathlib.Path(project_path, ".ss-manager")
+    logger.info("register credentials")
+    if not hidden_dir.exists():
+        logger.info(f"create hidden directory: {hidden_dir}")
+        hidden_dir.mkdir()
+    elif not ask_ok(f"{hidden_dir} already exists. Rewrite this?", False):
+        logger.info(f"do nothing (not rewrite)")
+        return
+
+    # ファイルを登録
+    token_path = str(pathlib.Path(hidden_dir, "token.pickle"))
+    token = create_token(creds_path=creds_path, token_path=token_path)
+    with open(token_path, "wb") as f:
+        pickle.dump(token, f)
+    shutil.copy2(creds_path, hidden_dir / pathlib.Path("credentials.json"))
+    logger.info("copied credentials successfully.")
+    logger.debug("reg-creds command ended successfully.")
+
+
 def main() -> None:
     parser = get_parser()
     args = parser.parse_args()
     set_logger(args.debug)
     if args.subcommand == "run":
-        run(project_path=args.project)
+        subcommand_run(project_path=args.project)
+    elif args.subcommand == "reg-creds":
+        subcommand_reg_creds(project_path=args.project, creds_path=args.creds)
     else:
         parser.print_help()
 

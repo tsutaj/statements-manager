@@ -80,8 +80,11 @@ class ProjectFile:
             )
             result_dict[problem_id].update(self._common_attr)
             # docs モードのときはパスと解釈してはならない
+            # credentials と token のパスを付与
             if problem_dict.get("mode") == "docs":
                 result_dict[problem_id]["statement_path"] = statement_path
+                result_dict[problem_id]["creds_path"] = self._cwd / Path(".ss-manager", "credentials.json")
+                result_dict[problem_id]["token_path"] = self._cwd / Path(".ss-manager", "token.pickle")
             # sample_path のデフォルトは problem.toml 内の tests ディレクトリ
             result_dict[problem_id].setdefault("sample_path", dir_name / Path("tests"))
             # output_path のデフォルトは problem.toml 内の ss-out ディレクトリ
