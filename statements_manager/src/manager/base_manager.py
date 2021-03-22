@@ -87,19 +87,12 @@ class BaseManager:
     def run(self):
         logger.info(f"rendering [problem id: {self.problem_attr['id']}]")
 
-        # make output directory
-        output_path = self.problem_attr["output_path"]
-        if output_path.exists():
-            logger.info(f"output directory '{output_path}' already exists.")
-        else:
-            output_path.mkdir()
-
-        # copy files
-        logger.info("setting html style")
-        style = self.problem_attr["style"]
-        for path in style.get("copied_files", []):
-            path = resolve_path(self._cwd, pathlib.Path(path))
-            shutil.copyfile(path, output_path / pathlib.Path(path.name))
+        # get contents (main text)
+        if "statement_path" not in self.problem_attr:
+            logger.error("statement_path is not set")
+            raise KeyError("statement_path is not set")
+        contents = self.get_contents(pathlib.Path(self.problem_attr["statement_path"]))
+        contents = self.replace_vars(contents)
 
         # create params
         logger.info("create params file")
@@ -120,12 +113,30 @@ class BaseManager:
         else:
             logger.warning("skip creating params: params_path is not set")
 
-        # get contents (main text)
-        if "statement_path" not in self.problem_attr:
-            logger.error("statement_path is not set")
-            raise KeyError("statement_path is not set")
-        contents = self.get_contents(pathlib.Path(self.problem_attr["statement_path"]))
-        contents = self.replace_vars(contents)
+        # make output directory
+        output_path = self.problem_attr["output_path"]
+        if output_path.exists():
+            logger.warning(f"output directory '{output_path}' already exists.")
+        else:
+            output_path.mkdir()
+
+        # copy files (related toml: project)
+        logger.info("setting html style")
+        style = self.problem_attr["style"]
+        for path in style.get("copied_files", []):
+            path = resolve_path(self._cwd, pathlib.Path(path))
+            shutil.copy2(path, output_path / pathlib.Path(path.name))
+
+        # copy assets (related toml: problem)
+        assets_src_path = pathlib.Path(
+            pathlib.Path(self.problem_attr["statement_path"]).parent, "assets"
+        )
+        assets_dst_path = output_path / pathlib.Path("assets")
+        if assets_src_path.exists():
+            logger.info("copy assets file")
+            if assets_dst_path.exists():
+                logger.warning(f"assets directory '{assets_dst_path}' already exists.")
+            shutil.copytree(assets_src_path, assets_dst_path, dirs_exist_ok=True)
 
         # convert: markdown -> html
         replace_sample_format = ReplaceSampleFormatExprExtension()
