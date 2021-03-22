@@ -11,6 +11,7 @@ from logging import Logger, getLogger
 from statements_manager.src.params_maker.lang_to_class import lang_to_class
 from statements_manager.src.variables_converter import VariablesConverter
 from statements_manager.src.utils import resolve_path
+from statements_manager.template import template_html
 
 logger = getLogger(__name__)  # type: Logger
 
@@ -65,17 +66,10 @@ class BaseManager:
         return replaced_html
 
     def apply_template(self, html: str) -> str:
-        style = self.problem_attr["style"]
-        if pathlib.Path(style.get("template_path", "")).exists():
-            with open(style["template_path"]) as f:
-                template = f.read()
-        else:
-            template = "{@task.statements}"
-
         env = Environment(
             variable_start_string="{@",
             variable_end_string="}",
-            loader=DictLoader({"template": template}),
+            loader=DictLoader({"template": template_html}),
         )
         replaced_html = env.get_template("template").render(task={"statements": html})
         return replaced_html
@@ -119,13 +113,6 @@ class BaseManager:
             logger.warning(f"output directory '{output_path}' already exists.")
         else:
             output_path.mkdir()
-
-        # copy files (related toml: project)
-        logger.info("setting html style")
-        style = self.problem_attr["style"]
-        for path in style.get("copied_files", []):
-            path = resolve_path(self._cwd, pathlib.Path(path))
-            shutil.copy2(path, output_path / pathlib.Path(path.name))
 
         # copy assets (related toml: problem)
         assets_src_path = pathlib.Path(
