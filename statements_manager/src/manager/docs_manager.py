@@ -2,7 +2,7 @@ import pathlib
 from statements_manager.src.manager.base_manager import BaseManager
 from googleapiclient.discovery import build
 from statements_manager.src.utils import create_token
-from logging import Logger, getLogger, basicConfig
+from logging import Logger, getLogger
 
 logger = getLogger(__name__)  # type: Logger
 
@@ -15,7 +15,7 @@ class DocsManager(BaseManager):
         setting_dir = pathlib.Path(pathlib.Path(problem_attr["creds_path"]).parent)
         if not setting_dir.exists():
             logger.error(f"setting dir '{setting_dir}' does not exist")
-            logger.info(f"tips: try 'ss-manager reg-creds' before running on docs mode.")
+            logger.info("tips: try 'ss-manager reg-creds' before running on docs mode.")
             raise IOError(f"setting dir '{setting_dir}' does not exist")
 
         self.token = create_token(

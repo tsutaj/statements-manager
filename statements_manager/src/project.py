@@ -8,16 +8,9 @@ from statements_manager.src.utils import resolve_path
 logger = getLogger(__name__)  # type: Logger
 
 
-class ProjectFile:
-    def __init__(self, project_path: str, default_toml: str) -> None:
-        if not Path(project_path).exists():
-            logger.error(f"project {project_path} does not exist.")
-            raise IOError(f"project {project_path} does not exist.")
-
-        project = toml.load(project_path)  # type: MutableMapping[str, Any]
-        default = toml.loads(default_toml)  # type: MutableMapping[str, Any]
-        self._cwd = Path(project_path).parent.resolve()
-        self._common_attr = self._merge_dict(project, default, self._cwd)
+class Project:
+    def __init__(self, working_dir: str) -> None:
+        self._cwd = Path(working_dir).resolve()
         self.problem_attr = self._search_problem_attr()
 
     def _merge_dict(
@@ -44,17 +37,6 @@ class ProjectFile:
         for k, v in result_dict.items():
             if k.endswith("_path"):
                 result_dict[k] = resolve_path(base_path, Path(v))
-        for k, v in result_dict.get("docs", {}).items():
-            if k.endswith("_path"):
-                result_dict["docs"][k] = resolve_path(base_path, Path(v))
-        for k, v in result_dict.get("style", {}).items():
-            if k.endswith("_path"):
-                result_dict["style"][k] = resolve_path(base_path, Path(v))
-            if k == "copied_files":
-                for i in range(len(result_dict["style"][k])):
-                    result_dict["style"][k][i] = resolve_path(
-                        base_path, Path(result_dict["style"][k][i])
-                    )
         return result_dict
 
     def _search_problem_attr(
@@ -78,13 +60,16 @@ class ProjectFile:
             result_dict[problem_id] = self._to_absolute_path(
                 problem_dict, problem_file.parent
             )
-            result_dict[problem_id].update(self._common_attr)
             # docs モードのときはパスと解釈してはならない
             # credentials と token のパスを付与
             if problem_dict.get("mode") == "docs":
                 result_dict[problem_id]["statement_path"] = statement_path
-                result_dict[problem_id]["creds_path"] = self._cwd / Path(".ss-manager", "credentials.json")
-                result_dict[problem_id]["token_path"] = self._cwd / Path(".ss-manager", "token.pickle")
+                result_dict[problem_id]["creds_path"] = self._cwd / Path(
+                    ".ss-manager", "credentials.json"
+                )
+                result_dict[problem_id]["token_path"] = self._cwd / Path(
+                    ".ss-manager", "token.pickle"
+                )
             # sample_path のデフォルトは problem.toml 内の tests ディレクトリ
             result_dict[problem_id].setdefault("sample_path", dir_name / Path("tests"))
             # output_path のデフォルトは problem.toml 内の ss-out ディレクトリ
