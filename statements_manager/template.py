@@ -1,3 +1,4 @@
+# flake8: noqa
 template_html = """
 <!DOCTYPE html>
 <html lang="ja">
