@@ -135,5 +135,6 @@ token.pickle
 #*
 output/
 batch.sh
+run.sh
 ss-out/
 constraints.hpp
