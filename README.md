@@ -4,6 +4,10 @@
 
 競技プログラミングの作問時に使用する、問題文管理を便利にするツール
 
+## Screencast
+
+![Peek 2021-03-23 12-17](https://user-images.githubusercontent.com/19629946/112087941-427fd900-8bd2-11eb-8cd5-e76bb73a8e23.gif)
+
 ## Getting Started
 
 ### Quickstart (とにかく動作させたい人向け)
