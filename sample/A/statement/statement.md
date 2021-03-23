@@ -1,12 +1,12 @@
 # A+B
 
-## 問題文
+## Problem statement
 
-整数 $A$ と $B$ が与えられます。$A + B$ の計算結果を出力してください。
+You are given two integers $A$ and $B$. Print $A + B$.
 
-ケースは $T$ 個与えられますので、$T$ 行出力してください。
+The number of given testcases is $T$, so you have to print $T$ lines.
 
-## 入力
+## Input
 
 ```
 $T$
@@ -16,17 +16,17 @@ $A_2$ $B_2$
 $A_T$ $B_T$
 ```
 
-- {@constraints.ALL_INPUTS_ARE_INTEGERS}
+- All inputs are integers.
 - ${@constraints.MIN_T} \leq T \leq {@constraints.MAX_T}$
-- ${@constraints.MIN_AB} \leq A, B \leq {@constraints.MAX_AB}$
+- ${@constraints.MIN_AB} \leq A_i, B_i \leq {@constraints.MAX_AB}$
 
-## 出力
+## Output
 
-$T$ 行出力してください。
+Output $T$ lines.
 
-$i$ 行目には $A_i + B_i$ の結果を出力してください。
+You have to output the calculation result of $A_i + B_i$ on $i$-th line.
 
-## 入出力例
+## Sample
 
 {@samples.all}
 

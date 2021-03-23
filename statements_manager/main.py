@@ -69,11 +69,12 @@ def subcommand_run(working_dir: str) -> None:
     # check mode
     for problem_id, config in project.problem_attr.items():
         mode = config["mode"].lower()  # type: str
+        lang = config["lang"].lower()  # type: str
         if mode == "docs":
-            logger.info("running in 'docs' mode")
+            logger.info(f"running in 'docs' mode (lang: {lang})")
             manager = DocsManager(config)  # type: Union[DocsManager, LocalManager]
         elif mode == "local":
-            logger.info("running in 'local' mode")
+            logger.info(f"running in 'local' mode (lang: {lang})")
             manager = LocalManager(config)
         else:
             logger.error(f"unknown mode: {mode}")

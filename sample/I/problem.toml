@@ -1,5 +1,6 @@
 # 問題文が存在する場所に応じてモードを選ぶ (必須: "docs" or "local")
 mode = "local"
+lang = "ja"
 
 # 問題 ID (必須: 出力 html 名にも使用される)
 id = "I"

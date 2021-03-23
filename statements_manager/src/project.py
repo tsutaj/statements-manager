@@ -74,4 +74,7 @@ class Project:
             result_dict[problem_id].setdefault("sample_path", dir_name / Path("tests"))
             # output_path のデフォルトは problem.toml 内の ss-out ディレクトリ
             result_dict[problem_id].setdefault("output_path", dir_name / Path("ss-out"))
+            # 言語のデフォルトは英語
+            result_dict[problem_id].setdefault("lang", "en")
+            result_dict[problem_id]["lang"].lower()
         return result_dict
