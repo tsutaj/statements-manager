@@ -10,7 +10,7 @@ from markdown.preprocessors import Preprocessor
 from logging import Logger, getLogger
 from statements_manager.src.params_maker.lang_to_class import lang_to_class
 from statements_manager.src.variables_converter import VariablesConverter
-from statements_manager.src.utils import resolve_path
+from statements_manager.template import template_html
 
 logger = getLogger(__name__)  # type: Logger
 
@@ -44,6 +44,7 @@ class BaseManager:
     def __init__(self, problem_attr):
         self._cwd = pathlib.Path.cwd()
         self.problem_attr = problem_attr  # type: dict[str, Any]
+        self.state = True
 
     @abstractmethod
     def get_contents(self, statement_path: pathlib.Path) -> str:
@@ -65,17 +66,10 @@ class BaseManager:
         return replaced_html
 
     def apply_template(self, html: str) -> str:
-        style = self.problem_attr["style"]
-        if pathlib.Path(style.get("template_path", "")).exists():
-            with open(style["template_path"]) as f:
-                template = f.read()
-        else:
-            template = "{@task.statements}"
-
         env = Environment(
             variable_start_string="{@",
             variable_end_string="}",
-            loader=DictLoader({"template": template}),
+            loader=DictLoader({"template": template_html}),
         )
         replaced_html = env.get_template("template").render(task={"statements": html})
         return replaced_html
@@ -85,21 +79,18 @@ class BaseManager:
             f.write(html)
 
     def run(self):
+        if not self.state:
+            logger.info(f"skipped [problem id: {self.problem_attr['id']}]")
+            return
+
         logger.info(f"rendering [problem id: {self.problem_attr['id']}]")
 
-        # make output directory
-        output_path = self.problem_attr["output_path"]
-        if output_path.exists():
-            logger.info(f"output directory '{output_path}' already exists.")
-        else:
-            output_path.mkdir()
-
-        # copy files
-        logger.info("setting html style")
-        style = self.problem_attr["style"]
-        for path in style.get("copied_files", []):
-            path = resolve_path(self._cwd, pathlib.Path(path))
-            shutil.copyfile(path, output_path / pathlib.Path(path.name))
+        # get contents (main text)
+        if "statement_path" not in self.problem_attr:
+            logger.error("statement_path is not set")
+            raise KeyError("statement_path is not set")
+        contents = self.get_contents(pathlib.Path(self.problem_attr["statement_path"]))
+        contents = self.replace_vars(contents)
 
         # create params
         logger.info("create params file")
@@ -120,12 +111,28 @@ class BaseManager:
         else:
             logger.warning("skip creating params: params_path is not set")
 
-        # get contents (main text)
-        if "statement_path" not in self.problem_attr:
-            logger.error("statement_path is not set")
-            raise KeyError("statement_path is not set")
-        contents = self.get_contents(pathlib.Path(self.problem_attr["statement_path"]))
-        contents = self.replace_vars(contents)
+        # make output directory
+        output_path = self.problem_attr["output_path"]
+        if output_path.exists():
+            logger.warning(f"output directory '{output_path}' already exists.")
+        else:
+            output_path.mkdir()
+
+        # copy assets (related toml: problem)
+        if "assets_path" in self.problem_attr:
+            assets_src_path = pathlib.Path(self.problem_attr["assets_path"])
+            assets_dst_path = output_path / pathlib.Path("assets")
+            if assets_src_path.exists():
+                logger.info("copy assets file")
+                if assets_dst_path.exists():
+                    logger.warning(
+                        f"assets directory '{assets_dst_path}' already exists."
+                    )
+                shutil.copytree(assets_src_path, assets_dst_path, dirs_exist_ok=True)
+            else:
+                logger.warning(
+                    f"assets_path '{self.problem_attr['assets_path']}' does not exist."
+                )
 
         # convert: markdown -> html
         replace_sample_format = ReplaceSampleFormatExprExtension()
@@ -144,4 +151,3 @@ class BaseManager:
         logger.info("saving replaced html")
         output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".html")
         self.save_html(html, output_path)
-        logger.info("")

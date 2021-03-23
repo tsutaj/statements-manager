@@ -1,18 +1,17 @@
-# 問題文が存在する場所に応じてモードを選ぶ
+# choose mode ('docs' or 'local')
 mode = "local"
 
-# 問題 ID (必須, 出力 html 名にも使用される)
+# problem id (it is used for the name of output html file)
 id = "A"
 
-# 問題文が格納されている場所
-# mode が local である場合、Markdown ファイルへのパスを記載する
-statement_path = "./tests/statement.md"
+# pato to a statement, output params
+statement_path = "./statement/statement.md"
 params_path = "./tests/constraints.hpp"
 
-# 問題制約を書く
+# write constraints
 [constraints]
     MIN_AB = 1
     MAX_AB = 1_000_000_000
     MIN_T = 1
     MAX_T = 100_000
-    ALL_INPUTS_ARE_INTEGERS = "入力は全て整数で与えられる"
+

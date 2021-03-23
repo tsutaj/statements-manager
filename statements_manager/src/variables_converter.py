@@ -20,6 +20,10 @@ class VariablesConverter:
         else:
             logger.warning("constraints are not set")
 
+        if "sample_path" not in problem_attr:
+            logger.warning("samples are not set")
+            return
+
         # sample_path 以下で、ファイル名に 'sample' を含むものはサンプルであるとする
         sample_names = list()
         for in_filename in problem_attr["sample_path"].glob("./**/*.in"):
@@ -69,12 +73,24 @@ class VariablesConverter:
             if in_name.exists():
                 with open(in_name, "r") as f:
                     input_txt = f.read()
-                    sample_text += f"### 入力例 {n_sample}\n"
+                    if problem_attr["lang"] == "en":
+                        sample_text += f"### Sample Input {n_sample}\n"
+                    elif problem_attr["lang"] == "ja":
+                        sample_text += f"### 入力例 {n_sample}\n"
+                    else:
+                        logger.error(f"unknown lang: '{problem_attr['lang']}'")
+                        raise ValueError(f"unknown lang: '{problem_attr['lang']}'")
                     sample_text += "<pre>\n" + input_txt + "</pre>\n"
             if out_name.exists():
                 with open(out_name, "r") as f:
                     output_txt = f.read()
-                    sample_text += f"### 出力例 {n_sample}\n"
+                    if problem_attr["lang"] == "en":
+                        sample_text += f"### Sample Output {n_sample}\n"
+                    elif problem_attr["lang"] == "ja":
+                        sample_text += f"### 出力例 {n_sample}\n"
+                    else:
+                        logger.error(f"unknown lang: '{problem_attr['lang']}'")
+                        raise ValueError(f"unknown lang: '{problem_attr['lang']}'")
                     sample_text += "<pre>\n" + output_txt + "</pre>\n"
             if md_name.exists():
                 with open(md_name, "r") as f:

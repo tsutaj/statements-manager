@@ -1,1 +1,2 @@
-末尾も改行が必要であることに注意してください。
+Note that a new-line is required in the end of output.
+

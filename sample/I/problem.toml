@@ -1,13 +1,15 @@
 # 問題文が存在する場所に応じてモードを選ぶ (必須: "docs" or "local")
 mode = "local"
+lang = "ja"
 
 # 問題 ID (必須: 出力 html 名にも使用される)
 id = "I"
 
 # 問題文が格納されている場所
 # mode が local である場合、Markdown ファイルへのパスを記載する
-statement_path = "./tests/statement.md"
+statement_path = "./statement/statement.md"
 params_path = "./tests/constraints.hpp"
+assets_path = "./statement/assets/"
 
 # 問題制約を書く
 [constraints]
