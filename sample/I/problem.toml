@@ -9,6 +9,7 @@ id = "I"
 # mode が local である場合、Markdown ファイルへのパスを記載する
 statement_path = "./statement/statement.md"
 params_path = "./tests/constraints.hpp"
+assets_path = "./statement/assets/"
 
 # 問題制約を書く
 [constraints]

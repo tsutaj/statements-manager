@@ -20,6 +20,10 @@ class VariablesConverter:
         else:
             logger.warning("constraints are not set")
 
+        if "sample_path" not in problem_attr:
+            logger.warning("samples are not set")
+            return
+
         # sample_path 以下で、ファイル名に 'sample' を含むものはサンプルであるとする
         sample_names = list()
         for in_filename in problem_attr["sample_path"].glob("./**/*.in"):

@@ -80,6 +80,7 @@ def subcommand_run(working_dir: str) -> None:
             logger.error(f"unknown mode: {mode}")
             raise ValueError(f"unknown mode: {mode}")
         manager.run()
+        logger.info("")
     logger.debug("run command ended successfully.")
 
 

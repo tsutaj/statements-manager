@@ -44,6 +44,7 @@ class BaseManager:
     def __init__(self, problem_attr):
         self._cwd = pathlib.Path.cwd()
         self.problem_attr = problem_attr  # type: dict[str, Any]
+        self.state = True
 
     @abstractmethod
     def get_contents(self, statement_path: pathlib.Path) -> str:
@@ -78,6 +79,10 @@ class BaseManager:
             f.write(html)
 
     def run(self):
+        if not self.state:
+            logger.info(f"skipped [problem id: {self.problem_attr['id']}]")
+            return
+
         logger.info(f"rendering [problem id: {self.problem_attr['id']}]")
 
         # get contents (main text)
@@ -114,15 +119,20 @@ class BaseManager:
             output_path.mkdir()
 
         # copy assets (related toml: problem)
-        assets_src_path = pathlib.Path(
-            pathlib.Path(self.problem_attr["statement_path"]).parent, "assets"
-        )
-        assets_dst_path = output_path / pathlib.Path("assets")
-        if assets_src_path.exists():
-            logger.info("copy assets file")
-            if assets_dst_path.exists():
-                logger.warning(f"assets directory '{assets_dst_path}' already exists.")
-            shutil.copytree(assets_src_path, assets_dst_path, dirs_exist_ok=True)
+        if "assets_path" in self.problem_attr:
+            assets_src_path = pathlib.Path(self.problem_attr["assets_path"])
+            assets_dst_path = output_path / pathlib.Path("assets")
+            if assets_src_path.exists():
+                logger.info("copy assets file")
+                if assets_dst_path.exists():
+                    logger.warning(
+                        f"assets directory '{assets_dst_path}' already exists."
+                    )
+                shutil.copytree(assets_src_path, assets_dst_path, dirs_exist_ok=True)
+            else:
+                logger.warning(
+                    f"assets_path '{self.problem_attr['assets_path']}' does not exist."
+                )
 
         # convert: markdown -> html
         replace_sample_format = ReplaceSampleFormatExprExtension()
@@ -141,4 +151,3 @@ class BaseManager:
         logger.info("saving replaced html")
         output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".html")
         self.save_html(html, output_path)
-        logger.info("")

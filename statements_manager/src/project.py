@@ -12,6 +12,28 @@ class Project:
     def __init__(self, working_dir: str) -> None:
         self._cwd = Path(working_dir).resolve()
         self.problem_attr = self._search_problem_attr()
+        self._check_project()
+
+    def _check_project(self) -> None:
+        acceptable_attr = [
+            "mode",
+            "id",
+            "statement_path",
+            "lang",
+            "assets_path",
+            "sample_path",
+            "params_path",
+            "constraints",
+            # これ以下はユーザーが設定しない属性
+            "output_path",
+            "creds_path",
+            "token_path",
+        ]
+        for problem in self.problem_attr.values():
+            for key in problem.keys():
+                if key not in acceptable_attr:
+                    logger.error(f"unknown attribute in setting file: '{key}'")
+                    raise KeyError(f"unknown attribute in setting file: '{key}'")
 
     def _merge_dict(
         self,

@@ -15,8 +15,11 @@ class DocsManager(BaseManager):
         setting_dir = pathlib.Path(pathlib.Path(problem_attr["creds_path"]).parent)
         if not setting_dir.exists():
             logger.error(f"setting dir '{setting_dir}' does not exist")
-            logger.info("tips: try 'ss-manager reg-creds' before running on docs mode.")
-            raise IOError(f"setting dir '{setting_dir}' does not exist")
+            logger.warning(
+                "tips: try 'ss-manager reg-creds' before running on docs mode."
+            )
+            self.state = False
+            return
 
         self.token = create_token(
             creds_path=problem_attr["creds_path"],
