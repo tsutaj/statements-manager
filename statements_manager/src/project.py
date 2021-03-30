@@ -9,8 +9,9 @@ logger = getLogger(__name__)  # type: Logger
 
 
 class Project:
-    def __init__(self, working_dir: str) -> None:
+    def __init__(self, working_dir: str, output: str) -> None:
         self._cwd = Path(working_dir).resolve()
+        self._output = output
         self.problem_attr = self._search_problem_attr()
         self._check_project()
 
@@ -26,6 +27,7 @@ class Project:
             "constraints",
             # これ以下はユーザーが設定しない属性
             "output_path",
+            "output_ext",
             "creds_path",
             "token_path",
         ]
@@ -96,6 +98,8 @@ class Project:
             result_dict[problem_id].setdefault("sample_path", dir_name / Path("tests"))
             # output_path のデフォルトは problem.toml 内の ss-out ディレクトリ
             result_dict[problem_id].setdefault("output_path", dir_name / Path("ss-out"))
+            # output_ext (出力ファイルの拡張子)
+            result_dict[problem_id]["output_ext"] = self._output
             # 言語のデフォルトは英語
             result_dict[problem_id].setdefault("lang", "en")
             result_dict[problem_id]["lang"].lower()
