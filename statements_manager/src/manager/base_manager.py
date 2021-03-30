@@ -153,7 +153,7 @@ class BaseManager:
                 extension_configs={
                     "pymdownx.pathconverter": {
                         "absolute": True,
-                        "base_path": output_path,
+                        "base_path": output_path.resolve(),
                     }
                 },
             )
