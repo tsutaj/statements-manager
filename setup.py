@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="statements-manager",
-    version="1.2.0",
+    version="1.3.0",
     author="Yuya Sugie",
     author_email="y.sugie.15739d@gmail.com",
     url="https://github.com/tsutaj/statements-manager",
