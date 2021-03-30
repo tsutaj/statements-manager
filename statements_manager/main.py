@@ -58,7 +58,7 @@ def get_parser() -> argparse.ArgumentParser:
         "-o",
         "--output",
         default="html",
-        choices=["html", "md"],
+        choices=["html", "md", "pdf"],
         help="output format (defaults to 'html')",
     )
 

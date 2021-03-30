@@ -1,6 +1,8 @@
 from __future__ import annotations
 import pathlib
 import shutil
+import pdfkit
+import pymdownx
 from abc import abstractmethod
 from typing import Any
 from jinja2 import Environment, DictLoader, StrictUndefined
@@ -10,7 +12,7 @@ from markdown.preprocessors import Preprocessor
 from logging import Logger, getLogger
 from statements_manager.src.params_maker.lang_to_class import lang_to_class
 from statements_manager.src.variables_converter import VariablesConverter
-from statements_manager.template import template_html
+from statements_manager.template import template_html, template_pdf_options
 
 logger = getLogger(__name__)  # type: Logger
 
@@ -136,7 +138,7 @@ class BaseManager:
 
         output_ext = self.problem_attr["output_ext"]
         logger.info(f"saving replaced {output_ext}")
-        if output_ext == "html":
+        if output_ext == "html" or output_ext == "pdf":
             # convert: markdown -> html
             replace_sample_format = ReplaceSampleFormatExprExtension()
             html = markdown(
@@ -146,13 +148,23 @@ class BaseManager:
                     "md_in_html",
                     "tables",
                     "markdown.extensions.fenced_code",
+                    "pymdownx.pathconverter",
                 ],
+                extension_configs={
+                    'pymdownx.pathconverter': {
+                        'absolute': True,
+                        'base_path': output_path,
+                    }
+                },
             )
             html = self.apply_template(html)
 
-            # save html
-            output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".html")
-            self.save_html(html, output_path)
+            if output_ext == "html":
+                output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".html")
+                self.save_html(html, output_path)
+            elif output_ext == "pdf":
+                output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".pdf")
+                pdfkit.from_string(html, output_path, options=template_pdf_options)
         elif output_ext == "md":
             output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".md")
             with open(output_path, "w") as f:

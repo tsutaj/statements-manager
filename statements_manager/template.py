@@ -8,6 +8,7 @@ template_html = """
     <style type="text/css">
       html {
           color: #222222;
+          font-family: 'Times New Roman', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', meiryo, Verdana, "lr oSVbN";
       }
 
       h1{
@@ -48,12 +49,12 @@ template_html = """
 
       p{
           font-size:12pt;
-          font-family: 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', meiryo, Verdana, "lr oSVbN"; 
+          font-family: 'Times New Roman', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', meiryo, Verdana, "lr oSVbN"; 
       }
 
       li{
           font-size:12pt;
-          font-family: 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', meiryo, Verdana, "lr oSVbN"; 
+          font-family: 'Times New Roman', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', meiryo, Verdana, "lr oSVbN"; 
       }
 
       pre {
@@ -97,21 +98,16 @@ template_html = """
         word-break: break-word;
       }
     </style>
-    <script>
-      MathJax = {
-          options: {
-              processHtmlClass: 'input-format|language-input-format'
-          },
-          chtml: {
-              matchFontHeight: false
-          },
-          tex: {
-              inlineMath: [['$', '$']]
-          }
-      };
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [["$", "$"]],
+                processEscapes: true,
+                processClass: 'input-format|language-input-format'
+            }
+        });
     </script>
-    <script id="MathJax-script" async
-            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML">
     </script>
   </head>
   <body>
@@ -119,3 +115,14 @@ template_html = """
   </body>
 </html>
 """
+
+template_pdf_options = {
+    'page-size': 'A4',
+    'margin-top': 24,
+    'margin-right': 16,
+    'margin-bottom': 16,
+    'margin-left': 16,
+    'encoding': 'UTF-8',
+    'javascript-delay': '3000',
+    'enable-local-file-access': None,
+}
