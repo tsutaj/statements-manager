@@ -134,8 +134,14 @@ ss-manager reg-creds WORKING_DIR CREDS_PATH
 以下のコマンドで、プロジェクトファイルで定義された各問題を HTML 化できます。出力された HTML は、各問題ディレクトリ内の `ss-out` ディレクトリに格納されます。
 
 ```bash
-ss-manager run WORKING_DIR
+ss-manager run [-o OUTPUT] WORKING_DIR
 ```
+
+- `WORKING_DIR`: 各問題ディレクトリの 1 つ上の階層
+- `OUTPUT`: 以下のうちいずれか 1 つを指定します。指定しなかった場合は `html` が指定されているものとして扱われます。
+  - `html` (default): HTML を出力
+  - `md`: Markdown を出力
+  - `pdf`: PDF を出力
 
 ## Links
 
