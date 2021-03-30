@@ -138,7 +138,22 @@ class BaseManager:
 
         output_ext = self.problem_attr["output_ext"]
         logger.info(f"saving replaced {output_ext}")
-        if output_ext == "html" or output_ext == "pdf":
+        if output_ext == "html":
+            # convert: markdown -> html
+            replace_sample_format = ReplaceSampleFormatExprExtension()
+            html = markdown(
+                contents,
+                extensions=[
+                    replace_sample_format,
+                    "md_in_html",
+                    "tables",
+                    "markdown.extensions.fenced_code",
+                ],
+            )
+            html = self.apply_template(html)
+            output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".html")
+            self.save_html(html, output_path)
+        elif output_ext == "pdf":
             # convert: markdown -> html
             replace_sample_format = ReplaceSampleFormatExprExtension()
             html = markdown(
@@ -158,17 +173,8 @@ class BaseManager:
                 },
             )
             html = self.apply_template(html)
-
-            if output_ext == "html":
-                output_path = output_path / pathlib.Path(
-                    self.problem_attr["id"] + ".html"
-                )
-                self.save_html(html, output_path)
-            elif output_ext == "pdf":
-                output_path = output_path / pathlib.Path(
-                    self.problem_attr["id"] + ".pdf"
-                )
-                pdfkit.from_string(html, output_path, options=template_pdf_options)
+            output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".pdf")
+            pdfkit.from_string(html, output_path, options=template_pdf_options)
         elif output_ext == "md":
             output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".md")
             with open(output_path, "w") as f:
