@@ -117,12 +117,12 @@ template_html = """
 """
 
 template_pdf_options = {
-    'page-size': 'A4',
-    'margin-top': 24,
-    'margin-right': 16,
-    'margin-bottom': 16,
-    'margin-left': 16,
-    'encoding': 'UTF-8',
-    'javascript-delay': '3000',
-    'enable-local-file-access': None,
+    "page-size": "A4",
+    "margin-top": 24,
+    "margin-right": 16,
+    "margin-bottom": 16,
+    "margin-left": 16,
+    "encoding": "UTF-8",
+    "javascript-delay": "3000",
+    "enable-local-file-access": None,
 }

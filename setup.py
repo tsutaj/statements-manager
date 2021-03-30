@@ -19,7 +19,7 @@ setup(
         "toml",
         "colorlog",
         "pdfkit",
-        "pymdown-extensions"
+        "pymdown-extensions",
     ],
     packages=find_packages(exclude=("sample", "config")),
     entry_points={

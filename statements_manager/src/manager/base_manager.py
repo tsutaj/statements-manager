@@ -2,7 +2,7 @@ from __future__ import annotations
 import pathlib
 import shutil
 import pdfkit
-import pymdownx
+import pymdownx  # noqa: F401
 from abc import abstractmethod
 from typing import Any
 from jinja2 import Environment, DictLoader, StrictUndefined
@@ -151,19 +151,23 @@ class BaseManager:
                     "pymdownx.pathconverter",
                 ],
                 extension_configs={
-                    'pymdownx.pathconverter': {
-                        'absolute': True,
-                        'base_path': output_path,
+                    "pymdownx.pathconverter": {
+                        "absolute": True,
+                        "base_path": output_path,
                     }
                 },
             )
             html = self.apply_template(html)
 
             if output_ext == "html":
-                output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".html")
+                output_path = output_path / pathlib.Path(
+                    self.problem_attr["id"] + ".html"
+                )
                 self.save_html(html, output_path)
             elif output_ext == "pdf":
-                output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".pdf")
+                output_path = output_path / pathlib.Path(
+                    self.problem_attr["id"] + ".pdf"
+                )
                 pdfkit.from_string(html, output_path, options=template_pdf_options)
         elif output_ext == "md":
             output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".md")
