@@ -134,20 +134,29 @@ class BaseManager:
                     f"assets_path '{self.problem_attr['assets_path']}' does not exist."
                 )
 
-        # convert: markdown -> html
-        replace_sample_format = ReplaceSampleFormatExprExtension()
-        html = markdown(
-            contents,
-            extensions=[
-                replace_sample_format,
-                "md_in_html",
-                "tables",
-                "markdown.extensions.fenced_code",
-            ],
-        )
-        html = self.apply_template(html)
+        output_ext = self.problem_attr["output_ext"]
+        logger.info(f"saving replaced {output_ext}")
+        if output_ext == "html":
+            # convert: markdown -> html
+            replace_sample_format = ReplaceSampleFormatExprExtension()
+            html = markdown(
+                contents,
+                extensions=[
+                    replace_sample_format,
+                    "md_in_html",
+                    "tables",
+                    "markdown.extensions.fenced_code",
+                ],
+            )
+            html = self.apply_template(html)
 
-        # save html
-        logger.info("saving replaced html")
-        output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".html")
-        self.save_html(html, output_path)
+            # save html
+            output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".html")
+            self.save_html(html, output_path)
+        elif output_ext == "md":
+            output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".md")
+            with open(output_path, "w") as f:
+                f.write(contents)
+        else:
+            logger.error(f"invalid extension '{output_ext}'")
+            raise ValueError(f"invalid extension '{output_ext}'")
