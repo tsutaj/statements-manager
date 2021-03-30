@@ -46,25 +46,35 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument("--debug", action="store_true", help="enable debug mode")
     subparsers = parser.add_subparsers(dest="subcommand")
 
-    subparser = subparsers.add_parser("run")
+    subparser = subparsers.add_parser(
+        "run",
+        help="generate statement file(s)",
+    )
     subparser.add_argument(
         "working_dir",
-        help="Path to a working directory.",
+        help="path to a working directory",
+    )
+    subparser.add_argument(
+        "-o",
+        "--output",
+        default="html",
+        choices=["html", "md", "pdf"],
+        help="output format (defaults to 'html')",
     )
 
-    subparser = subparsers.add_parser("reg-creds")
+    subparser = subparsers.add_parser("reg-creds", help="register credentials file")
     subparser.add_argument(
         "working_dir",
-        help="Path to a working directory.",
+        help="path to a working directory",
     )
-    subparser.add_argument("creds", help="Path to credentials file (json)")
+    subparser.add_argument("creds", help="path to credentials file (json)")
     return parser
 
 
-def subcommand_run(working_dir: str) -> None:
+def subcommand_run(working_dir: str, output: str) -> None:
     working_dir = str(pathlib.Path(working_dir).resolve())
     logger.debug(f"run: working_dir = '{working_dir}'")
-    project = Project(working_dir)  # Project
+    project = Project(working_dir, output)  # Project
 
     # check mode
     for problem_id, config in project.problem_attr.items():
@@ -118,7 +128,7 @@ def main() -> None:
     args = parser.parse_args()
     set_logger(args.debug)
     if args.subcommand == "run":
-        subcommand_run(working_dir=args.working_dir)
+        subcommand_run(working_dir=args.working_dir, output=args.output)
     elif args.subcommand == "reg-creds":
         subcommand_reg_creds(working_dir=args.working_dir, creds_path=args.creds)
     else:
