@@ -18,6 +18,8 @@ setup(
         "jinja2",
         "toml",
         "colorlog",
+        "pdfkit",
+        "pymdown-extensions",
     ],
     packages=find_packages(exclude=("sample", "config")),
     entry_points={
