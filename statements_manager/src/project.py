@@ -3,8 +3,6 @@ import copy
 from logging import Logger, getLogger
 from typing import MutableMapping, Any
 from pathlib import Path
-from statements_manager.src.manager.docs_manager import DocsManager  # noqa: F401
-from statements_manager.src.manager.local_manager import LocalManager  # noqa: F401
 from statements_manager.src.utils import resolve_path
 
 logger = getLogger(__name__)  # type: Logger
