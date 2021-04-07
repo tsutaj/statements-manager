@@ -3,6 +3,8 @@ import copy
 from logging import Logger, getLogger
 from typing import MutableMapping, Any
 from pathlib import Path
+from statements_manager.src.manager.docs_manager import DocsManager  # noqa: F401
+from statements_manager.src.manager.local_manager import LocalManager  # noqa: F401
 from statements_manager.src.utils import resolve_path
 
 logger = getLogger(__name__)  # type: Logger
@@ -11,9 +13,21 @@ logger = getLogger(__name__)  # type: Logger
 class Project:
     def __init__(self, working_dir: str, output: str) -> None:
         self._cwd = Path(working_dir).resolve()
-        self._output = output
+        self._output = output  # type: str
+        self._problemset_html = ""  # type: str
+        self.stmts_manager = None  # type: Any
         self.problem_attr = self._search_problem_attr()
         self._check_project()
+
+    def run_problem(self) -> None:
+        if len(self._problemset_html):
+            self._problemset_html += '<div style="page-break-after:always;"></div>'
+        if self.stmts_manager is not None:
+            self._problemset_html += self.stmts_manager.run_problem()
+
+    def run_problemset(self) -> None:
+        if self.stmts_manager is not None:
+            self.stmts_manager.run_problemset(self._problemset_html, self._cwd)
 
     def _check_project(self) -> None:
         acceptable_attr = [
