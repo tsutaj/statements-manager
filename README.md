@@ -129,7 +129,7 @@ ss-manager reg-creds WORKING_DIR CREDS_PATH
   - 問題制約を記述します
   - `[定数名] = [定数]` のように記載します
 
-### 4. 各ファイルを HTML 化する
+### 4. 各ファイルを HTML / PDF / Markdown 化する
 
 以下のコマンドで、プロジェクトファイルで定義された各問題を HTML 化できます。出力された HTML は、各問題ディレクトリ内の `ss-out` ディレクトリに格納されます。
 
@@ -142,6 +142,7 @@ ss-manager run [-o OUTPUT] WORKING_DIR
   - `html` (default): HTML を出力
   - `md`: Markdown を出力
   - `pdf`: PDF を出力
+    - `-o` オプションで `pdf` を指定した場合のみ、セット全体の PDF も出力するようになっています。`WORKING_DIR` 直下に `problemset.pdf` というファイルが出力されます。
 
 ## Links
 
