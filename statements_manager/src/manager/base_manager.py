@@ -4,7 +4,7 @@ import shutil
 import pdfkit
 import pymdownx  # noqa: F401
 from abc import abstractmethod
-from typing import Any
+from typing import Any, cast
 from jinja2 import Environment, DictLoader, StrictUndefined
 from markdown import markdown
 from markdown.extensions import Extension
@@ -80,10 +80,10 @@ class BaseManager:
         with open(output_path, "w") as f:
             f.write(html)
 
-    def run(self):
+    def run_problem(self) -> str:
         if not self.state:
             logger.info(f"skipped [problem id: {self.problem_attr['id']}]")
-            return
+            return ""
 
         logger.info(f"rendering [problem id: {self.problem_attr['id']}]")
 
@@ -137,6 +137,7 @@ class BaseManager:
                 )
 
         output_ext = self.problem_attr["output_ext"]
+        result_html = ""
         logger.info(f"saving replaced {output_ext}")
         if output_ext == "html":
             # convert: markdown -> html
@@ -172,8 +173,14 @@ class BaseManager:
                     }
                 },
             )
+            result_html = html
             html = self.apply_template(html)
             output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".pdf")
+
+            wait_second = (
+                int(cast(int, template_pdf_options["javascript-delay"])) // 1000
+            )
+            logger.info(f"please wait... ({wait_second} sec or greater)")
             pdfkit.from_string(html, output_path, options=template_pdf_options)
         elif output_ext == "md":
             output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".md")
@@ -182,3 +189,22 @@ class BaseManager:
         else:
             logger.error(f"invalid extension '{output_ext}'")
             raise ValueError(f"invalid extension '{output_ext}'")
+        return result_html
+
+    def run_problemset(self, problemset_html: str, output_path: pathlib.Path) -> None:
+        # PDF 出力モード以外で実行された場合は何もしない
+        if len(problemset_html) == 0:
+            return
+
+        logger.info("create problemset pdf")
+        html = self.apply_template(problemset_html)
+        if output_path.exists():
+            logger.warning(f"output directory '{output_path}' already exists.")
+        else:
+            output_path.mkdir()
+
+        output_path = output_path / pathlib.Path("problemset.pdf")
+        template_pdf_options["javascript-delay"] = 10000
+        wait_second = int(cast(int, template_pdf_options["javascript-delay"])) // 1000
+        logger.info(f"please wait... ({wait_second} sec or greater)")
+        pdfkit.from_string(html, output_path, options=template_pdf_options)

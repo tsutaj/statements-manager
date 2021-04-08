@@ -124,5 +124,11 @@ template_pdf_options = {
     "margin-left": 16,
     "encoding": "UTF-8",
     "javascript-delay": "3000",
+    # "header-center": "hoge",
+    # "header-font-size": 10,
+    # "header-spacing": 12,
+    # "footer-center": "[page] / [toPage]",
+    # "footer-font-size": 8,
+    # "footer-spacing": 8,
     "enable-local-file-access": None,
 }

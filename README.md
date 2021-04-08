@@ -6,8 +6,9 @@
 
 ## What is this?
 
-- Markdown 形式で記述された問題文ファイルを HTML 形式に変換して出力します
-- 問題の制約・サンプル管理の一本化
+- Markdown 形式で記述された「制約やサンプルの情報を外部に委ねた」問題文ファイルを、 HTML / PDF / Markdown 形式に変換して出力します
+  - 制約やサンプルは問題文に直接的には書きません。詳しくは後述
+- **特長**: 問題の制約・サンプル管理の一本化
   - 問題制約は、問題設定ファイル内で記述します
   - 定義したものを問題文ファイルで利用することができるほか、generator / validator で利用可能な形で出力することができます
   - **「制約やサンプルを途中で変更したので、問題文・generator / validator の双方をそれぞれ変更する」という作業をする必要がなくなります**
@@ -71,6 +72,8 @@ pip install statements-manager
 
 **注意: Google Docs にある問題文を扱いたい場合は、この操作が必須となります。** 問題文がすべてローカル環境に存在する場合はこの操作は不要です。
 
+作業ディレクトリ `WORKING_DIR` に対して、以下で説明する credentials というものを登録します。
+
 - [Google Docs - Quickstart](https://developers.google.com/docs/api/quickstart/python#step_1_turn_on_the) の "Step 1: Turn on the Google Docs API" 内にある "Enable the Google Docs API" を押して、API を使える状態にします
   - 扱いたい Docs ファイルが閲覧できる権限を持っているアカウントで作成しなければならないはずですので、アカウントの選択に注意してください
   - Project name の入力を求められるかもしれません。名前は何でもいいと思います
@@ -129,7 +132,7 @@ ss-manager reg-creds WORKING_DIR CREDS_PATH
   - 問題制約を記述します
   - `[定数名] = [定数]` のように記載します
 
-### 4. 各ファイルを HTML 化する
+### 4. 各ファイルを HTML / PDF / Markdown 化する
 
 以下のコマンドで、プロジェクトファイルで定義された各問題を HTML 化できます。出力された HTML は、各問題ディレクトリ内の `ss-out` ディレクトリに格納されます。
 
@@ -142,6 +145,7 @@ ss-manager run [-o OUTPUT] WORKING_DIR
   - `html` (default): HTML を出力
   - `md`: Markdown を出力
   - `pdf`: PDF を出力
+    - `-o` オプションで `pdf` を指定した場合のみ、セット全体の PDF も出力するようになっています。`WORKING_DIR` 直下に `problemset.pdf` というファイルが出力されます。
 
 ## Links
 
