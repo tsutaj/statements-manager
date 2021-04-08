@@ -177,7 +177,9 @@ class BaseManager:
             html = self.apply_template(html)
             output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".pdf")
 
-            wait_second = cast(int, template_pdf_options["javascript-delay"]) // 1000
+            wait_second = (
+                int(cast(int, template_pdf_options["javascript-delay"])) // 1000
+            )
             logger.info(f"please wait... ({wait_second} sec or greater)")
             pdfkit.from_string(html, output_path, options=template_pdf_options)
         elif output_ext == "md":
@@ -203,6 +205,6 @@ class BaseManager:
 
         output_path = output_path / pathlib.Path("problemset.pdf")
         template_pdf_options["javascript-delay"] = 10000
-        wait_second = cast(int, template_pdf_options["javascript-delay"]) // 1000
+        wait_second = int(cast(int, template_pdf_options["javascript-delay"])) // 1000
         logger.info(f"please wait... ({wait_second} sec or greater)")
         pdfkit.from_string(html, output_path, options=template_pdf_options)

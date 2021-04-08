@@ -1,7 +1,7 @@
 import toml
 import copy
 from logging import Logger, getLogger
-from typing import MutableMapping, Any
+from typing import MutableMapping, Any, List
 from pathlib import Path
 from statements_manager.src.utils import resolve_path
 
@@ -12,20 +12,23 @@ class Project:
     def __init__(self, working_dir: str, output: str) -> None:
         self._cwd = Path(working_dir).resolve()
         self._output = output  # type: str
-        self._problemset_html = ""  # type: str
+        self._problemset_html_list = []  # type: List[str]
         self.stmts_manager = None  # type: Any
         self.problem_attr = self._search_problem_attr()
         self._check_project()
 
     def run_problem(self) -> None:
-        if len(self._problemset_html):
-            self._problemset_html += '<div style="page-break-after:always;"></div>'
         if self.stmts_manager is not None:
-            self._problemset_html += self.stmts_manager.run_problem()
+            problem_html = self.stmts_manager.run_problem()  # type: str
+            if len(problem_html) > 0:
+                self._problemset_html_list.append(problem_html)
 
     def run_problemset(self) -> None:
+        problemset_html = '<div style="page-break-after:always;"></div>'.join(
+            self._problemset_html_list
+        )
         if self.stmts_manager is not None:
-            self.stmts_manager.run_problemset(self._problemset_html, self._cwd)
+            self.stmts_manager.run_problemset(problemset_html, self._cwd)
 
     def _check_project(self) -> None:
         acceptable_attr = [
