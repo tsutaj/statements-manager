@@ -2,7 +2,6 @@ import argparse
 import pathlib
 import pickle
 import shutil
-from typing import Union
 from logging import Logger, getLogger, basicConfig
 from statements_manager.src.project import Project
 from statements_manager.src.manager.docs_manager import DocsManager
@@ -82,15 +81,18 @@ def subcommand_run(working_dir: str, output: str) -> None:
         lang = config["lang"].lower()  # type: str
         if mode == "docs":
             logger.info(f"running in 'docs' mode (lang: {lang})")
-            manager = DocsManager(config)  # type: Union[DocsManager, LocalManager]
+            project.stmts_manager = DocsManager(config)
         elif mode == "local":
             logger.info(f"running in 'local' mode (lang: {lang})")
-            manager = LocalManager(config)
+            project.stmts_manager = LocalManager(config)
         else:
             logger.error(f"unknown mode: {mode}")
             raise ValueError(f"unknown mode: {mode}")
-        manager.run()
+        project.run_problem()
         logger.info("")
+
+    logger.debug("run for problem set")
+    project.run_problemset()
     logger.debug("run command ended successfully.")
 
 
