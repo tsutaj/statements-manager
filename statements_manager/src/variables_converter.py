@@ -12,7 +12,14 @@ class VariablesConverter:
         self.vars = {}  # type: dict[str, Any]
         self.vars["constraints"] = {}  # dict[str, str]
         self.vars["samples"] = {}  # dict[str, str]
+        self._convert_constraints(problem_attr)
+        self._convert_samples(problem_attr)
 
+    def _convert_constraints(self, problem_attr: dict[str, Any]) -> None:
+        """
+        - 制約を文字列型に変換しつつ格納
+        - 数値について: 桁が大きい場合は指数表記に直され、そうでない場合はカンマがつく
+        """
         if "constraints" in problem_attr:
             for name, value in problem_attr["constraints"].items():
                 logger.info(f"constraints: {name} => {value}")
@@ -20,6 +27,13 @@ class VariablesConverter:
         else:
             logger.warning("constraints are not set")
 
+    def _convert_samples(self, problem_attr: dict[str, Any]) -> None:
+        """
+        - `sample_path` が指定されていない場合: 警告を出して抜ける
+        - `sample_path` が指定されている場合
+            - 指定ディレクトリ以下で `sample` を含むものは、すべてサンプルに関するファイルとみなす
+            - 入出力の存在判定によってどのような形式 (通常 / input-only / output-only / インタラクティブ) かを判断
+        """
         if "sample_path" not in problem_attr:
             logger.warning("samples are not set")
             return
@@ -34,8 +48,7 @@ class VariablesConverter:
                 sample_names.append(out_filename.stem)
         for md_filename in problem_attr["sample_path"].glob("./**/*.md"):
             if (
-                problem_attr["mode"] == "local"
-                and md_filename.resolve() != problem_attr["statement_path"].resolve()
+                md_filename.resolve() != problem_attr["statement_path"].resolve()
                 and str(md_filename).lower().find("sample") >= 0
             ):
                 sample_names.append(md_filename.stem)

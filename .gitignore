@@ -138,3 +138,4 @@ batch.sh
 run.sh
 ss-out/
 constraints.hpp
+virtualenv/
