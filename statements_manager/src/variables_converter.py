@@ -107,9 +107,9 @@ class VariablesConverter:
                 if value == 10 ** k:
                     return f"10^{{{k}}}"
                 elif value % (10 ** k) == 0:
-                    return f"{value // 10 ** k} \times 10^{{{k}}}"
+                    return f"{value // 10 ** k} \\times 10^{{{k}}}"
                 else:
-                    return f"{value / 10 ** k} \times 10^{{{k}}}"
+                    return f"{value / 10 ** k} \\times 10^{{{k}}}"
             else:
                 return format(value, ",").replace(",", "{,}")
         else:
