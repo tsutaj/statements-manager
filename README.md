@@ -183,3 +183,8 @@ ss-manager run [-o OUTPUT] WORKING_DIR
 - [library-checker-problems](https://github.com/yosupo06/library-checker-problems)
   - 当アプリケーションの機能は、これの影響を強く受けています
   - library-cheker-problems の作問機能で出来ることを網羅しつつ、Rime と親和性が良い設計にし、さらに作問時に便利な Google Docs とも連携させたいというモチベーションがあり、このアプリケーションが作られました
+
+
+## For Contributors
+
+- 本リポジトリへの Issue / PR など、なんでも歓迎です。詳細は [`CONTRIBUTING`](./CONTRIBUTING.md) をご覧ください。
