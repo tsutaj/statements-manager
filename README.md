@@ -1,5 +1,7 @@
 # statements-manager
 
+![PyPI](https://img.shields.io/pypi/v/statements-manager) [![Python Versions](https://img.shields.io/pypi/pyversions/statements-manager.svg)](https://pypi.org/project/statements-manager/)
+
 **English description is under preparation. Sorry for inconvenience.**
 
 競技プログラミングの作問時に使用する、問題文管理を便利にするツール
