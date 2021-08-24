@@ -3,13 +3,13 @@ from setuptools import find_packages, setup
 
 setup(
     name="statements-manager",
-    version="1.4.3",
+    version="1.4.4",
     author="Yuya Sugie",
     author_email="y.sugie.15739d@gmail.com",
     url="https://github.com/tsutaj/statements-manager",
     license="Apache License 2.0",
     description="",
-    python_requires=">=3.7",
+    python_requires=">=3.8",
     install_requires=[
         "google-api-python-client",
         "google-auth-httplib2",
