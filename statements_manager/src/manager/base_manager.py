@@ -12,6 +12,7 @@ from jinja2 import DictLoader, Environment, StrictUndefined
 from markdown import markdown
 from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
+
 from statements_manager.src.params_maker.lang_to_class import lang_to_class
 from statements_manager.src.variables_converter import VariablesConverter
 from statements_manager.template import template_html, template_pdf_options

@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any, List, MutableMapping
 
 import toml
+
 from statements_manager.src.manager.docs_manager import DocsManager
 from statements_manager.src.manager.local_manager import LocalManager
 from statements_manager.src.manager.recognize_mode import recognize_mode

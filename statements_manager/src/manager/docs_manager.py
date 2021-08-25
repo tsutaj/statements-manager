@@ -2,6 +2,7 @@ import pathlib
 from logging import Logger, getLogger
 
 from googleapiclient.discovery import build
+
 from statements_manager.src.manager.base_manager import BaseManager
 from statements_manager.src.utils import create_token
 
