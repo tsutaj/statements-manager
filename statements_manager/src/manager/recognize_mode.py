@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pathlib
 from logging import Logger, getLogger
-from typing import Any, MutableMapping
+from typing import Any
 from urllib.parse import urlparse
 
 logger = getLogger(__name__)  # type: Logger
@@ -19,7 +19,7 @@ def is_valid_url(url: str) -> bool:
         return False
 
 
-def recognize_mode(config: MutableMapping[str, Any], base_path: pathlib.Path) -> str:
+def recognize_mode(config: dict[str, Any], base_path: pathlib.Path) -> str:
     """
     recognize execute mode. ("docs" or "local")
     """

@@ -4,7 +4,7 @@ import pathlib
 import shutil
 from abc import abstractmethod
 from logging import Logger, getLogger
-from typing import Any, MutableMapping, cast
+from typing import Any, cast
 
 import pdfkit
 import pymdownx  # noqa: F401
@@ -46,7 +46,7 @@ class ReplaceSampleFormatExprExtension(Extension):
 
 
 class BaseManager:
-    def __init__(self, problem_attr: MutableMapping[str, Any]):
+    def __init__(self, problem_attr: dict[str, Any]):
         self._cwd = pathlib.Path.cwd()
         self.problem_attr = problem_attr  # type: dict[str, Any]
         self.state = True

@@ -1,7 +1,9 @@
+from __future__ import annotations
+
 import copy
 from logging import Logger, getLogger
 from pathlib import Path
-from typing import Any, List, MutableMapping
+from typing import Any, List
 
 import toml
 
@@ -22,7 +24,7 @@ class Project:
         self.problem_attr = self._search_problem_attr()
         self._check_project()
 
-    def set_config(self, config: MutableMapping[str, Any], mode: str) -> None:
+    def set_config(self, config: dict[str, Any], mode: str) -> None:
         if mode == "docs":
             self.stmts_manager = DocsManager(config)
         elif mode == "local":
@@ -65,10 +67,10 @@ class Project:
 
     def _merge_dict(
         self,
-        lhs: MutableMapping[str, Any],
-        rhs: MutableMapping[str, Any],
+        lhs: dict[str, Any],
+        rhs: dict[str, Any],
         base_path: Path,
-    ) -> MutableMapping[str, Any]:
+    ) -> dict[str, Any]:
         """lhs に rhs の内容をマージする
         lhs にキーがあればそちらを優先し、なければ rhs の情報を用いる
         """
@@ -77,8 +79,8 @@ class Project:
         return self._to_absolute_path(result_dict, base_path)
 
     def _to_absolute_path(
-        self, setting_dict: MutableMapping[str, Any], base_path: Path
-    ) -> MutableMapping[str, Any]:
+        self, setting_dict: dict[str, Any], base_path: Path
+    ) -> dict[str, Any]:
         """setting_dict に含まれているキーの中で
         '_path' で終わるもの全てに対して、値を絶対パスに変更 (既に絶対パスなら何もしない)
         ただし docs mode の場合の statement_path は置換しない
@@ -94,11 +96,11 @@ class Project:
 
     def _search_problem_attr(
         self,
-    ) -> MutableMapping[str, Any]:
+    ) -> dict[str, Any]:
         """problem.toml が含まれているディレクトリを問題ディレクトリとみなす
         問題ごとに設定ファイルを読み込む
         """
-        result_dict = {}  # type: MutableMapping[str, Any]
+        result_dict = {}  # type: dict[str, Any]
         for problem_file in sorted(self._cwd.glob("./**/problem.toml")):
             dir_name = problem_file.parent.resolve()
             problem_dict = toml.load(problem_file)
