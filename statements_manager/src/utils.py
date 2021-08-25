@@ -1,8 +1,9 @@
 import pickle
 from pathlib import Path
-from typing import Union, Tuple, Any
-from google_auth_oauthlib.flow import InstalledAppFlow
+from typing import Any, Tuple, Union
+
 from google.auth.transport.requests import Request
+from google_auth_oauthlib.flow import InstalledAppFlow
 
 
 def resolve_path(base_path: Path, path: Path) -> Path:
