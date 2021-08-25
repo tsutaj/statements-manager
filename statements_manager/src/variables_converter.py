@@ -1,8 +1,9 @@
 from __future__ import annotations
-import pathlib
+
 import math
-from typing import Any
+import pathlib
 from logging import Logger, getLogger
+from typing import Any
 
 logger = getLogger(__name__)  # type: Logger
 

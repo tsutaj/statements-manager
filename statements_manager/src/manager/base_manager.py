@@ -1,15 +1,17 @@
 from __future__ import annotations
+
 import pathlib
 import shutil
+from abc import abstractmethod
+from logging import Logger, getLogger
+from typing import Any, MutableMapping, cast
+
 import pdfkit
 import pymdownx  # noqa: F401
-from abc import abstractmethod
-from typing import Any, cast
-from jinja2 import Environment, DictLoader, StrictUndefined
+from jinja2 import DictLoader, Environment, StrictUndefined
 from markdown import markdown
 from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
-from logging import Logger, getLogger
 from statements_manager.src.params_maker.lang_to_class import lang_to_class
 from statements_manager.src.variables_converter import VariablesConverter
 from statements_manager.template import template_html, template_pdf_options
@@ -43,7 +45,7 @@ class ReplaceSampleFormatExprExtension(Extension):
 
 
 class BaseManager:
-    def __init__(self, problem_attr):
+    def __init__(self, problem_attr: MutableMapping[str, Any]):
         self._cwd = pathlib.Path.cwd()
         self.problem_attr = problem_attr  # type: dict[str, Any]
         self.state = True

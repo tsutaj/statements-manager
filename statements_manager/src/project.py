@@ -1,8 +1,12 @@
-import toml
 import copy
 from logging import Logger, getLogger
-from typing import MutableMapping, Any, List
 from pathlib import Path
+from typing import Any, List, MutableMapping
+
+import toml
+from statements_manager.src.manager.docs_manager import DocsManager
+from statements_manager.src.manager.local_manager import LocalManager
+from statements_manager.src.manager.recognize_mode import recognize_mode
 from statements_manager.src.utils import resolve_path
 
 logger = getLogger(__name__)  # type: Logger
@@ -16,6 +20,12 @@ class Project:
         self.stmts_manager = None  # type: Any
         self.problem_attr = self._search_problem_attr()
         self._check_project()
+
+    def set_config(self, config: MutableMapping[str, Any], mode: str) -> None:
+        if mode == "docs":
+            self.stmts_manager = DocsManager(config)
+        elif mode == "local":
+            self.stmts_manager = LocalManager(config)
 
     def run_problem(self) -> None:
         if self.stmts_manager is not None:
@@ -99,6 +109,12 @@ class Project:
             result_dict[problem_id] = self._to_absolute_path(
                 problem_dict, problem_file.parent
             )
+
+            # mode の自動認識
+            if "mode" not in result_dict[problem_id]:
+                result_dict[problem_id]["mode"] = recognize_mode(
+                    result_dict[problem_id]
+                )
             # docs モードのときはパスと解釈してはならない
             # credentials と token のパスを付与
             if problem_dict.get("mode") == "docs":
@@ -117,5 +133,5 @@ class Project:
             result_dict[problem_id]["output_ext"] = self._output
             # 言語のデフォルトは英語
             result_dict[problem_id].setdefault("lang", "en")
-            result_dict[problem_id]["lang"].lower()
+            result_dict[problem_id]["lang"] = result_dict[problem_id]["lang"].lower()
         return result_dict
