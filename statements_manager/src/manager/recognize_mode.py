@@ -19,7 +19,7 @@ def is_valid_url(url: str) -> bool:
         return False
 
 
-def recognize_mode(config: MutableMapping[str, Any]) -> str:
+def recognize_mode(config: MutableMapping[str, Any], base_path: pathlib.Path) -> str:
     """
     recognize execute mode. ("docs" or "local")
     """
@@ -30,7 +30,7 @@ def recognize_mode(config: MutableMapping[str, Any]) -> str:
 
     statement_path = config["statement_path"]
     # if "statement_path" is valid as local path, it may be "local"
-    if pathlib.Path(statement_path).exists():
+    if (base_path / pathlib.Path(statement_path)).exists():
         return "local"
     # otherwise, it may be "docs"
     # it is either in URL-format or in ID-format.

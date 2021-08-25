@@ -80,11 +80,14 @@ class Project:
     ) -> MutableMapping[str, Any]:
         """setting_dict に含まれているキーの中で
         '_path' で終わるもの全てに対して、値を絶対パスに変更 (既に絶対パスなら何もしない)
+        ただし docs mode の場合の statement_path は置換しない
         """
         base_path = base_path.resolve()
         result_dict = copy.deepcopy(setting_dict)
         for k, v in result_dict.items():
-            if k.endswith("_path"):
+            if k.endswith("_path") and not (
+                setting_dict["mode"] == "docs" and k == "statement_path"
+            ):
                 result_dict[k] = resolve_path(base_path, Path(v))
         return result_dict
 
@@ -104,21 +107,22 @@ class Project:
             elif problem_dict["id"] in result_dict:
                 logger.error(f'problem id \'{problem_dict["id"]}\' appears twice')
                 raise ValueError(f'problem id \'{problem_dict["id"]}\' appears twice')
-            statement_path = problem_dict.get("statement_path")
             problem_id = problem_dict["id"]
+
+            # mode の自動認識 (ここで mode が確定)
+            if "mode" not in problem_dict:
+                mode = recognize_mode(problem_dict, problem_file.parent)
+                problem_dict["mode"] = mode
+
+            # 各プロパティは絶対パスに変換される
+            # これ以降に problem_dict を使うことはない
             result_dict[problem_id] = self._to_absolute_path(
                 problem_dict, problem_file.parent
             )
 
-            # mode の自動認識
-            if "mode" not in result_dict[problem_id]:
-                result_dict[problem_id]["mode"] = recognize_mode(
-                    result_dict[problem_id]
-                )
             # docs モードのときはパスと解釈してはならない
             # credentials と token のパスを付与
-            if problem_dict.get("mode") == "docs":
-                result_dict[problem_id]["statement_path"] = statement_path
+            if result_dict[problem_id].get("mode") == "docs":
                 result_dict[problem_id]["creds_path"] = self._cwd / Path(
                     ".ss-manager", "credentials.json"
                 )
