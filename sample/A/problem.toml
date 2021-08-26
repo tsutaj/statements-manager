@@ -5,7 +5,10 @@ mode = "local"
 id = "A"
 
 # pato to a statement, output params
-statement_path = "./statement/statement.md"
+statements_info = [
+    "./statement/statement_ja.md",
+    "./statement/statement_en.md",
+]
 params_path = "./tests/constraints.hpp"
 
 # write constraints
@@ -14,4 +17,3 @@ params_path = "./tests/constraints.hpp"
     MAX_AB = 1_000_000_000
     MIN_T = 1
     MAX_T = 100_000
-

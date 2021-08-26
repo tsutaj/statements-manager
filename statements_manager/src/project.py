@@ -32,10 +32,12 @@ class Project:
 
     def _check_project(self) -> None:
         acceptable_attr = [
-            "mode",
-            "id",
+            # 問題ファイルごとに値が異なる属性
+            "mode",  # deprecated
             "statement_path",
             "lang",
+            # problem.toml 内の問題ファイルそれぞれに共通して使われる属性
+            "id",
             "assets_path",
             "sample_path",
             "params_path",
