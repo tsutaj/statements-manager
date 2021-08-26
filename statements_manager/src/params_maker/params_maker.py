@@ -1,7 +1,8 @@
 from __future__ import annotations
+
 from abc import abstractmethod
-from typing import Any
 from logging import Logger, getLogger
+from typing import Any
 
 logger = getLogger(__name__)  # type: Logger
 

@@ -2,10 +2,9 @@ import argparse
 import pathlib
 import pickle
 import shutil
-from logging import Logger, getLogger, basicConfig
+from logging import Logger, basicConfig, getLogger
+
 from statements_manager.src.project import Project
-from statements_manager.src.manager.docs_manager import DocsManager
-from statements_manager.src.manager.local_manager import LocalManager
 from statements_manager.src.utils import ask_ok, create_token
 
 logger = getLogger(__name__)  # type: Logger
@@ -79,12 +78,13 @@ def subcommand_run(working_dir: str, output: str) -> None:
     for problem_id, config in project.problem_attr.items():
         mode = config["mode"].lower()  # type: str
         lang = config["lang"].lower()  # type: str
+
         if mode == "docs":
             logger.info(f"running in 'docs' mode (lang: {lang})")
-            project.stmts_manager = DocsManager(config)
+            project.set_config(config, mode="docs")
         elif mode == "local":
             logger.info(f"running in 'local' mode (lang: {lang})")
-            project.stmts_manager = LocalManager(config)
+            project.set_config(config, mode="local")
         else:
             logger.error(f"unknown mode: {mode}")
             raise ValueError(f"unknown mode: {mode}")
