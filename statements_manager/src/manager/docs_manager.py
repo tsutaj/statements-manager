@@ -1,8 +1,10 @@
 import pathlib
-from statements_manager.src.manager.base_manager import BaseManager
-from googleapiclient.discovery import build
-from statements_manager.src.utils import create_token
 from logging import Logger, getLogger
+
+from googleapiclient.discovery import build
+
+from statements_manager.src.manager.base_manager import BaseManager
+from statements_manager.src.utils import create_token
 
 logger = getLogger(__name__)  # type: Logger
 

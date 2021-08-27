@@ -1,8 +1,9 @@
 from __future__ import annotations
-import pathlib
+
 import math
-from typing import Any
+import pathlib
 from logging import Logger, getLogger
+from typing import Any
 
 logger = getLogger(__name__)  # type: Logger
 
@@ -40,18 +41,24 @@ class VariablesConverter:
 
         # sample_path 以下で、ファイル名に 'sample' を含むものはサンプルであるとする
         sample_names = list()
-        for in_filename in problem_attr["sample_path"].glob("./**/*.in"):
+        for in_filename in problem_attr["sample_path"].glob("./*.in"):
             if str(in_filename).lower().find("sample") >= 0:
                 sample_names.append(in_filename.stem)
-        for out_filename in problem_attr["sample_path"].glob("./**/*.out"):
+        for out_filename in problem_attr["sample_path"].glob("./*.out"):
             if str(out_filename).lower().find("sample") >= 0:
                 sample_names.append(out_filename.stem)
-        for md_filename in problem_attr["sample_path"].glob("./**/*.md"):
+        for md_filename in problem_attr["sample_path"].glob("./*.md"):
             if (
-                md_filename.resolve() != problem_attr["statement_path"].resolve()
+                pathlib.Path(md_filename).resolve()
+                != problem_attr["statement_path"].resolve()
                 and str(md_filename).lower().find("sample") >= 0
             ):
                 sample_names.append(md_filename.stem)
+        for exp_filename in problem_attr["sample_path"].glob(
+            f"./{problem_attr['lang']}/*.md"
+        ):
+            if str(exp_filename).lower().find("sample") >= 0:
+                sample_names.append(exp_filename.stem)
         if len(sample_names) == 0:
             logger.warning("samples are not set")
         sample_names = sorted(list(set(sample_names)))
@@ -63,6 +70,9 @@ class VariablesConverter:
             in_name = problem_attr["sample_path"] / pathlib.Path(f"{sample_name}.in")
             out_name = problem_attr["sample_path"] / pathlib.Path(f"{sample_name}.out")
             md_name = problem_attr["sample_path"] / pathlib.Path(f"{sample_name}.md")
+            exp_name = problem_attr["sample_path"] / pathlib.Path(
+                f"{problem_attr['lang']}/{sample_name}.md"
+            )
 
             # 入力 / 出力のいずれかが欠けている場合は警告だけにとどめる
             if (not in_name.exists()) and (not out_name.exists()):
@@ -78,7 +88,7 @@ class VariablesConverter:
                 logger.warning("Recognized as input-only sample.")
 
             # サンプルに対する説明が無いことに対する警告 (Markdown があるか)
-            if not md_name.exists():
+            if not exp_name.exists():
                 logger.warning(f"{sample_name}: There is no explanation.")
 
             name = "s" + str(n_sample)
@@ -109,6 +119,10 @@ class VariablesConverter:
                 with open(md_name, "r") as f:
                     md_txt = f.read()
                     sample_text += md_txt + "\n"
+            if exp_name.exists():
+                with open(exp_name, "r") as f:
+                    exp_txt = f.read()
+                    sample_text += exp_txt + "\n"
             self.vars["samples"][name] = sample_text
             sample_text_all += sample_text
         self.vars["samples"]["all"] = sample_text_all
