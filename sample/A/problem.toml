@@ -2,9 +2,9 @@
 id = "A"
 
 # pato to a statement, output params
-statements_info = [
-    "./statement/statement_ja.md",
-    "./statement/statement_en.md",
+statements_path = [
+    ["./statement/statement_ja.md", "ja"],
+    ["./statement/statement_en.md", "en"],
 ]
 params_path = "./tests/constraints.hpp"
 

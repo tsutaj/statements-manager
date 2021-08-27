@@ -1,5 +1,3 @@
-lang = "ja"
-
 # 問題 ID (必須, 出力 html 名にも使用される)
 id = "H"
 
@@ -7,7 +5,11 @@ id = "H"
 # mode が Docs である場合、Google Docs の URL または Document ID を記載する
 # (Document ID とは Docs の URL にある、ランダムのような文字列のことです)
 # 以下に示す 2 種類の書き方が許容される
-statement_path = "1MoguVNpp2SgJvF0ncPbp_8_x2_GhClMijUjF3U3g8ns"
-# statement_path = "https://docs.google.com/document/d/1MoguVNpp2SgJvF0ncPbp_8_x2_GhClMijUjF3U3g8ns/edit?usp=sharing"
+statements_path = [
+  ["1MoguVNpp2SgJvF0ncPbp_8_x2_GhClMijUjF3U3g8ns", "ja"],
+]
+# statement_path = [
+# "https://docs.google.com/document/d/1MoguVNpp2SgJvF0ncPbp_8_x2_GhClMijUjF3U3g8ns/edit?usp=sharing"
+# ]
 
 params_path = "./tests/constraints.hpp"
