@@ -1,11 +1,13 @@
 # problem id (it is used for the name of output html file)
 id = "A"
 
-# pato to a statement, output params
+# pato to statements
 statements_path = [
     ["./statement/statement_ja.md", "ja"],
     ["./statement/statement_en.md", "en"],
 ]
+
+# output params
 params_path = "./tests/constraints.hpp"
 
 # write constraints

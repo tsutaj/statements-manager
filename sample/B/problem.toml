@@ -4,7 +4,7 @@ id = "B"
 # 問題文が格納されている場所
 # mode が local である場合、Markdown ファイルへのパスを記載する
 statements_path = [
-    ["./statement/statement_ja.md", "ja"],
+    ["./statement/statement.md", "ja"],
 ]
 params_path = "./tests/constraints.hpp"
 
