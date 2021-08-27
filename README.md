@@ -20,7 +20,7 @@
 
 ## Screencast
 
-![Peek 2021-03-23 12-17](https://user-images.githubusercontent.com/19629946/112087941-427fd900-8bd2-11eb-8cd5-e76bb73a8e23.gif)
+![screencast](https://user-images.githubusercontent.com/19629946/131149286-39111b9b-9719-4693-98f9-88ed8caea34d.gif)
 
 ## Quickstart
 
