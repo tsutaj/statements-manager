@@ -1,15 +1,14 @@
 # 問題 ID (必須, 出力 html 名にも使用される)
 id = "H"
 
-# 問題文が格納されている場所 (必須)
-# mode が Docs である場合、Google Docs の URL または Document ID を記載する
-# (Document ID とは Docs の URL にある、ランダムのような文字列のことです)
-# 以下に示す 2 種類の書き方が許容される
-statements_path = [
-  ["1MoguVNpp2SgJvF0ncPbp_8_x2_GhClMijUjF3U3g8ns", "ja"],
-]
-# statement_path = [
-#   ["https://docs.google.com/document/d/1MoguVNpp2SgJvF0ncPbp_8_x2_GhClMijUjF3U3g8ns/edit?usp=sharing", "ja"]
-# ]
-
+# 制約の出力先となるファイル名
 params_path = "./tests/constraints.hpp"
+
+# 問題文が格納されている場所 (必須)
+# Google Docs で問題文を管理している場合、Google Docs の URL または Document ID を記載する
+# (Document ID とは Docs の URL にある、ランダムのような文字列のことです)
+# 'path' は、以下に示す 2 種類の書き方が許容される
+[[statements]]
+path = "1MoguVNpp2SgJvF0ncPbp_8_x2_GhClMijUjF3U3g8ns"
+# path = "https://docs.google.com/document/d/1MoguVNpp2SgJvF0ncPbp_8_x2_GhClMijUjF3U3g8ns/edit?usp=sharing"
+lang = "ja"

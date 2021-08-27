@@ -1,13 +1,17 @@
 # 問題 ID (必須: 出力 html 名にも使用される)
 id = "I"
 
-# 問題文が格納されている場所
-# mode が local である場合、Markdown ファイルへのパスを記載する
-statements_path = [
-    ["./statement/statement.md", "ja"]
-]
+# 制約の出力先となるファイル名
 params_path = "./tests/constraints.hpp"
+
+# 添付ファイルが格納されているフォルダ名
 assets_path = "./statement/assets/"
+
+# 問題文が格納されている場所
+# 問題文ファイルがローカルにある場合、Markdown ファイルへのパスを記載する
+[[statements]]
+path = "./statement/statement.md"
+lang = "ja"
 
 # 問題制約を書く
 [constraints]
