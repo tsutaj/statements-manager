@@ -88,6 +88,7 @@ pip install statements-manager
 ![Screenshot from 2021-08-19 23-24-51](https://user-images.githubusercontent.com/19629946/130088491-761cf3bb-6b8c-4bb4-9396-91e98be6ab8a.png)
 
 ![Screenshot from 2021-08-19 23-25-11](https://user-images.githubusercontent.com/19629946/130088501-5e1208df-445a-4797-be31-60a77f04c91d.png)
+
 - 以下のコマンドを打って、JSON ファイルを作業ディレクトリに登録します
   - `WORKING_DIR` とは、"How to use" の冒頭にあるように、各問題ディレクトリの 1 つ上の階層です
   - 登録が終われば、`CREDS_PATH` にある json ファイルは削除しても構いません
@@ -98,7 +99,7 @@ ss-manager reg-creds WORKING_DIR CREDS_PATH
 
 ### 3. 問題ごとに設定ファイル `problem.toml` を作る
 
-問題ディレクトリごとに設定ファイルを作ります。`problem.toml` という名前にして `toml` 形式で記述します。詳しい例は [`sample/A/problem.toml`](https://github.com/tsutaj/statements-manager/blob/master/sample/A/problem.toml) をご覧ください。
+問題ディレクトリごとに設定ファイルを作ります。`problem.toml` という名前にして `toml` 形式で記述します。詳しい例は [`sample/A/problem.toml`](https://github.com/tsutaj/statements-manager/blob/master/sample/A/problem.toml) などの、`sample` ディレクトリにある設定ファイルをご覧ください。
 
 **tips (Rime を使用したことがある方向け)**: このファイルは Rime で言うところの `PROBLEM` ファイルに似た位置づけです。`PROBLEM` と同じ階層に保存することを推奨します。
 
@@ -106,23 +107,10 @@ ss-manager reg-creds WORKING_DIR CREDS_PATH
 
 設定する項目は以下の通りです。
 
-- `mode` (**必須**)
-  - `docs` もしくは `local` のいずれか一方を指定します
-    - `docs`: 問題文のファイルが Google Docs 内に存在することを想定したモードで実行します
-    - `local`: 問題文のファイルがローカルに存在することを想定したモードで実行します
 - `id` (**必須**)
   - 問題 ID を指定します
   - アプリケーション実行中の問題判別や、出力される HTML の名前に使用されます
-    - 例: id に `A` と指定したならば、出力 HTML は `A.html` という名前になる
-  - ID は、実行時に操作対象となる設定ファイルそれぞれで **一意でなければなりません**。例えば、`ID = "A"` となる設定ファイルが複数存在してはいけません
-- `statement_path` (**必須**)
-  - docs mode の場合: 問題文の Document ID を記載します
-    - Document ID とは Docs の URL 末尾にある、英数字でできた長い文字列のことです
-  - local mode の場合: 問題文が記載されている Markdown ファイルへのパスを記載します
-- `lang` (任意)
-  - 問題文が書かれている言語を設定します
-  - `ja` (日本語) もしくは `en` (英語) のいずれか一方を指定します
-  - 何も指定しなかった場合は `en` が設定されているとみなして実行します
+  - ID は、実行時に操作対象となる設定ファイルそれぞれで **一意でなければなりません**。例えば、`id = "A"` となる設定ファイルが複数存在してはいけません
 - `assets_path` (任意)
   - 問題文に添付する画像などが含まれているディレクトリへのパスを指定します (問題文に図が必要な場合などにご利用ください)
   - `assets_path` 以下に存在する全てのファイル・ディレクトリが `ss-out` ディレクトリ中の **`assets` ディレクトリにコピー** されます。画像などのリンクを張る際は、この仕様を念頭に置いて指定してください。
@@ -133,7 +121,10 @@ ss-manager reg-creds WORKING_DIR CREDS_PATH
     - 拡張子が `.in` / `.out` / `.md` のいずれかである
       - `.in` ファイル: 入力例を表すファイル
       - `.out` ファイル: 出力例を表すファイル
-      - `.md` ファイル: 入出力例に関する説明 (`sample` ディレクトリの A 問題参照)、またはインタラクティブの入出力例を表すファイル (`sample` ディレクトリの I 問題参照)
+      - `.md` ファイル: インタラクティブの入出力例を表すファイル (`sample` ディレクトリの I 問題参照)
+      - `[言語名]/*.md` ファイル: 入出力例に関する説明 (`sample` ディレクトリの A 問題参照)
+        - 例: 日本語で `00_sample_00` に関する説明をしたいならば、`[sample_path]/ja/00_sample_00.md` というファイルを用意します
+        - **注意: v1.5.0 より、インタラクティブの入出力例のために用意する Markdown ファイルと、入出力例に関する説明のために用意する Markdown ファイルは、想定する格納場所が明確に異なります**
     - ファイル名に `sample` が部分文字列として含まれる
 - `params_path` (任意)
   - 問題制約となるパラメータの値を、generator や validator で利用できるようにファイルに出力したいときに、パラメータを記載したファイルの出力パスを指定します
@@ -141,6 +132,21 @@ ss-manager reg-creds WORKING_DIR CREDS_PATH
     - 何も指定しなかった場合は、ファイルが出力されません
   - 指定されたパスの拡張子から言語を推定し、その言語に合ったパラメータファイルを出力するようになっています
     - 注意: 現状は C++ のみ (`.cpp`, `.cc`, `.h`, `.hpp`) 対応しています。今後対応言語は増やす予定です
+- `[[statements]]` (**必須**)
+  - 用意する問題文ファイルそれぞれについて設定します。設定方法の例は `sample` ディレクトリにある A 問題・C 問題などを参照してください
+    - A 問題では、英語・日本語の両方で問題文を作成する例を示しています
+    - C 問題では、英語・日本語の両方で問題文を作成することに加えて、制約のみが異なる問題を作成する例も示しています
+  - 各問題文ファイルについて以下を設定します
+    - `path` (**必須**)
+      - ローカルに問題文が存在する場合: 問題文が記載されているファイル名を指定します
+      - Google Docs に問題文が存在する場合: Google Docs の ID か、もしくは Google Docs のファイルの URL を指定します。設定方法の例は `sample` の H 問題を参照してください。
+    - `lang` (任意)
+      - 問題文が書かれている言語を設定します
+      - `ja` (日本語) もしくは `en` (英語) のいずれか一方を指定します
+      - 何も指定しなかった場合は `en` が設定されているとみなして実行します
+    - `mode` (任意)
+      - `docs` または `local` のどちらかを指定します。問題文ファイルが存在する場所に応じて設定ください
+      - 何も設定しなかった場合はモードが自動で認識されますので、通常は `mode` を設定する必要はありません
 - `[constraints]` (任意)
   - 問題制約を記述します
   - `[定数名] = [定数]` のように記載します
@@ -189,35 +195,36 @@ name: update-statements
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install statements-manager
-    - name: Run statements-manager
-      run: |
-        ss-manager run ./
-    - name: Commit files
-      run: |
-        git add --all
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
-        git commit -m "[ci skip] [bot] Updating to ${{ github.sha }}."
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        branch: ${{ github.ref }}
+      - uses: actions/checkout@v2
+      - name: Set up Python 3
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install statements-manager
+      - name: Run statements-manager
+        run: |
+          ss-manager run ./
+      - name: Commit files
+        run: |
+          git add --all
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -m "[ci skip] [bot] Updating to ${{ github.sha }}."
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          branch: ${{ github.ref }}
 ```
+
 ## Links
 
 - [Rime](https://github.com/icpc-jag/rime)
@@ -226,7 +233,6 @@ jobs:
 - [library-checker-problems](https://github.com/yosupo06/library-checker-problems)
   - 当アプリケーションの機能は、これの影響を強く受けています
   - library-cheker-problems の作問機能で出来ることを網羅しつつ、Rime と親和性が良い設計にし、さらに作問時に便利な Google Docs とも連携させたいというモチベーションがあり、このアプリケーションが作られました
-
 
 ## For Contributors
 

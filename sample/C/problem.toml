@@ -1,0 +1,37 @@
+# problem id (it is used for the name of output html file)
+id = "C"
+
+# output params
+params_path = "./tests/constraints.hpp"
+
+# path to statements
+[[statements]]
+path = "./statement/en/statement_1.md"
+lang = "en"
+
+[[statements]]
+path = "./statement/en/statement_2.md"
+lang = "en"
+
+[[statements]]
+path = "./statement/ja/statement_1.md"
+lang = "ja"
+
+[[statements]]
+path = "./statement/ja/statement_2.md"
+lang = "ja"
+
+# write constraints
+[constraints]
+    MIN_A = 1
+    MAX_A = 1_000_000_000
+
+    MIN_N_SMALL = 1
+    MAX_N_SMALL = 1000
+    MIN_Q_SMALL = 1
+    MAX_Q_SMALL = 1000
+
+    MIN_N_LARGE = 1
+    MAX_N_LARGE = 100_000
+    MIN_Q_LARGE = 1
+    MAX_Q_LARGE = 100_000
