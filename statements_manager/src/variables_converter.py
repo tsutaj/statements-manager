@@ -137,9 +137,9 @@ class VariablesConverter:
         if isinstance(value, int):
             if str(value).endswith("000000"):
                 k = math.floor(math.log10(abs(value)))
-                if value == 10 ** k:
+                if value == 10**k:
                     return f"10^{{{k}}}"
-                elif value % (10 ** k) == 0:
+                elif value % (10**k) == 0:
                     return f"{value // 10 ** k} \\times 10^{{{k}}}"
                 else:
                     return f"{value / 10 ** k} \\times 10^{{{k}}}"

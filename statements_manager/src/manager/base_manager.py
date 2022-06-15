@@ -82,11 +82,16 @@ class BaseManager:
 
     def apply_preprocess(self, markdown_text: str) -> str:
         if "preprocess_path" in self.problem_attr:
-            proc = Popen(["python", self.problem_attr["preprocess_path"]],
-                         stdout=PIPE, stdin=PIPE, stderr=PIPE)
+            proc = Popen(
+                ["python", self.problem_attr["preprocess_path"]],
+                stdout=PIPE,
+                stdin=PIPE,
+                stderr=PIPE,
+            )
             try:
                 processed_text, _ = proc.communicate(
-                    input=markdown_text.encode(encoding="utf-8"), timeout=10)
+                    input=markdown_text.encode(encoding="utf-8"), timeout=10
+                )
             except TimeoutExpired:
                 raise TimeoutError("too long preprocess")
             return processed_text.decode(encoding="utf-8")
@@ -95,11 +100,16 @@ class BaseManager:
 
     def apply_postprocess(self, html_text: str) -> str:
         if "postprocess_path" in self.problem_attr:
-            proc = Popen(["python", self.problem_attr["postprocess_path"]],
-                         stdout=PIPE, stdin=PIPE, stderr=PIPE)
+            proc = Popen(
+                ["python", self.problem_attr["postprocess_path"]],
+                stdout=PIPE,
+                stdin=PIPE,
+                stderr=PIPE,
+            )
             try:
                 processed_text, _ = proc.communicate(
-                    input=html_text.encode(encoding="utf-8"), timeout=10)
+                    input=html_text.encode(encoding="utf-8"), timeout=10
+                )
             except TimeoutExpired:
                 raise TimeoutError("too long postprocess")
             return processed_text.decode(encoding="utf-8")
