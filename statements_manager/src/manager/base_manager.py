@@ -4,6 +4,7 @@ import pathlib
 import shutil
 from abc import abstractmethod
 from logging import Logger, getLogger
+from subprocess import PIPE, Popen, TimeoutExpired
 from typing import Any, cast
 
 import pdfkit
@@ -12,7 +13,6 @@ from jinja2 import DictLoader, Environment, StrictUndefined
 from markdown import markdown
 from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
-from subprocess import Popen, PIPE, TimeoutExpired
 
 from statements_manager.src.params_maker.lang_to_class import lang_to_class
 from statements_manager.src.variables_converter import VariablesConverter
