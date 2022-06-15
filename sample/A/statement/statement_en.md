@@ -1,6 +1,6 @@
 ## Problem A
 
-### <u>A+B</u>
+### <u>**A+B**</u>
 
 You are given two integers $A$ and $B$. Print $A + B$.
 
