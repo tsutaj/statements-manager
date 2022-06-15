@@ -1,5 +1,5 @@
-import sys
 import re
+import sys
 
 ENGLISH_UNAVAILABLE = \
     '<!-- begin en only -->\n' + \

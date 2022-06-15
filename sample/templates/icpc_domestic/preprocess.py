@@ -1,5 +1,5 @@
-import sys
 import re
+import sys
 
 
 def preprocess(markdown_lines):
