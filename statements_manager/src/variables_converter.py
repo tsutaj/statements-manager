@@ -97,23 +97,29 @@ class VariablesConverter:
                 with open(in_name, "r") as f:
                     input_txt = f.read()
                     if problem_attr["lang"] == "en":
-                        sample_text += f"### Sample Input {n_sample}\n"
+                        sample_text += "### Sample Input"
                     elif problem_attr["lang"] == "ja":
-                        sample_text += f"### 入力例 {n_sample}\n"
+                        sample_text += "### 入力例"
                     else:
                         logger.error(f"unknown lang: '{problem_attr['lang']}'")
                         raise ValueError(f"unknown lang: '{problem_attr['lang']}'")
+                    if len(sample_names) >= 2:
+                        sample_text += f" {n_sample}"
+                    sample_text += "\n"
                     sample_text += "<pre>\n" + input_txt + "</pre>\n"
             if out_name.exists():
                 with open(out_name, "r") as f:
                     output_txt = f.read()
                     if problem_attr["lang"] == "en":
-                        sample_text += f"### Sample Output {n_sample}\n"
+                        sample_text += "### Output for the Sample Input"
                     elif problem_attr["lang"] == "ja":
-                        sample_text += f"### 出力例 {n_sample}\n"
+                        sample_text += "### 出力例"
                     else:
                         logger.error(f"unknown lang: '{problem_attr['lang']}'")
                         raise ValueError(f"unknown lang: '{problem_attr['lang']}'")
+                    if len(sample_names) >= 2:
+                        sample_text += f" {n_sample}"
+                    sample_text += "\n"
                     sample_text += "<pre>\n" + output_txt + "</pre>\n"
             if md_name.exists():
                 with open(md_name, "r") as f:
@@ -131,9 +137,9 @@ class VariablesConverter:
         if isinstance(value, int):
             if str(value).endswith("000000"):
                 k = math.floor(math.log10(abs(value)))
-                if value == 10 ** k:
+                if value == 10**k:
                     return f"10^{{{k}}}"
-                elif value % (10 ** k) == 0:
+                elif value % (10**k) == 0:
                     return f"{value // 10 ** k} \\times 10^{{{k}}}"
                 else:
                     return f"{value / 10 ** k} \\times 10^{{{k}}}"

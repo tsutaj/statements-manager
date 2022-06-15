@@ -1,4 +1,4 @@
-## Problem A
+## Problem D
 
 ### <u>**A+B**</u>
 
@@ -6,7 +6,7 @@
 
 $T$ 個のテストケースが与えられますので、$T$ 行出力してください。
 
-### 入力
+### Input
 
 ```
 $T$
@@ -20,7 +20,7 @@ $A_T$ $B_T$
 - ${@constraints.MIN_T} \leq T \leq {@constraints.MAX_T}$
 - ${@constraints.MIN_AB} \leq A_i, B_i \leq {@constraints.MAX_AB}$
 
-### 出力
+### Output
 
 $T$ 行出力してください。
 

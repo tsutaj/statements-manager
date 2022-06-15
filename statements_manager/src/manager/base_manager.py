@@ -4,6 +4,7 @@ import pathlib
 import shutil
 from abc import abstractmethod
 from logging import Logger, getLogger
+from subprocess import PIPE, Popen, TimeoutExpired
 from typing import Any, cast
 
 import pdfkit
@@ -15,7 +16,7 @@ from markdown.preprocessors import Preprocessor
 
 from statements_manager.src.params_maker.lang_to_class import lang_to_class
 from statements_manager.src.variables_converter import VariablesConverter
-from statements_manager.template import template_html, template_pdf_options
+from statements_manager.template import template_pdf_options
 
 logger = getLogger(__name__)  # type: Logger
 
@@ -74,10 +75,46 @@ class BaseManager:
         env = Environment(
             variable_start_string="{@",
             variable_end_string="}",
-            loader=DictLoader({"template": template_html}),
+            loader=DictLoader({"template": self.problem_attr["template_html"]}),
         )
         replaced_html = env.get_template("template").render(task={"statements": html})
         return replaced_html
+
+    def apply_preprocess(self, markdown_text: str) -> str:
+        if "preprocess_path" in self.problem_attr:
+            proc = Popen(
+                ["python", self.problem_attr["preprocess_path"]],
+                stdout=PIPE,
+                stdin=PIPE,
+                stderr=PIPE,
+            )
+            try:
+                processed_text, _ = proc.communicate(
+                    input=markdown_text.encode(encoding="utf-8"), timeout=10
+                )
+            except TimeoutExpired:
+                raise TimeoutError("too long preprocess")
+            return processed_text.decode(encoding="utf-8")
+        else:
+            return markdown_text
+
+    def apply_postprocess(self, html_text: str) -> str:
+        if "postprocess_path" in self.problem_attr:
+            proc = Popen(
+                ["python", self.problem_attr["postprocess_path"]],
+                stdout=PIPE,
+                stdin=PIPE,
+                stderr=PIPE,
+            )
+            try:
+                processed_text, _ = proc.communicate(
+                    input=html_text.encode(encoding="utf-8"), timeout=10
+                )
+            except TimeoutExpired:
+                raise TimeoutError("too long postprocess")
+            return processed_text.decode(encoding="utf-8")
+        else:
+            return html_text
 
     def save_html(self, html: str, output_path: pathlib.Path):
         with open(output_path, "w") as f:
@@ -145,6 +182,7 @@ class BaseManager:
         if output_ext == "html":
             # convert: markdown -> html
             replace_sample_format = ReplaceSampleFormatExprExtension()
+            contents = self.apply_preprocess(contents)
             html = markdown(
                 contents,
                 extensions=[
@@ -155,11 +193,13 @@ class BaseManager:
                 ],
             )
             html = self.apply_template(html)
+            html = self.apply_postprocess(html)
             output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".html")
             self.save_html(html, output_path)
         elif output_ext == "pdf":
             # convert: markdown -> html
             replace_sample_format = ReplaceSampleFormatExprExtension()
+            contents = self.apply_preprocess(contents)
             html = markdown(
                 contents,
                 extensions=[
@@ -178,6 +218,7 @@ class BaseManager:
             )
             result_html = html
             html = self.apply_template(html)
+            html = self.apply_postprocess(html)
             output_path = output_path / pathlib.Path(self.problem_attr["id"] + ".pdf")
 
             wait_second = (

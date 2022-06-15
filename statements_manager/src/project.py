@@ -11,6 +11,7 @@ from statements_manager.src.manager.docs_manager import DocsManager
 from statements_manager.src.manager.local_manager import LocalManager
 from statements_manager.src.manager.recognize_mode import recognize_mode
 from statements_manager.src.utils import resolve_path
+from statements_manager.template import template_html
 
 logger = getLogger(__name__)  # type: Logger
 
@@ -63,11 +64,15 @@ class Project:
             "sample_path",
             "params_path",
             "constraints",
+            "template_path",
+            "preprocess_path",
+            "postprocess_path",
             # これ以下はユーザーが設定しない属性
             "output_path",
             "output_ext",
             "creds_path",
             "token_path",
+            "template_html",
             "statement_path",
             "mode",
             "lang",
@@ -128,6 +133,13 @@ class Project:
         for problem_file in sorted(self._cwd.glob("./**/problem.toml")):
             dir_name = problem_file.parent.resolve()
             problem_dict = toml.load(problem_file)
+
+            # HTML テンプレートを表す文字列 (指定がなければデフォルトのものを使う)
+            if "template_path" not in problem_dict:
+                problem_dict["template_html"] = template_html
+            else:
+                with open(dir_name / Path(problem_dict["template_path"])) as f:
+                    problem_dict["template_html"] = f.read()
 
             # id は必ず設定が必要
             # id は重複してはならない (既に見たものは set で持つ)
