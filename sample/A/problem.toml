@@ -3,9 +3,6 @@ id = "A"
 
 # output params
 params_path = "./tests/constraints.hpp"
-template_path = "../templates/icpc_domestic/template.html"
-preprocess_path = "../templates/icpc_domestic/preprocess.py"
-postprocess_path = "../templates/icpc_domestic/postprocess.py"
 
 # path to statements
 [[statements]]
