@@ -136,7 +136,7 @@ class SamplesConverter:
             if str(exp_filename).lower().find("sample") >= 0:
                 sample_names.add(exp_filename.stem)
 
-        sample_names ^= ignore_samples
+        sample_names -= ignore_samples
         return sorted(list(sample_names))
 
     def print_warning(
