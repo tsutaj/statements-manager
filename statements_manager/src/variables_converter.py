@@ -3,7 +3,7 @@ from __future__ import annotations
 import math
 import pathlib
 from logging import Logger, getLogger
-from typing import Any, List
+from typing import Any, List, Set
 
 logger = getLogger(__name__)  # type: Logger
 
@@ -108,29 +108,36 @@ class SampleFile:
 
 
 class SamplesConverter:
-    def get_sample_names_list(self, sample_path, statement_path, language) -> List[str]:
+    def get_sample_names_list(
+        self,
+        sample_path: pathlib.Path,
+        statement_path: pathlib.Path,
+        language: str,
+        ignore_samples: Set,
+    ) -> List[str]:
         # sample_path 以下で、ファイル名に 'sample' を含むものはサンプルであるとする
-        sample_names = list()
+        sample_names = set()
         for in_filename in sample_path.glob("./*.in"):
             if str(in_filename).lower().find("sample") >= 0:
-                sample_names.append(in_filename.stem)
+                sample_names.add(in_filename.stem)
         for out_filename in sample_path.glob("./*.out"):
             if str(out_filename).lower().find("sample") >= 0:
-                sample_names.append(out_filename.stem)
+                sample_names.add(out_filename.stem)
         for diff_filename in sample_path.glob("./*.diff"):
             if str(diff_filename).lower().find("sample") >= 0:
-                sample_names.append(diff_filename.stem)
+                sample_names.add(diff_filename.stem)
         for md_filename in sample_path.glob("./*.md"):
             if (
                 pathlib.Path(md_filename).resolve() != statement_path.resolve()
                 and str(md_filename).lower().find("sample") >= 0
             ):
-                sample_names.append(md_filename.stem)
+                sample_names.add(md_filename.stem)
         for exp_filename in sample_path.glob(f"./{language}/*.md"):
             if str(exp_filename).lower().find("sample") >= 0:
-                sample_names.append(exp_filename.stem)
-        sample_names = sorted(list(set(sample_names)))
-        return sample_names
+                sample_names.add(exp_filename.stem)
+
+        sample_names ^= ignore_samples
+        return sorted(list(sample_names))
 
     def print_warning(
         self,
@@ -172,6 +179,7 @@ class SamplesConverter:
             problem_attr["sample_path"],
             problem_attr["statement_path"],
             problem_attr["lang"],
+            set(problem_attr.get("ignore_samples", list())),
         )
         if len(sample_names) == 0:
             logger.warning("samples are not set")

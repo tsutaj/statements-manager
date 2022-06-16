@@ -62,6 +62,7 @@ class Project:
             "id",
             "assets_path",
             "sample_path",
+            "ignore_samples",
             "params_path",
             "constraints",
             "template_path",
