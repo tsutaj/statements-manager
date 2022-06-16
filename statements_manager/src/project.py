@@ -169,7 +169,7 @@ class Project:
                 problem_id = f"{id}"
                 if lang_count[lang] > 1:
                     problem_id += f"{lang_number[lang]}"
-                if len(problem_dict["statements"]) > 1:
+                if len(lang_count) > 1:
                     problem_id += f"_{lang}"
 
                 # 問題全体の設定と問題文特有の設定とをマージする
