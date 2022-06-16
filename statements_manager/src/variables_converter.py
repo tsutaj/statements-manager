@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import fnmatch
 import math
 import pathlib
 from logging import Logger, getLogger
@@ -136,8 +137,13 @@ class SamplesConverter:
             if str(exp_filename).lower().find("sample") >= 0:
                 sample_names.add(exp_filename.stem)
 
-        sample_names -= ignore_samples
-        return sorted(list(sample_names))
+        filtered_sample = list()
+        for sample_name in sample_names:
+            if not any(
+                [fnmatch.fnmatch(sample_name, pattern) for pattern in ignore_samples]
+            ):
+                filtered_sample.append(sample_name)
+        return sorted(filtered_sample)
 
     def print_warning(
         self,
@@ -179,7 +185,7 @@ class SamplesConverter:
             problem_attr["sample_path"],
             problem_attr["statement_path"],
             problem_attr["lang"],
-            set(problem_attr.get("ignore_samples", list())),
+            problem_attr.get("ignore_samples", list()),
         )
         if len(sample_names) == 0:
             logger.warning("samples are not set")
