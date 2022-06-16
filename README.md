@@ -129,6 +129,7 @@ ss-manager reg-creds WORKING_DIR CREDS_PATH
 - `ignore_samples` (任意)
   - `sample_path` で指定されたディレクトリにある、サンプルケースとして認識されるファイル名のうち、問題文に反映してほしくないものをリスト形式で指定します。拡張子は含めてはなりません
   - 例えば `00_sample_00` および `00_sample_hoge` を問題文に含めてほしくない場合、`ignore_samples = ["00_sample_00", "00_sample_hoge"]` のように設定します
+  - [Unix のシェル形式のワイルドカード](https://docs.python.org/ja/3/library/fnmatch.html) に対応しています
   - 何も指定されなかった場合、見つかった全てのサンプルケースが問題文に反映されます
 - `params_path` (任意)
   - 問題制約となるパラメータの値を、generator や validator で利用できるようにファイルに出力したいときに、パラメータを記載したファイルの出力パスを指定します
