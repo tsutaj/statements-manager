@@ -38,5 +38,13 @@ class DocsManager(BaseManager):
             if "paragraph" not in content:
                 continue
             for element in content["paragraph"]["elements"]:
-                text += element["textRun"]["content"]
+                statement = element["textRun"]["content"]
+                if "suggestedInsertionIds" not in element["textRun"]:
+                    text += statement
+                else:
+                    logger.warning(
+                        f"proposed element for addition (ignored in rendering): {statement}"
+                    )
+                if "suggestedDeletionIds" in element["textRun"]:
+                    logger.warning(f"proposed element for deletion: {statement}")
         return text
