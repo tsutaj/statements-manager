@@ -1,5 +1,4 @@
 import pathlib
-import pprint
 from logging import Logger, getLogger
 
 from googleapiclient.discovery import build
