@@ -50,7 +50,9 @@ def get_parser() -> argparse.ArgumentParser:
     )
     subparser.add_argument(
         "working_dir",
-        help="path to a working directory",
+        nargs="?",
+        default=".",
+        help="path to a working directory (default: current directory)",
     )
     subparser.add_argument(
         "-o",
@@ -63,7 +65,9 @@ def get_parser() -> argparse.ArgumentParser:
     subparser = subparsers.add_parser("reg-creds", help="register credentials file")
     subparser.add_argument(
         "working_dir",
-        help="path to a working directory",
+        nargs="?",
+        default=".",
+        help="path to a working directory (default: current directory)",
     )
     subparser.add_argument("creds", help="path to credentials file (json)")
     return parser
