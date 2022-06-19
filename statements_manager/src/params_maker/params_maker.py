@@ -14,6 +14,7 @@ class ParamsMaker:
 
     def run(self) -> None:
         params_lines = []  # type: list[str]
+        params_lines.append(self.header())
         for key, value in self.params.items():
             if not all(ord(c) < 128 for c in str(value)):
                 logger.warning(f"ignored parameter: {key} => {value}")
@@ -32,6 +33,10 @@ class ParamsMaker:
         with open(self.output_path, "w") as f:
             for line in params_lines:
                 f.write(line + "\n")
+
+    @abstractmethod
+    def header(self) -> str:
+        pass
 
     @abstractmethod
     def parse_int(self, key: str, value: int) -> str:
