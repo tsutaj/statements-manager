@@ -61,6 +61,12 @@ def get_parser() -> argparse.ArgumentParser:
         choices=["html", "md", "pdf"],
         help="output format (defaults to 'html')",
     )
+    subparser.add_argument(
+        "-p",
+        "--make-problemset",
+        action="store_true",
+        help="make problemset file",
+    )
 
     subparser = subparsers.add_parser("reg-creds", help="register credentials file")
     subparser.add_argument(
@@ -73,18 +79,23 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def subcommand_run(working_dir: str, output: str) -> None:
+def subcommand_run(
+    working_dir: str,
+    output: str,
+    make_problemset: bool,
+) -> None:
     working_dir = str(pathlib.Path(working_dir).resolve())
     logger.debug(f"run: working_dir = '{working_dir}'")
     project = Project(working_dir, output)  # Project
 
-    project.run_problems()
-    logger.debug("run for problem set")
-    project.run_problemset()
+    project.run_problems(make_problemset)
     logger.debug("run command ended successfully.")
 
 
-def subcommand_reg_creds(working_dir: str, creds_path: str) -> None:
+def subcommand_reg_creds(
+    working_dir: str,
+    creds_path: str,
+) -> None:
     # 引数は実在するものでなければならない
     if not pathlib.Path(working_dir).exists():
         logger.error(f"working directory '{working_dir}' does not exist")
@@ -118,9 +129,16 @@ def main() -> None:
     args = parser.parse_args()
     set_logger(args.debug)
     if args.subcommand == "run":
-        subcommand_run(working_dir=args.working_dir, output=args.output)
+        subcommand_run(
+            working_dir=args.working_dir,
+            output=args.output,
+            make_problemset=args.make_problemset,
+        )
     elif args.subcommand == "reg-creds":
-        subcommand_reg_creds(working_dir=args.working_dir, creds_path=args.creds)
+        subcommand_reg_creds(
+            working_dir=args.working_dir,
+            creds_path=args.creds,
+        )
     else:
         parser.print_help()
 

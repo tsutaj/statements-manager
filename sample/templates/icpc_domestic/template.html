@@ -1,11 +1,23 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
-    <title>Problem Statement</title>
+    <title>
+      {% if problemset.is_problemset %}
+        All Problems
+      {% else %}
+        Problem {@problemset.problems[0].id}
+      {% endif %}
+    </title>
     <meta charset="utf-8">
     <style type="text/css">
-body{
+  body{
     font-family : sans-serif;
+  }
+
+  blockquote { /* edited by tsutaj */
+        white-space: pre;
+        word-break: break-all;
+        word-wrap: break-word;
   }
   
   table.main {
@@ -248,7 +260,28 @@ body{
       <!-- nothing in the 1st column. everything else in the 2nd -->
       <tr>
        <td class="main">
-          {@task.statements}
+        {% if problemset.is_problemset %}
+          <h2>Links</h2>
+          <div>
+            {% for problem_loop in problemset.problems %}
+              <a href="#section_{@problem_loop.id}">{@problem_loop.id}</a>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% for problem in problemset.problems %}
+          <a name="section_{@problem.id}"></a>
+          {@problem.statement}
+
+          <h3></h3>
+          <footer style="text-align: right">(End of Problem {@problem.id})
+            {% if problemset.is_problemset %}
+              {% for problem_loop in problemset.problems %}
+                <a href="#section_{@problem_loop.id}">{@problem_loop.id}</a>
+              {% endfor %}
+            {% endif %}
+          </footer>
+        {% endfor %}
        </td>                     
       </tr>                      
       </table>                         

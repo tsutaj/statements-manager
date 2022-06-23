@@ -1,5 +1,5 @@
 # flake8: noqa
-template_html = """
+default_template_html = """
 <!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -111,9 +111,27 @@ template_html = """
     </script>
   </head>
   <body>
-    {@task.statements}
+    {% for problem in problemset.problems %}
+      {@problem.statement}
+
+      {% if not loop.last %}
+        <hr>
+      {% endif %}
+    {% endfor %}
   </body>
 </html>
+"""
+
+default_template_markdown = """
+{% for problem in problemset.problems %}
+
+{@problem.statement}
+
+{% if not loop.last %}
+---
+{% endif %}
+
+{% endfor %}
 """
 
 template_pdf_options = {

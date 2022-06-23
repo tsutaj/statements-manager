@@ -19,8 +19,8 @@ def sub_while_unchange(pattern, repl, str):
 def postprocess(html_text):
     html_text = re.sub("<blockquote>\n<p>", "<blockquote>", html_text)
     html_text = re.sub("</p>\n</blockquote>", "</blockquote>", html_text)
-    html_text = re.sub("<pre><code>", "<pre>", html_text)
-    html_text = re.sub("</code></pre>", "</pre>", html_text)
+    html_text = re.sub(r"<pre(.*)><code(.*)>", r"<blockquote>", html_text)
+    html_text = re.sub(r"</code></pre>", r"</blockquote>", html_text)
     html_text = re.sub(r"\{,\}", ",", html_text)
 
     html_text = re.sub(r"\$(.*?)\$", r"<i>\1</i>", html_text)
@@ -60,38 +60,35 @@ def postprocess(html_text):
     # html_text = re.sub(r'<h3>(?![Input|Output|Problem|入力|出力|入出力|Sample])(.*)</h3>', r'<h3>\1</h3>\n<div>\n' +
     #                    ENGLISH_UNAVAILABLE + '<!-- begin ja only -->\n', html_text)
     html_text = re.sub(
-        r"<h3>(?![Input|Output|Problem|入力|出力|入出力|Sample])(.*)</h3>",
-        r"<h3>\1</h3>\n<div>\n" + "<!-- begin ja only -->\n",
+        r"<h3>",
+        r"</div>\n<h3>",
         html_text,
     )
     html_text = re.sub(
-        r"<h3>Input</h3>",
-        "<!-- end ja only -->\n</div>\n"
-        + "<h3>Input</h3>\n<div>\n<!-- begin ja only -->\n",
+        r"</h3>",
+        r"</h3>\n<div>",
         html_text,
     )
     html_text = re.sub(
-        r"<h3>入(.*)力(.*)</h3>",
-        "<!-- end ja only -->\n</div>\n"
-        + r"<h3>入\1力\2</h3>\n<div>\n<!-- begin ja only -->\n",
+        r"</div>\n<h3>?",
+        r"<h3>",
+        html_text,
+        1,
+    )
+    html_text = re.sub(
+        r"([\s\S]*)</td>",
+        r"\1</div>\n</td>",
+        html_text,
+        1,
+    )
+    html_text = re.sub(
+        r"([\s\S]*?)<h2>(.*?)</h2>(\s*?)</div>([\s\S]*?)<h3>",
+        r"\1</div>\n<h2>\2</h2>\3\4<h3>",
         html_text,
     )
     html_text = re.sub(
-        r"<h3>出力(.*)</h3>",
-        "<!-- end ja only -->\n</div>\n"
-        + r"<h3>出力\1</h3>\n<div>\n<!-- begin ja only -->\n",
-        html_text,
-    )
-    html_text = re.sub(
-        r"<h3>Sample(.*)</h3>",
-        "<!-- end ja only -->\n</div>\n"
-        + r"<h3>Sample\1</h3>\n<div>\n<!-- begin ja only -->\n",
-        html_text,
-    )
-    html_text = re.sub(
-        r"<h3>Output(.*)</h3>",
-        "<!-- end ja only -->\n</div>\n"
-        + r"<h3>Output\1</h3>\n<div>\n<!-- begin ja only -->\n",
+        "<h3></h3>",
+        "",
         html_text,
     )
     return html_text
