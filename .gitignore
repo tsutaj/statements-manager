@@ -139,3 +139,6 @@ run.sh
 ss-out/
 constraints.hpp
 virtualenv/
+problemset.html
+problemset.md
+problemset.pdf
