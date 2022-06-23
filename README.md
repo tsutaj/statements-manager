@@ -181,6 +181,8 @@ ss-manager reg-creds WORKING_DIR CREDS_PATH
 
 必要であれば、HTML・PDF に適用されるテンプレートを指定するためのファイル `problemset.toml` を作成します。このファイルが無い場合は、デフォルトのテンプレートが使用されます。
 
+`problemset.toml` は、`ss-manager run` を実行するときの `WORKING_DIR` の階層と一致しているときにのみ参照されます。
+
 - `[template]`
   - `template_path`
     - HTML および PDF 出力で使用されるテンプレート HTML へのパスを指定します (指定されていない場合、デフォルトのテンプレートが適用されます)
@@ -194,18 +196,18 @@ ss-manager reg-creds WORKING_DIR CREDS_PATH
 
 ### 6. ファイルを HTML / PDF / Markdown 化する
 
-以下のコマンドで、プロジェクトファイルで定義された各問題を HTML 化できます。出力された HTML は、各問題ディレクトリ内の `ss-out` ディレクトリに格納されます。
+以下のコマンドで、プロジェクトファイルで定義された各問題を HTML 化できます。出力された HTML は、各問題ディレクトリ内の `ss-out` ディレクトリに格納されます。使い方の詳細は `ss-manager run -h` をご覧ください。
 
 ```bash
-ss-manager run [-o OUTPUT] WORKING_DIR
+ss-manager run [-o OUTPUT] [-p] WORKING_DIR
 ```
 
 - `WORKING_DIR`: 各問題ディレクトリの 1 つ上の階層
-- `OUTPUT`: 以下のうちいずれか 1 つを指定します。指定しなかった場合は `html` が指定されているものとして扱われます。
+- `-o OUTPUT, --output OUTPUT`: 以下のうちいずれか 1 つを指定します。指定しなかった場合は `html` が指定されているものとして扱われます。
   - `html` (default): HTML を出力
   - `md`: Markdown を出力
   - `pdf`: PDF を出力
-    - `-o` オプションで `pdf` を指定した場合のみ、セット全体の PDF も出力するようになっています。`WORKING_DIR` 直下に `problemset.pdf` というファイルが出力されます。
+- `-p, --make-problemset`: 問題セット全体のファイルも出力します。出力結果は `WORKING_DIR` 直下に保存されます
 
 ## 運用例 (リポジトリにある問題文を半自動で更新する試み)
 
