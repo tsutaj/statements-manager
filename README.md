@@ -132,20 +132,13 @@ ss-manager reg-creds WORKING_DIR CREDS_PATH
   - [Unix のシェル形式のワイルドカード](https://docs.python.org/ja/3/library/fnmatch.html) に対応しています
   - 何も指定されなかった場合、見つかった全てのサンプルケースが問題文に反映されます
 - `params_path` (任意)
+
   - 問題制約となるパラメータの値を、generator や validator で利用できるようにファイルに出力したいときに、パラメータを記載したファイルの出力パスを指定します
     - 例: `path/to/constraints.hpp` としたならば、当該パスにファイルが生成されて出力されます
     - 何も指定しなかった場合は、ファイルが出力されません
   - 指定されたパスの拡張子から言語を推定し、その言語に合ったパラメータファイルを出力するようになっています
     - 注意: 現状は C++ のみ (`.cpp`, `.cc`, `.h`, `.hpp`) 対応しています。今後対応言語は増やす予定です
-- `template_path` (任意)
-  - HTML および PDF 出力で使用されるテンプレート HTML へのパスを指定します (指定されていない場合、デフォルトのテンプレートが適用されます)
-  - テンプレートでは、問題文本文に相当する部分に `{@task.statements}` 文を記述する必要があります。詳細は `sample/templates/default.html` などをご覧ください
-- `preprocess_path` (任意)
-  - Markdown ファイルに関して前処理を行う **Python スクリプト** へのパスを指定します。Markdown が HTML 形式にレンダリングされる前に適用したい処理を記述してください (指定されていない場合、前処理は行われません)
-  - Markdown ファイルの中身は標準入力で与えられ、前処理の結果は標準出力で返す必要があります。詳細は `sample/templates/icpc_domestic/preprocess.py` をご覧ください
-- `postprocess_path` (任意)
-  - HTML ファイルに関して後処理を行う **Python スクリプト** へのパスを指定します。HTML 形式にレンダリングされた後に適用したい処理を記述してください (指定されていない場合、後処理は行われません)
-  - HTML ファイルの中身は標準入力で与えられ、後処理の結果は標準出力で返す必要があります。詳細は `sample/templates/icpc_domestic/postprocess.py` をご覧ください
+
 - `[[statements]]` (**必須**)
   - 用意する問題文ファイルそれぞれについて設定します。設定方法の例は `sample` ディレクトリにある A 問題・C 問題などを参照してください
     - A 問題では、英語・日本語の両方で問題文を作成する例を示しています
@@ -182,20 +175,39 @@ ss-manager reg-creds WORKING_DIR CREDS_PATH
     - `problem.toml` の `sample_path` で指定されたディレクトリ以下にある、サンプルに関連するすべてのファイル群に置換されます
     - サンプルの挿入順番は、上述した「サンプルの番号付け」で得られた順番通りに行われます
 
-### 5. ファイルを HTML / PDF / Markdown 化する
+### 5. テンプレート設定ファイルを用意する (任意)
 
-以下のコマンドで、プロジェクトファイルで定義された各問題を HTML 化できます。出力された HTML は、各問題ディレクトリ内の `ss-out` ディレクトリに格納されます。
+**書き方を直感的に把握するために、`sample` ディレクトリにある `problemset.toml` を参考にすることをお勧めします**
+
+必要であれば、HTML・PDF に適用されるテンプレートを指定するためのファイル `problemset.toml` を作成します。このファイルが無い場合は、デフォルトのテンプレートが使用されます。
+
+`problemset.toml` は、`ss-manager run` を実行するときの `WORKING_DIR` の階層と一致しているときにのみ参照されます。
+
+- `[template]`
+  - `template_path`
+    - HTML および PDF 出力で使用されるテンプレート HTML へのパスを指定します (指定されていない場合、デフォルトのテンプレートが適用されます)
+    - テンプレートでは、問題文本文に相当する部分に `{@problem.statement}` 文を記述する必要があります。詳細は `sample/templates/default.html` などをご覧ください
+  - `preprocess_path`
+    - Markdown ファイルに関して前処理を行う **Python スクリプト** へのパスを指定します。Markdown が HTML 形式にレンダリングされる前に適用したい処理を記述してください (指定されていない場合、前処理は行われません)
+    - Markdown ファイルの中身は標準入力で与えられ、前処理の結果は標準出力で返す必要があります。詳細は `sample/templates/icpc_domestic/preprocess.py` をご覧ください
+  - `postprocess_path`
+    - HTML ファイルに関して後処理を行う **Python スクリプト** へのパスを指定します。HTML 形式にレンダリングされた後に適用したい処理を記述してください (指定されていない場合、後処理は行われません)
+    - HTML ファイルの中身は標準入力で与えられ、後処理の結果は標準出力で返す必要があります。詳細は `sample/templates/icpc_domestic/postprocess.py` をご覧ください
+
+### 6. ファイルを HTML / PDF / Markdown 化する
+
+以下のコマンドで、プロジェクトファイルで定義された各問題を HTML 化できます。出力された HTML は、各問題ディレクトリ内の `ss-out` ディレクトリに格納されます。使い方の詳細は `ss-manager run -h` をご覧ください。
 
 ```bash
-ss-manager run [-o OUTPUT] WORKING_DIR
+ss-manager run [-o OUTPUT] [-p] WORKING_DIR
 ```
 
 - `WORKING_DIR`: 各問題ディレクトリの 1 つ上の階層
-- `OUTPUT`: 以下のうちいずれか 1 つを指定します。指定しなかった場合は `html` が指定されているものとして扱われます。
+- `-o OUTPUT, --output OUTPUT`: 以下のうちいずれか 1 つを指定します。指定しなかった場合は `html` が指定されているものとして扱われます。
   - `html` (default): HTML を出力
   - `md`: Markdown を出力
   - `pdf`: PDF を出力
-    - `-o` オプションで `pdf` を指定した場合のみ、セット全体の PDF も出力するようになっています。`WORKING_DIR` 直下に `problemset.pdf` というファイルが出力されます。
+- `-p, --make-problemset`: 問題セット全体のファイルも出力します。出力結果は `WORKING_DIR` 直下に保存されます
 
 ## 運用例 (リポジトリにある問題文を半自動で更新する試み)
 
