@@ -3,57 +3,39 @@ from __future__ import annotations
 import copy
 from logging import Logger, getLogger
 from pathlib import Path
-from typing import Any, List
+from typing import Any, Dict, List
 
 import toml
 
-from statements_manager.src.manager.docs_manager import DocsManager
-from statements_manager.src.manager.local_manager import LocalManager
-from statements_manager.src.manager.recognize_mode import recognize_mode
+from statements_manager.src.manager import Manager
+from statements_manager.src.recognize_mode import recognize_mode
 from statements_manager.src.utils import resolve_path
-from statements_manager.template import template_html
+from statements_manager.template import default_template_html
 
 logger = getLogger(__name__)  # type: Logger
 
 
 class Project:
-    def __init__(self, working_dir: str, output: str) -> None:
+    def __init__(self, working_dir: str, ext: str) -> None:
         self._cwd = Path(working_dir).resolve()
-        self._output = output  # type: str
-        self._problemset_html_list = []  # type: List[str]
-        self.stmts_manager = None  # type: Any
+        self._ext = ext  # type: str
         self.problem_attr = self._search_problem_attr()
         self._check_project()
-
-    def run_problems(self) -> None:
-        """それぞれの問題について問題文作成を実行する"""
-        for problem_id, config in self.problem_attr.items():
-            mode = config["mode"].lower()  # type: str
-            lang = config["lang"].lower()  # type: str
-
-            if mode == "docs":
-                logger.info(f"{problem_id}: running in 'docs' mode (lang: {lang})")
-                self.stmts_manager = DocsManager(config)
-            elif mode == "local":
-                logger.info(f"{problem_id}: running in 'local' mode (lang: {lang})")
-                self.stmts_manager = LocalManager(config)
-            else:
-                logger.error(f"unknown mode: {mode}")
-                raise ValueError(f"unknown mode: {mode}")
-
-            problem_html = self.stmts_manager.run_problem()  # type: str
-            if len(problem_html) > 0:
-                self._problemset_html_list.append(problem_html)
-
-            logger.info("")
-
-    def run_problemset(self) -> None:
-        """問題セット全体の PDF を作成する"""
-        problemset_html = '<div style="page-break-after:always;"></div>'.join(
-            self._problemset_html_list
+        self.template_attr = self._search_template_attr()
+        self._check_template()
+        self.stmts_manager = Manager(
+            problem_attr=self.problem_attr,
+            template_attr=self.template_attr,
         )
-        if self.stmts_manager is not None:
-            self.stmts_manager.run_problemset(problemset_html, self._cwd)
+
+    def run_problems(self, make_problemset: bool) -> None:
+        """問題文作成を実行する"""
+        problem_ids = sorted(list(self.problem_attr.keys()))  # type: List[str]
+        self.stmts_manager.run(
+            problem_ids=problem_ids,
+            output_ext=self._ext,
+            make_problemset=make_problemset,
+        )
 
     def _check_project(self) -> None:
         """問題設定ファイルの中身をチェックする"""
@@ -65,15 +47,11 @@ class Project:
             "ignore_samples",
             "params_path",
             "constraints",
-            "template_path",
-            "preprocess_path",
-            "postprocess_path",
             # これ以下はユーザーが設定しない属性
             "output_path",
             "output_ext",
             "creds_path",
             "token_path",
-            "template_html",
             "statement_path",
             "mode",
             "lang",
@@ -81,7 +59,22 @@ class Project:
         for problem in self.problem_attr.values():
             for key in problem.keys():
                 if key not in acceptable_attr:
-                    logger.warning(f"unknown attribute in setting file: '{key}'")
+                    logger.warning(
+                        f"unknown attribute in problem setting file: '{key}'"
+                    )
+
+    def _check_template(self) -> None:
+        acceptable_attr = [
+            "template_path",
+            "preprocess_path",
+            "postprocess_path",
+            # これ以下はユーザーが設定しない属性
+            "template_html",
+            "output_path",
+        ]
+        for key in self.template_attr.keys():
+            if key not in acceptable_attr:
+                logger.warning(f"unknown attribute in template setting file: '{key}'")
 
     def _check_statement_info(self, statement_info: dict[str, Any]):
         """[[statement]] の中身をチェックする"""
@@ -134,13 +127,6 @@ class Project:
         for problem_file in sorted(self._cwd.glob("./**/problem.toml")):
             dir_name = problem_file.parent.resolve()
             problem_dict = toml.load(problem_file)
-
-            # HTML テンプレートを表す文字列 (指定がなければデフォルトのものを使う)
-            if "template_path" not in problem_dict:
-                problem_dict["template_html"] = template_html
-            else:
-                with open(dir_name / Path(problem_dict["template_path"])) as f:
-                    problem_dict["template_html"] = f.read()
 
             # id は必ず設定が必要
             # id は重複してはならない (既に見たものは set で持つ)
@@ -210,10 +196,42 @@ class Project:
                     "output_path", dir_name / Path("ss-out")
                 )
                 # output_ext (出力ファイルの拡張子)
-                result_dict[problem_id]["output_ext"] = self._output
+                result_dict[problem_id]["output_ext"] = self._ext
                 # 言語のデフォルトは英語
                 result_dict[problem_id].setdefault("lang", "en")
                 result_dict[problem_id]["lang"] = result_dict[problem_id][
                     "lang"
                 ].lower()
+        return result_dict
+
+    def _search_template_attr(
+        self,
+    ) -> dict[str, Any]:
+        """problemset.toml (問題セットの設定ファイル) を探す"""
+        config_file = self._cwd / "problemset.toml"
+        dir_name = config_file.parent.resolve()
+        if config_file.exists():
+            config_toml = toml.load(config_file)
+            if "template" in config_toml:
+                config_dict = config_toml["template"]
+            else:
+                logger.warning("template settings not found.")
+                config_dict = {}
+        else:
+            logger.warning(f"{config_file} not found.")
+            config_dict = {}
+
+        result_dict = {}  # type: Dict[str, Any]
+        # テンプレートファイル
+        if "template_path" in config_dict:
+            with open(dir_name / Path(config_dict["template_path"])) as f:
+                result_dict["template_html"] = f.read()
+        else:
+            result_dict["template_html"] = default_template_html
+
+        result_dict["output_path"] = dir_name
+        keys = ["preprocess_path", "postprocess_path"]
+        for key in keys:
+            if key in config_dict.keys():
+                result_dict[key] = dir_name / config_dict[key]
         return result_dict
