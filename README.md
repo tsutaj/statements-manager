@@ -183,7 +183,7 @@ ss-manager reg-creds WORKING_DIR CREDS_PATH
 
 `problemset.toml` は、`ss-manager run` を実行するときの `WORKING_DIR` の階層と一致しているときにのみ参照されます。
 
-- `[template]`
+- `[template]`: テンプレートファイルの設定
   - `template_path`
     - HTML および PDF 出力で使用されるテンプレート HTML へのパスを指定します (指定されていない場合、デフォルトのテンプレートが適用されます)
     - テンプレートでは、問題文本文に相当する部分に `{@problem.statement}` 文を記述する必要があります。詳細は `sample/templates/default.html` などをご覧ください
@@ -193,6 +193,13 @@ ss-manager reg-creds WORKING_DIR CREDS_PATH
   - `postprocess_path`
     - HTML ファイルに関して後処理を行う **Python スクリプト** へのパスを指定します。HTML 形式にレンダリングされた後に適用したい処理を記述してください (指定されていない場合、後処理は行われません)
     - HTML ファイルの中身は標準入力で与えられ、後処理の結果は標準出力で返す必要があります。詳細は `sample/templates/icpc_domestic/postprocess.py` をご覧ください
+- `[pdf]`: PDF 出力時の [wkhtmltopdf](https://wkhtmltopdf.org/) (PDF にレンダリングする際に使用されるサードパーティライブラリ) の設定
+  - `[pdf.common]`
+    - 各問題のファイルにも、問題セットのファイルにも適用されてほしい設定をここに記載します
+  - `[pdf.problem]`
+    - 各問題のファイルにのみ適用されてほしい設定をここに記載します
+  - `[pdf.problemset]`
+    - 問題セットのファイルにのみ適用されてほしい設定をここに記載します
 
 ### 6. ファイルを HTML / PDF / Markdown 化する
 

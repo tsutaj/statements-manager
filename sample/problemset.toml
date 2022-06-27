@@ -4,6 +4,11 @@
     postprocess_path = "./templates/icpc_domestic/postprocess.py"
 
 [pdf]
+    [pdf.common]
+        margin-top = 10
+        margin-right = 10
+        margin-bottom = 10
+        margin-left = 10
     [pdf.problem]
         javascript-delay = 1000
     [pdf.problemset]
