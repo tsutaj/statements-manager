@@ -23,9 +23,11 @@ class Project:
         self._check_project()
         self.template_attr = self._search_template_attr()
         self._check_template()
+        self.pdf_attr_raw = self._search_pdf_attr_raw()
         self.stmts_manager = Manager(
             problem_attr=self.problem_attr,
             template_attr=self.template_attr,
+            pdf_attr_raw=self.pdf_attr_raw,
         )
 
     def run_problems(self, make_problemset: bool) -> None:
@@ -235,3 +237,20 @@ class Project:
             if key in config_dict.keys():
                 result_dict[key] = dir_name / config_dict[key]
         return result_dict
+
+    def _search_pdf_attr_raw(
+        self,
+    ) -> dict[str, Any]:
+        """problemset.toml (問題セットの設定ファイル) を探し、PDF 設定を得る"""
+        config_file = self._cwd / "problemset.toml"
+        if config_file.exists():
+            config_toml = toml.load(config_file)
+            if "pdf" in config_toml:
+                config_dict = config_toml["pdf"]
+            else:
+                logger.warning("pdf settings not found.")
+                config_dict = {}
+        else:
+            logger.warning(f"{config_file} not found.")
+            config_dict = {}
+        return config_dict
