@@ -2,3 +2,9 @@
     template_path = "./templates/icpc_domestic/template.html"
     preprocess_path = "./templates/icpc_domestic/preprocess.py"
     postprocess_path = "./templates/icpc_domestic/postprocess.py"
+
+[pdf]
+    [pdf.problem]
+        javascript-delay = 1000
+    [pdf.problemset]
+        javascript-delay = 10000

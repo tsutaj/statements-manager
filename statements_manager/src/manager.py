@@ -22,9 +22,15 @@ class ContentsStatus(Enum):
 
 
 class Manager:
-    def __init__(self, problem_attr: dict[str, Any], template_attr: dict[str, Any]):
+    def __init__(
+        self,
+        problem_attr: dict[str, Any],
+        template_attr: dict[str, Any],
+        pdf_attr_raw: dict[str, Any],
+    ):
         self._cwd = Path.cwd()
         self.problem_attr = problem_attr  # type: dict[str, Any]
+        self.pdf_attr_raw = pdf_attr_raw  # type: dict[str, Any]
         self.renderer = Renderer(
             template_attr.get("template_html", default_template_html),
             template_attr.get("preprocess_path", None),
@@ -127,6 +133,18 @@ class Manager:
                     f"assets_path '{self.problem_attr[problem_id]['assets_path']}' does not exist."
                 )
 
+    def make_pdf_attr(self, is_problemset: bool) -> dict[str, Any]:
+        if "common" in self.pdf_attr_raw:
+            pdf_attr = self.pdf_attr_raw["common"]
+        else:
+            pdf_attr = template_pdf_options
+
+        if is_problemset:
+            pdf_attr.update(self.pdf_attr_raw.get("problemset", {}))
+        else:
+            pdf_attr.update(self.pdf_attr_raw.get("problem", {}))
+        return pdf_attr
+
     def run_rendering(
         self,
         output_dir: Path,
@@ -147,16 +165,16 @@ class Manager:
             )
             self.save_file(html, output_path)
         elif output_ext == "pdf":
-            wait_second = (
-                int(cast(int, template_pdf_options["javascript-delay"])) // 1000
-            )
-            logger.info(f"please wait... ({wait_second} sec or greater)")
+            pdf_attr = self.make_pdf_attr(is_problemset)
+            wait_second = int(cast(int, pdf_attr["javascript-delay"]))
+            if wait_second > 0:
+                logger.info(f"please wait... ({wait_second} [msec] or greater)")
             self.renderer.generate_and_dump_pdf(
                 problem_attr=self.problem_attr,
                 problem_ids=problem_ids,
                 is_problemset=is_problemset,
                 pdf_path=output_path,
-                pdf_options=template_pdf_options,
+                pdf_options=pdf_attr,
             )
         elif output_ext == "md":
             md = self.renderer.generate_markdown(
