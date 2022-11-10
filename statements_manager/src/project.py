@@ -231,7 +231,7 @@ class Project:
         else:
             result_dict["template_html"] = default_template_html
 
-        result_dict["output_path"] = dir_name
+        result_dict["output_path"] = dir_name / "problemset"
         keys = ["preprocess_path", "postprocess_path"]
         for key in keys:
             if key in config_dict.keys():

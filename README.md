@@ -214,7 +214,7 @@ ss-manager run [-o OUTPUT] [-p] WORKING_DIR
   - `html` (default): HTML を出力
   - `md`: Markdown を出力
   - `pdf`: PDF を出力
-- `-p, --make-problemset`: 問題セット全体のファイルも出力します。出力結果は `WORKING_DIR` 直下に保存されます
+- `-p, --make-problemset`: 問題セット全体のファイルも出力します。出力結果は `WORKING_DIR/problemset` 直下に保存されます
 
 ## 運用例 (リポジトリにある問題文を半自動で更新する試み)
 
