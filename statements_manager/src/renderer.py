@@ -1,3 +1,5 @@
+import pathlib
+import re
 from subprocess import PIPE, Popen, TimeoutExpired
 from typing import Any, Dict, List, Union
 
@@ -6,6 +8,7 @@ from jinja2 import DictLoader, Environment, StrictUndefined
 from markdown import markdown
 from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
+from pyquery import PyQuery as pq
 
 from statements_manager.src.variables_converter import VariablesConverter
 from statements_manager.template import default_template_markdown
@@ -150,6 +153,13 @@ class Renderer:
                     "fenced_code",
                 ],
             )
+            # 問題セットの場合、添付ファイルのパスを置換する
+            if is_problemset:
+                rendered_contents = re.sub(
+                    r'(<img .*src="(?:|\./+)assets/+)(.+".*>)',
+                    f"\\1{problem_id}/\\2",
+                    rendered_contents,
+                )
             problem_attr[problem_id]["statement"] = rendered_contents
 
         html = self.apply_template(
@@ -174,6 +184,16 @@ class Renderer:
             problem_ids=problem_ids,
             is_problemset=is_problemset,
         )
+        # 添付ファイルへのパスを絶対パスにする
+        dom = pq(html)
+        for img in dom("img").items():
+            img_url = img.attr["src"]
+            if not img_url.startswith("http"):
+                img_url = pathlib.Path(
+                    pathlib.Path(pdf_path).resolve().parent / img_url
+                )
+            img.attr["src"] = str(img_url)
+        html = dom.html()
         pdfkit.from_string(html, pdf_path, options=pdf_options)
 
     def generate_markdown(

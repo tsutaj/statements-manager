@@ -20,6 +20,7 @@ setup(
         "colorlog",
         "pdfkit",
         "pymdown-extensions",
+        "pyquery==1.2.4",
     ],
     packages=find_packages(exclude=("sample", "config")),
     entry_points={
