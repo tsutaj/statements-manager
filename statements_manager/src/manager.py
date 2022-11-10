@@ -56,7 +56,9 @@ class Manager:
         if not setting_dir.exists():
             logger.error(f"setting dir '{setting_dir}' does not exist")
             logger.warning(
-                "tips: try 'ss-manager reg-creds' before running on docs mode."
+                "tips: try 'ss-manager reg-creds' before running on docs mode.\n"
+                "how to create credentials file: "
+                "see https://github.com/tsutaj/statements-manager/blob/master/README.md#how-to-use"
             )
             return (ContentsStatus.NG, "")
 
