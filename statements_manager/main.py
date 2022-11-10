@@ -68,14 +68,23 @@ def get_parser() -> argparse.ArgumentParser:
         help="make problemset file",
     )
 
-    subparser = subparsers.add_parser("reg-creds", help="register credentials file")
+    subparser = subparsers.add_parser(
+        "reg-creds",
+        help="register credentials file",
+        formatter_class=argparse.RawTextHelpFormatter,
+    )
     subparser.add_argument(
         "working_dir",
         nargs="?",
         default=".",
         help="path to a working directory (default: current directory)",
     )
-    subparser.add_argument("creds", help="path to credentials file (json)")
+    subparser.add_argument(
+        "creds",
+        help="path to credentials file (json)\n"
+        "how to create credentials file: "
+        "see https://github.com/tsutaj/statements-manager/blob/master/README.md#how-to-use",
+    )
     return parser
 
 
