@@ -1,223 +1,238 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <title>
-      {% if problemset.is_problemset %}
-        All Problems
-      {% else %}
-        Problem {@problemset.problems[0].id}
-      {% endif %}
-    </title>
-    <meta charset="utf-8">
-    <style type="text/css">
-  body{
-    font-family : sans-serif;
-  }
 
-  blockquote { /* edited by tsutaj */
-        white-space: pre;
-        word-break: break-all;
-        word-wrap: break-word;
-  }
-  
-  table.main {
-    width        : 100%; /* edited by tsutaj */
-    border-color : #66f;
-    border-style : solid;
-    border-width : 1pt 1pt 1pt 1pt;
-  }
-  
-  td.main {
-    background-color : #fff;
-  }
-  
-  td.menu {
-    background-color : #fff;
-  }
-  
-  h1 {
-    border-color : #78c;
-    border-style : solid;
-    border-width : 1px 1px 1px 1px;
-  
-    margin       : 5px 0px 0px 0px;
-  }
-  
-  h2 {
-    color            : #fff;
-    font-size        : medium;
-    background-color : #33f;
-  
-    border-color : #33f;
-    border-style : double;
-    border-width : 1px 1px 1px 1px;
-  
-    margin       : 5px 0px 0px 0px;
-    padding      : 5px 5px;
-  }
-  
-  h2.result_congrat {
-    color            : #fff;
-    font-size        : medium;
-    background-color : #0f8;
-  
-    border-color : #0f8;
-    border-style : double;
-    border-width : 1px 1px 1px 1px;
-  
-    margin       : 0px 0px 0px 0px;
-    padding      : 5px 5px;
-  }
-  
-  div.result_congrat {
-    border-color : #0f8;
-    border-style : double;
-    border-width : 1px 1px 1px 1px;
-  
-    margin       : 0px 0px 0px 0px;
-    padding      : 5px 10px;
-  }
-  
-  h2.result_one_more {
-    color            : #fff;
-    font-size        : medium;
-    background-color : #88f;
-  
-    border-color : #88f;
-    border-style : double;
-    border-width : 1px 1px 1px 1px;
-  
-    margin       : 0px 0px 0px 0px;
-    padding      : 5px 5px;
-  }
-  
-  div.result_one_more {
-    border-color : #88f;
-    border-style : double;
-    border-width : 1px 1px 1px 1px;
-  
-    margin       : 0px 0px 0px 0px;
-    padding      : 5px 10px;
-  }
-  
-  h2.result_wrong {
-    color            : #fff;
-    font-size        : medium;
-    background-color : orange;
-  
-    border-color : orange;
-    border-style : double;
-    border-width : 1px 1px 1px 1px;
-  
-    margin       : 0px 0px 0px 0px;
-    padding      : 5px 5px;
-  }
-  
-  div.result_wrong {
-    border-color : orange;
-    border-style : double;
-    border-width : 1px 1px 1px 1px;
-  
-    margin       : 0px 0px 0px 0px;
-    padding      : 5px 10px;
-  }
-  
-  h2.result_missing {
-    color            : #fff;
-    font-size        : medium;
-    background-color : #444;
-  
-    border-color : #444;
-    border-style : double;
-    border-width : 1px 1px 1px 1px;
-  
-    margin       : 0px 0px 0px 0px;
-    padding      : 5px 5px;
-  }
-  
-  div.result_missing {
-    border-color : #444;
-    border-style : double;
-    border-width : 1px 1px 1px 1px;
-  
-    margin       : 0px 0px 0px 0px;
-    padding      : 5px 10px;
-  }
-  
-  h2.result_hopeless {
-    color            : #fff;
-    font-size        : medium;
-    background-color : red;
-  
-    border-color : red;
-    border-style : double;
-    border-width : 1px 1px 1px 1px;
-  
-    margin       : 0px 0px 0px 0px;
-    padding      : 5px 5px;
-  }
-  
-  div.result_hopeless {
-    border-color : red;
-    border-style : double;
-    border-width : 1px 1px 1px 1px;
-  
-    margin       : 0px 0px 0px 0px;
-    padding      : 5px 10px;
-  }
-  
-  h3 {
-    color            : #fff;
-    font-size        : medium;
-    background-color : #78c;
-  
-    border-color : #78c;
-    border-style : double;
-    border-width : 1px 1px 1px 1px;
-  
-    margin       : 0px 0px 0px 0px;
-    padding      : 0px 10px;
-  }
-  
-  div {
-    border-color : #78c;
-    border-style : double;
-    border-width : 1px 1px 1px 1px;
-  
-    margin       : 0px 0px 0px 0px;
-    padding      : 5px 10px;
-  }
-  
-  div.banner {
-    border-color : #78c;
-    border-style : none;
-    border-width : 1px 1px 1px 1px;
+<head>
+  <title>
+    {% if problemset.is_problemset %}
+    All Problems
+    {% else %}
+    Problem {@problemset.problems[0].id}
+    {% endif %}
+  </title>
+  <meta charset="utf-8">
+  <style type="text/css">
+    body {
+      font-family: sans-serif;
+    }
 
-    margin       : 0px 0px 0px 0px;
-    padding      : 5px 10px;
-  }
-  
-  p.result {
-    color : #f00;
-  }
-  
-  ul.menu {
-    list-style-type:none;
-    margin       : 2pt;
-    padding      : 2pt;  
-  }
-  
-  a:link{
-    color:#d60;
-  }
-  a:visited{
-    color:#f00;
-  }
-  pre, tt {
-    font-family: Courier, monospace;
-  }
-</style>
-    <script type="text/x-mathjax-config">
+    blockquote {
+      /* edited by tsutaj */
+      white-space: pre;
+      word-break: break-all;
+      word-wrap: break-word;
+    }
+
+    table.main {
+      width: 100%;
+      /* edited by tsutaj */
+      border-color: #66f;
+      border-style: solid;
+      border-width: 1pt 1pt 1pt 1pt;
+    }
+
+    td.main {
+      background-color: #fff;
+    }
+
+    td.menu {
+      background-color: #fff;
+    }
+
+    h1 {
+      border-color: #78c;
+      border-style: solid;
+      border-width: 1px 1px 1px 1px;
+
+      margin: 5px 0px 0px 0px;
+    }
+
+    h2 {
+      color: #fff;
+      font-size: medium;
+      background-color: #33f;
+
+      border-color: #33f;
+      border-style: double;
+      border-width: 1px 1px 1px 1px;
+
+      margin: 5px 0px 0px 0px;
+      padding: 5px 5px;
+    }
+
+    h2.result_congrat {
+      color: #fff;
+      font-size: medium;
+      background-color: #0f8;
+
+      border-color: #0f8;
+      border-style: double;
+      border-width: 1px 1px 1px 1px;
+
+      margin: 0px 0px 0px 0px;
+      padding: 5px 5px;
+    }
+
+    div.result_congrat {
+      border-color: #0f8;
+      border-style: double;
+      border-width: 1px 1px 1px 1px;
+
+      margin: 0px 0px 0px 0px;
+      padding: 5px 10px;
+    }
+
+    h2.result_one_more {
+      color: #fff;
+      font-size: medium;
+      background-color: #88f;
+
+      border-color: #88f;
+      border-style: double;
+      border-width: 1px 1px 1px 1px;
+
+      margin: 0px 0px 0px 0px;
+      padding: 5px 5px;
+    }
+
+    div.result_one_more {
+      border-color: #88f;
+      border-style: double;
+      border-width: 1px 1px 1px 1px;
+
+      margin: 0px 0px 0px 0px;
+      padding: 5px 10px;
+    }
+
+    h2.result_wrong {
+      color: #fff;
+      font-size: medium;
+      background-color: orange;
+
+      border-color: orange;
+      border-style: double;
+      border-width: 1px 1px 1px 1px;
+
+      margin: 0px 0px 0px 0px;
+      padding: 5px 5px;
+    }
+
+    div.result_wrong {
+      border-color: orange;
+      border-style: double;
+      border-width: 1px 1px 1px 1px;
+
+      margin: 0px 0px 0px 0px;
+      padding: 5px 10px;
+    }
+
+    h2.result_missing {
+      color: #fff;
+      font-size: medium;
+      background-color: #444;
+
+      border-color: #444;
+      border-style: double;
+      border-width: 1px 1px 1px 1px;
+
+      margin: 0px 0px 0px 0px;
+      padding: 5px 5px;
+    }
+
+    div.result_missing {
+      border-color: #444;
+      border-style: double;
+      border-width: 1px 1px 1px 1px;
+
+      margin: 0px 0px 0px 0px;
+      padding: 5px 10px;
+    }
+
+    h2.result_hopeless {
+      color: #fff;
+      font-size: medium;
+      background-color: red;
+
+      border-color: red;
+      border-style: double;
+      border-width: 1px 1px 1px 1px;
+
+      margin: 0px 0px 0px 0px;
+      padding: 5px 5px;
+    }
+
+    div.result_hopeless {
+      border-color: red;
+      border-style: double;
+      border-width: 1px 1px 1px 1px;
+
+      margin: 0px 0px 0px 0px;
+      padding: 5px 10px;
+    }
+
+    h3 {
+      color: #fff;
+      font-size: medium;
+      background-color: #78c;
+
+      border-color: #78c;
+      border-style: double;
+      border-width: 1px 1px 1px 1px;
+
+      margin: 0px 0px 0px 0px;
+      padding: 0px 10px;
+    }
+
+    #page-break {
+      page-break-after: always;
+      border-style: none;
+      border-width: 0;
+
+      margin: 0;
+      padding: 0;
+    }
+
+    div {
+      border-color: #78c;
+      border-style: double;
+      border-width: 1px 1px 1px 1px;
+
+      margin: 0px 0px 0px 0px;
+      padding: 5px 10px;
+    }
+
+    div.banner {
+      border-color: #78c;
+      border-style: none;
+      border-width: 1px 1px 1px 1px;
+
+      margin: 0px 0px 0px 0px;
+      padding: 5px 10px;
+    }
+
+    p.result {
+      color: #f00;
+    }
+
+    ul.menu {
+      list-style-type: none;
+      margin: 2pt;
+      padding: 2pt;
+    }
+
+    a:link {
+      color: #d60;
+    }
+
+    a:visited {
+      color: #f00;
+    }
+
+    pre,
+    tt {
+      font-family: Courier, monospace;
+    }
+  </style>
+  <script type="text/x-mathjax-config">
         MathJax.Hub.Config({
             tex2jax: {
                 inlineMath: [["$", "$"]],
@@ -226,64 +241,73 @@
             }
         });
     </script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML">
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML">
     </script>
-  </head>
-  <body>
-    <table class="main">
-      <!-- ------------ 1st row ---------------- -->
-      <!-- |        ACM Inter Collegiate Programming Contest       | -->
-      <tr>
-       <td colspan=2 align=center>
-        
-      <div class=banner align=right><font size=-1>
-      <i>2022/6/25 JAG-ICPC</i></font></div> </td>
-      </tr>
-      
-      <!-- ------------ 2nd row ---------------- -->
-      <!-- menu in the 1st column. empty in the 2nd. -->
-      <tr>
-       <td class=menu rowspan=4 valign=top nowrap>
-        </td>
-       <td>
-        </td>
-      </tr>
-      
-      <!-- ------------ 3rd row ---------------- -->
-      <!-- no 1st column. empty in the 2nd. -->
-      <tr>
-       <td>
-        </td>
-      </tr>
-      
-      <!-- ------------ 4th row ------------ -->
-      <!-- nothing in the 1st column. everything else in the 2nd -->
-      <tr>
-       <td class="main">
+</head>
+
+<body>
+  <table class="main">
+    <!-- ------------ 1st row ---------------- -->
+    <!-- |        ACM Inter Collegiate Programming Contest       | -->
+    <tr>
+      <td colspan=2 align=center>
+
+        <div class=banner align=right>
+          <font size=-1>
+            <i>2022/6/25 JAG-ICPC</i>
+          </font>
+        </div>
+      </td>
+    </tr>
+
+    <!-- ------------ 2nd row ---------------- -->
+    <!-- menu in the 1st column. empty in the 2nd. -->
+    <tr>
+      <td class=menu rowspan=4 valign=top nowrap>
+      </td>
+      <td>
+      </td>
+    </tr>
+
+    <!-- ------------ 3rd row ---------------- -->
+    <!-- no 1st column. empty in the 2nd. -->
+    <tr>
+      <td>
+      </td>
+    </tr>
+
+    <!-- ------------ 4th row ------------ -->
+    <!-- nothing in the 1st column. everything else in the 2nd -->
+    <tr>
+      <td class="main">
         {% if problemset.is_problemset %}
-          <h2>Links</h2>
-          <div>
-            {% for problem_loop in problemset.problems %}
-              <a href="#section_{@problem_loop.id}">{@problem_loop.id}</a>
-            {% endfor %}
-          </div>
+        <h2>Links</h2>
+        <div>
+          {% for problem_loop in problemset.problems %}
+          <a href="#section_{@problem_loop.id}">{@problem_loop.id}</a>
+          {% endfor %}
+        </div>
         {% endif %}
 
         {% for problem in problemset.problems %}
+        <div id="page-break">
           <a name="section_{@problem.id}"></a>
           {@problem.statement}
 
           <h3></h3>
           <footer style="text-align: right">(End of Problem {@problem.id})
             {% if problemset.is_problemset %}
-              {% for problem_loop in problemset.problems %}
-                <a href="#section_{@problem_loop.id}">{@problem_loop.id}</a>
-              {% endfor %}
+            {% for problem_loop in problemset.problems %}
+            <a href="#section_{@problem_loop.id}">{@problem_loop.id}</a>
+            {% endfor %}
             {% endif %}
           </footer>
+        </div>
         {% endfor %}
-       </td>                     
-      </tr>                      
-      </table>                         
-  </body>
+      </td>
+    </tr>
+  </table>
+</body>
+
 </html>
