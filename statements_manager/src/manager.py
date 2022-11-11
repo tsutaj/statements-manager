@@ -50,39 +50,55 @@ class Manager:
 
     def get_docs_contents(self, problem_id: str) -> Tuple[ContentsStatus, str]:
         statement_path = self.problem_attr[problem_id]["statement_path"]
-        setting_dir = pathlib.Path(
-            pathlib.Path(self.problem_attr[problem_id]["creds_path"]).parent
-        )
-        if not setting_dir.exists():
-            logger.error(f"setting dir '{setting_dir}' does not exist")
-            logger.warning(
-                "tips: try 'ss-manager reg-creds' before running on docs mode.\n"
-                "how to create credentials file: "
-                "see https://github.com/tsutaj/statements-manager/blob/master/README.md#how-to-use"
-            )
-            return (ContentsStatus.NG, "")
-
-        token = create_token(
-            creds_path=self.problem_attr[problem_id]["creds_path"],
-            token_path=self.problem_attr[problem_id]["token_path"],
-        )
-        service = build("docs", "v1", credentials=token)
-        document = service.documents().get(documentId=statement_path).execute()
-        contents = ""
-        for content in document.get("body")["content"]:
-            if "paragraph" not in content:
+        setting_dir_candidates = [
+            pathlib.Path.home() / ".ss-manager",
+            pathlib.Path(self.problem_attr[problem_id]["token_path"]).parent,
+        ]
+        for setting_dir in setting_dir_candidates:
+            if not setting_dir.exists():
                 continue
-            for element in content["paragraph"]["elements"]:
-                statement = element["textRun"]["content"]
-                if "suggestedInsertionIds" not in element["textRun"]:
-                    contents += statement
-                else:
-                    logger.warning(
-                        f"proposed element for addition (ignored in rendering): {statement}"
-                    )
-                if "suggestedDeletionIds" in element["textRun"]:
-                    logger.warning(f"proposed element for deletion: {statement}")
-        return (ContentsStatus.OK, contents)
+
+            try:
+                token = create_token(
+                    creds_path=str(setting_dir / "credentials.json"),
+                    token_path=str(setting_dir / "token.pickle"),
+                )
+                if token is None:
+                    continue
+
+                logger.info(
+                    f"trying to get docs file using token ({setting_dir / 'token.pickle'})"
+                )
+                service = build("docs", "v1", credentials=token)
+                document = service.documents().get(documentId=statement_path).execute()
+                contents = ""
+                for content in document.get("body")["content"]:
+                    if "paragraph" not in content:
+                        continue
+                    for element in content["paragraph"]["elements"]:
+                        statement = element["textRun"]["content"]
+                        if "suggestedInsertionIds" not in element["textRun"]:
+                            contents += statement
+                        else:
+                            logger.warning(
+                                f"proposed element for addition (ignored in rendering): {statement}"
+                            )
+                        if "suggestedDeletionIds" in element["textRun"]:
+                            logger.warning(
+                                f"proposed element for deletion: {statement}"
+                            )
+                return (ContentsStatus.OK, contents)
+            except Exception as e:
+                logger.error(f"error occured! ({setting_dir}): {e}")
+
+        # どのパスでも生成できなかったらエラー
+        logger.error("cannot get docs contents")
+        logger.warning(
+            "tips: try 'ss-manager reg-creds' before running on docs mode.\n"
+            "how to create credentials file: "
+            "see https://github.com/tsutaj/statements-manager/blob/master/README.md#how-to-use"
+        )
+        return (ContentsStatus.NG, "")
 
     # ローカルまたは Google Docs から問題文のテキストファイルを取得
     def get_contents(self, problem_id: str) -> Tuple[ContentsStatus, str]:

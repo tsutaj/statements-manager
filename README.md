@@ -89,12 +89,12 @@ pip install statements-manager
 
 ![Screenshot from 2021-08-19 23-25-11](https://user-images.githubusercontent.com/19629946/130088501-5e1208df-445a-4797-be31-60a77f04c91d.png)
 
-- 以下のコマンドを打って、JSON ファイルを作業ディレクトリに登録します
-  - `WORKING_DIR` とは、"How to use" の冒頭にあるように、各問題ディレクトリの 1 つ上の階層です
+- 以下のコマンドを打って、JSON ファイルを登録します
   - 登録が終われば、`CREDS_PATH` にある json ファイルは削除しても構いません
+  - JSON ファイルは、ホームディレクトリに生成される隠しフォルダ `.ss-manager` の中に格納されます
 
 ```python
-ss-manager reg-creds WORKING_DIR CREDS_PATH
+ss-manager reg-creds CREDS_PATH
 ```
 
 ### 3. 問題ごとに設定ファイル `problem.toml` を作る
