@@ -74,13 +74,7 @@ def get_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawTextHelpFormatter,
     )
     subparser.add_argument(
-        "working_dir",
-        nargs="?",
-        default=".",
-        help="path to a working directory (default: current directory)",
-    )
-    subparser.add_argument(
-        "creds",
+        "creds_path",
         help="path to credentials file (json)\n"
         "how to create credentials file: "
         "see https://github.com/tsutaj/statements-manager/blob/master/README.md#how-to-use",
@@ -102,33 +96,34 @@ def subcommand_run(
 
 
 def subcommand_reg_creds(
-    working_dir: str,
     creds_path: str,
 ) -> None:
     # 引数は実在するものでなければならない
-    if not pathlib.Path(working_dir).exists():
-        logger.error(f"working directory '{working_dir}' does not exist")
-        raise IOError(f"working directory '{working_dir}' does not exist")
     if not pathlib.Path(creds_path).exists():
-        logger.error(f"credentials {creds_path} does not exist")
-        raise IOError(f"credentials {creds_path} does not exist")
+        logger.error(f"credentials '{creds_path}' does not exist")
+        raise IOError(f"credentials '{creds_path}' does not exist")
 
-    # 隠しディレクトリ (すでにディレクトリがある場合は更新するか確認)
-    hidden_dir = pathlib.Path(working_dir, ".ss-manager")
+    # 隠しディレクトリ
+    homedir = str(pathlib.Path.home())
+    hidden_dir = pathlib.Path(homedir, ".ss-manager")
     logger.info("register credentials")
     if not hidden_dir.exists():
         logger.info(f"create hidden directory: {hidden_dir}")
         hidden_dir.mkdir()
-    elif not ask_ok(f"{hidden_dir} already exists. Rewrite this?", False):
-        logger.info("do nothing (not rewrite)")
+
+    # 上書きが発生する場合は確認する
+    token_path = hidden_dir / "token.pickle"
+    if token_path.exists() and not ask_ok(
+        f"{hidden_dir} already exists. Rewrite this?", default_response=False
+    ):
         return
 
     # ファイルを登録
-    token_path = str(pathlib.Path(hidden_dir, "token.pickle"))
-    token = create_token(creds_path=creds_path, token_path=token_path)
+    token = create_token(creds_path)
     with open(token_path, "wb") as f:
         pickle.dump(token, f)
-    shutil.copy2(creds_path, hidden_dir / pathlib.Path("credentials.json"))
+    creds_savepath = hidden_dir / "credentials.json"
+    shutil.copy2(creds_path, creds_savepath)
     logger.info("copied credentials successfully.")
     logger.debug("reg-creds command ended successfully.")
 
@@ -145,8 +140,7 @@ def main() -> None:
         )
     elif args.subcommand == "reg-creds":
         subcommand_reg_creds(
-            working_dir=args.working_dir,
-            creds_path=args.creds,
+            creds_path=args.creds_path,
         )
     else:
         parser.print_help()
