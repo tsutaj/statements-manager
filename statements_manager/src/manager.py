@@ -84,6 +84,7 @@ class Manager:
                     logger.warning(f"proposed element for deletion: {statement}")
         return (ContentsStatus.OK, contents)
 
+    # ローカルまたは Google Docs から問題文のテキストファイルを取得
     def get_contents(self, problem_id: str) -> Tuple[ContentsStatus, str]:
         if self.problem_attr[problem_id]["mode"] == "local":
             return self.get_local_contents(problem_id)
@@ -97,6 +98,7 @@ class Manager:
         with open(output_path, "w") as f:
             f.write(text)
 
+    # 制約パラメータファイル (e.g. constraints.hpp) の作成
     def create_params_file(self, problem_id: str) -> None:
         logger.info("create params file")
         if (
@@ -119,10 +121,11 @@ class Manager:
         else:
             logger.warning("skip creating params: params_path is not set")
 
+    # 添付ファイル群のコピー
     def copy_assets(self, problem_id: str, output_path: Path) -> None:
         if "assets_path" in self.problem_attr[problem_id]:
             assets_src_path = Path(self.problem_attr[problem_id]["assets_path"])
-            assets_dst_path = output_path / Path("assets")
+            assets_dst_path = output_path
             if assets_src_path.exists():
                 logger.info("copy assets file")
                 if assets_dst_path.exists():
@@ -223,7 +226,7 @@ class Manager:
                 logger.warning(f"output directory '{output_dir}' already exists.")
             else:
                 output_dir.mkdir()
-            self.copy_assets(problem_id, output_dir)
+            self.copy_assets(problem_id, output_dir / "assets")
             self.run_rendering(
                 output_dir=output_dir,
                 output_ext=output_ext,
@@ -236,6 +239,18 @@ class Manager:
         if not valid_problem_ids:
             logger.warning("problem files not found")
         elif make_problemset:
+            if self.problemset_dir.exists():
+                logger.warning(
+                    f"output problemset directory '{self.problemset_dir}' already exists."
+                )
+            else:
+                self.problemset_dir.mkdir()
+
+            # 添付ファイルのコピー
+            for problem_id in valid_problem_ids:
+                self.copy_assets(
+                    problem_id, self.problemset_dir / "assets" / problem_id
+                )
             logger.info("rendering problemset")
             self.run_rendering(
                 output_dir=self.problemset_dir,
