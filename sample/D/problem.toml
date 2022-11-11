@@ -1,0 +1,17 @@
+# problem id (it is used for the name of output html file)
+id = "D"
+
+# output params
+params_path = "./tests/constraints.hpp"
+
+# path to statements
+[[statements]]
+path = "./statement/statement.md"
+lang = "en" # 見出しを英語にするため
+
+# write constraints
+[constraints]
+    MIN_AB = 1
+    MAX_AB = 1_000_000_000
+    MIN_T = 1
+    MAX_T = 100_000

@@ -50,7 +50,9 @@ def get_parser() -> argparse.ArgumentParser:
     )
     subparser.add_argument(
         "working_dir",
-        help="path to a working directory",
+        nargs="?",
+        default=".",
+        help="path to a working directory (default: current directory)",
     )
     subparser.add_argument(
         "-o",
@@ -59,52 +61,69 @@ def get_parser() -> argparse.ArgumentParser:
         choices=["html", "md", "pdf"],
         help="output format (defaults to 'html')",
     )
-
-    subparser = subparsers.add_parser("reg-creds", help="register credentials file")
     subparser.add_argument(
-        "working_dir",
-        help="path to a working directory",
+        "-p",
+        "--make-problemset",
+        action="store_true",
+        help="make problemset file",
     )
-    subparser.add_argument("creds", help="path to credentials file (json)")
+
+    subparser = subparsers.add_parser(
+        "reg-creds",
+        help="register credentials file",
+        formatter_class=argparse.RawTextHelpFormatter,
+    )
+    subparser.add_argument(
+        "creds_path",
+        help="path to credentials file (json)\n"
+        "how to create credentials file: "
+        "see https://github.com/tsutaj/statements-manager/blob/master/README.md#how-to-use",
+    )
     return parser
 
 
-def subcommand_run(working_dir: str, output: str) -> None:
+def subcommand_run(
+    working_dir: str,
+    output: str,
+    make_problemset: bool,
+) -> None:
     working_dir = str(pathlib.Path(working_dir).resolve())
     logger.debug(f"run: working_dir = '{working_dir}'")
     project = Project(working_dir, output)  # Project
 
-    project.run_problems()
-    logger.debug("run for problem set")
-    project.run_problemset()
+    project.run_problems(make_problemset)
     logger.debug("run command ended successfully.")
 
 
-def subcommand_reg_creds(working_dir: str, creds_path: str) -> None:
+def subcommand_reg_creds(
+    creds_path: str,
+) -> None:
     # 引数は実在するものでなければならない
-    if not pathlib.Path(working_dir).exists():
-        logger.error(f"working directory '{working_dir}' does not exist")
-        raise IOError(f"working directory '{working_dir}' does not exist")
     if not pathlib.Path(creds_path).exists():
-        logger.error(f"credentials {creds_path} does not exist")
-        raise IOError(f"credentials {creds_path} does not exist")
+        logger.error(f"credentials '{creds_path}' does not exist")
+        raise IOError(f"credentials '{creds_path}' does not exist")
 
-    # 隠しディレクトリ (すでにディレクトリがある場合は更新するか確認)
-    hidden_dir = pathlib.Path(working_dir, ".ss-manager")
+    # 隠しディレクトリ
+    homedir = str(pathlib.Path.home())
+    hidden_dir = pathlib.Path(homedir, ".ss-manager")
     logger.info("register credentials")
     if not hidden_dir.exists():
         logger.info(f"create hidden directory: {hidden_dir}")
         hidden_dir.mkdir()
-    elif not ask_ok(f"{hidden_dir} already exists. Rewrite this?", False):
-        logger.info("do nothing (not rewrite)")
+
+    # 上書きが発生する場合は確認する
+    token_path = hidden_dir / "token.pickle"
+    if token_path.exists() and not ask_ok(
+        f"{hidden_dir} already exists. Rewrite this?", default_response=False
+    ):
         return
 
     # ファイルを登録
-    token_path = str(pathlib.Path(hidden_dir, "token.pickle"))
-    token = create_token(creds_path=creds_path, token_path=token_path)
+    token = create_token(creds_path)
     with open(token_path, "wb") as f:
         pickle.dump(token, f)
-    shutil.copy2(creds_path, hidden_dir / pathlib.Path("credentials.json"))
+    creds_savepath = hidden_dir / "credentials.json"
+    shutil.copy2(creds_path, creds_savepath)
     logger.info("copied credentials successfully.")
     logger.debug("reg-creds command ended successfully.")
 
@@ -114,9 +133,15 @@ def main() -> None:
     args = parser.parse_args()
     set_logger(args.debug)
     if args.subcommand == "run":
-        subcommand_run(working_dir=args.working_dir, output=args.output)
+        subcommand_run(
+            working_dir=args.working_dir,
+            output=args.output,
+            make_problemset=args.make_problemset,
+        )
     elif args.subcommand == "reg-creds":
-        subcommand_reg_creds(working_dir=args.working_dir, creds_path=args.creds)
+        subcommand_reg_creds(
+            creds_path=args.creds_path,
+        )
     else:
         parser.print_help()
 

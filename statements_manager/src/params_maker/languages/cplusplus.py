@@ -9,6 +9,9 @@ class CppParamsMaker(ParamsMaker):
     def __init__(self, params: dict[str, Any], output_path: str) -> None:
         super().__init__(params, output_path)
 
+    def header(self) -> str:
+        return "#pragma once\n"
+
     def parse_int(self, key: str, value: int) -> str:
         return f"const long long int {key} = {value};"
 

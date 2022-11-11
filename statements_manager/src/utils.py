@@ -1,6 +1,6 @@
 import pickle
 from pathlib import Path
-from typing import Any, Tuple, Union
+from typing import Any, Union
 
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -24,13 +24,13 @@ def ask_ok(question: str, default_response: bool = True) -> bool:
     return response in ["y", "ye", "yes"]
 
 
-def create_token(
-    creds_path: str, token_path: Union[str, None] = None
-) -> Tuple[Any, Any]:
+def create_token(creds_path: str, token_path: Union[str, None] = None) -> Any:
     scopes = ["https://www.googleapis.com/auth/documents.readonly"]
-    token_obj = None
+    if not Path(creds_path).exists():
+        return None
 
     # set credentials
+    token_obj = None
     if token_path and Path(token_path).exists():
         with open(token_path, "rb") as token:
             token_obj = pickle.load(token)

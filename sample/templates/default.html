@@ -1,5 +1,3 @@
-# flake8: noqa
-default_template_html = """
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -122,33 +120,3 @@ default_template_html = """
 </body>
 
 </html>
-"""
-
-default_template_markdown = """
-{% for problem in problemset.problems %}
-
-{@problem.statement}
-
-{% if not loop.last %}
----
-{% endif %}
-
-{% endfor %}
-"""
-
-template_pdf_options = {
-    "page-size": "A4",
-    "margin-top": 24,
-    "margin-right": 16,
-    "margin-bottom": 16,
-    "margin-left": 16,
-    "encoding": "UTF-8",
-    "javascript-delay": "3000",
-    # "header-center": "hoge",
-    # "header-font-size": 10,
-    # "header-spacing": 12,
-    # "footer-center": "[page] / [toPage]",
-    # "footer-font-size": 8,
-    # "footer-spacing": 8,
-    "enable-local-file-access": None,
-}

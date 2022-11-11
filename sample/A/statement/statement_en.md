@@ -1,12 +1,12 @@
-# A+B
+## Problem A
 
-## Problem statement
+### <u>**A+B**</u>
 
 You are given two integers $A$ and $B$. Print $A + B$.
 
 The number of given testcases is $T$, so you have to print $T$ lines.
 
-## Input
+### Input
 
 ```
 $T$
@@ -20,13 +20,10 @@ $A_T$ $B_T$
 - ${@constraints.MIN_T} \leq T \leq {@constraints.MAX_T}$
 - ${@constraints.MIN_AB} \leq A_i, B_i \leq {@constraints.MAX_AB}$
 
-## Output
+### Output
 
 Output $T$ lines.
 
 You have to output the calculation result of $A_i + B_i$ on $i$-th line.
 
-## Sample
-
 {@samples.all}
-

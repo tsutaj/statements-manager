@@ -23,8 +23,8 @@ lang = "ja"
 
 # write constraints
 [constraints]
-    MIN_A = 1
-    MAX_A = 1_000_000_000
+    MIN_A = -1_000_000_000
+    MAX_A = +1_000_000_000
 
     MIN_N_SMALL = 1
     MAX_N_SMALL = 1000
