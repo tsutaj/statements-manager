@@ -4,10 +4,11 @@
 <head>
     <title>Problem Statement</title>
     <meta charset="utf-8">
+    <link href='http://fonts.googleapis.com/css?family=Noto+Serif' rel='stylesheet' type='text/css'>
     <style type="text/css">
         html {
             color: #222222;
-            font-family: 'Times New Roman', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', meiryo, Verdana, "lr oSVbN";
+            font-family: "Noto Serif";
         }
 
         h1 {
@@ -48,12 +49,10 @@
 
         p {
             font-size: 12pt;
-            font-family: 'Times New Roman', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', meiryo, Verdana, "lr oSVbN";
         }
 
         li {
             font-size: 12pt;
-            font-family: 'Times New Roman', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', meiryo, Verdana, "lr oSVbN";
         }
 
         pre {
@@ -63,7 +62,11 @@
             border-radius: 4px;
         }
 
-        pre>code {
+        code {
+            color: #e83e8c;
+        }
+
+        code.language-input-format {
             color: #222222;
         }
 
@@ -90,12 +93,6 @@
         .table tbody>tr>td.vert-aligned {
             vertical-align: middle;
         }
-
-        code {
-            font-size: 87.5%;
-            color: #e83e8c;
-            word-break: break-word;
-        }
     </style>
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({
@@ -107,13 +104,13 @@
         });
     </script>
     <script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML">
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS_CHTML">
         </script>
 </head>
 
 <body>
     {% for problem in problemset.problems %}
-    <div style="page-break-after: always">
+    <div {% if not loop.last %} style="page-break-after: always" {% endif %}>
         {@problem.statement}
     </div>
     {% endfor %}

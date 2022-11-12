@@ -5,11 +5,24 @@
 
 [pdf]
     [pdf.common]
-        margin-top = 10
-        margin-right = 10
-        margin-bottom = 10
-        margin-left = 10
+        encoding = "UTF-8"
+        page-size = "A4"
+        margin-top = 24
+        margin-right = 16
+        margin-bottom = 16
+        margin-left = 16
+        enable-local-file-access = ""
+        disable-smart-shrinking = ""
+        debug-javascript = ""
     [pdf.problem]
         javascript-delay = 1000
     [pdf.problemset]
         javascript-delay = 10000
+        header-center = "International Collegiate Programming Contest\nPractice Contest for ICPC YYYY Domestic Contest, YYYY-MM-DD"
+        header-font-name = "Times New Roman"
+        header-font-size = 12
+        header-spacing = 12
+        footer-center = "[page] / [toPage]"
+        footer-font-name = "Times New Roman"
+        footer-font-size = 10
+        footer-spacing = 8
