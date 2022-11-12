@@ -6,10 +6,11 @@ default_template_html = """
 <head>
     <title>Problem Statement</title>
     <meta charset="utf-8">
+    <link href='http://fonts.googleapis.com/css?family=Noto+Serif' rel='stylesheet' type='text/css'>
     <style type="text/css">
         html {
             color: #222222;
-            font-family: 'Times New Roman', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', meiryo, Verdana, "lr oSVbN";
+            font-family: "Noto Serif";
         }
 
         h1 {
@@ -50,12 +51,10 @@ default_template_html = """
 
         p {
             font-size: 12pt;
-            font-family: 'Times New Roman', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', meiryo, Verdana, "lr oSVbN";
         }
 
         li {
             font-size: 12pt;
-            font-family: 'Times New Roman', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', meiryo, Verdana, "lr oSVbN";
         }
 
         pre {
@@ -65,7 +64,11 @@ default_template_html = """
             border-radius: 4px;
         }
 
-        pre>code {
+        code {
+            color: #e83e8c;
+        }
+
+        code.language-input-format {
             color: #222222;
         }
 
@@ -92,12 +95,6 @@ default_template_html = """
         .table tbody>tr>td.vert-aligned {
             vertical-align: middle;
         }
-
-        code {
-            font-size: 87.5%;
-            color: #e83e8c;
-            word-break: break-word;
-        }
     </style>
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({
@@ -109,13 +106,13 @@ default_template_html = """
         });
     </script>
     <script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML">
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS_CHTML">
         </script>
 </head>
 
 <body>
     {% for problem in problemset.problems %}
-    <div style="page-break-after: always">
+    <div {% if not loop.last %} style="page-break-after: always" {% endif %}>
         {@problem.statement}
     </div>
     {% endfor %}
@@ -137,18 +134,14 @@ default_template_markdown = """
 """
 
 template_pdf_options = {
+    "encoding": "UTF-8",
     "page-size": "A4",
     "margin-top": 24,
     "margin-right": 16,
     "margin-bottom": 16,
     "margin-left": 16,
-    "encoding": "UTF-8",
     "javascript-delay": "3000",
-    # "header-center": "hoge",
-    # "header-font-size": 10,
-    # "header-spacing": 12,
-    # "footer-center": "[page] / [toPage]",
-    # "footer-font-size": 8,
-    # "footer-spacing": 8,
     "enable-local-file-access": None,
+    "disable-smart-shrinking": None,
+    "debug-javascript": None,
 }
