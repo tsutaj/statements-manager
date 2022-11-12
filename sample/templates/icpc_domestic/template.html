@@ -182,8 +182,16 @@
       padding: 0px 10px;
     }
 
-    #page-break {
+    .page-break {
       page-break-after: always;
+      border-style: none;
+      border-width: 0;
+
+      margin: 0;
+      padding: 0;
+    }
+
+    .no-page-break {
       border-style: none;
       border-width: 0;
 
@@ -291,7 +299,7 @@
         {% endif %}
 
         {% for problem in problemset.problems %}
-        <div id="page-break">
+        <div class="{% if loop.last %}no-{% endif %}page-break">
           <a name="section_{@problem.id}"></a>
           {@problem.statement}
 

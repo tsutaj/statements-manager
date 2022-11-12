@@ -66,6 +66,17 @@ class Renderer:
         )
         return replaced_html
 
+    def replace_assets_path(
+        self, contents: str, problem_id: str, is_problemset: bool
+    ) -> str:
+        if is_problemset:
+            contents = re.sub(
+                r'(<img .*src="(?:|\./+)assets/+)(.+".*>)',
+                f"\\1{problem_id}/\\2",
+                contents,
+            )
+        return contents
+
     def get_render_context(
         self, problem_attr: Dict[str, Any], problem_ids: List[str], is_problemset: bool
     ) -> Dict[str, Any]:
@@ -154,12 +165,9 @@ class Renderer:
                 ],
             )
             # 問題セットの場合、添付ファイルのパスを置換する
-            if is_problemset:
-                rendered_contents = re.sub(
-                    r'(<img .*src="(?:|\./+)assets/+)(.+".*>)',
-                    f"\\1{problem_id}/\\2",
-                    rendered_contents,
-                )
+            rendered_contents = self.replace_assets_path(
+                rendered_contents, problem_id, is_problemset
+            )
             problem_attr[problem_id]["statement"] = rendered_contents
 
         html = self.apply_template(
@@ -194,7 +202,7 @@ class Renderer:
                 )
             img.attr["src"] = str(img_url)
         html = dom.html()
-        pdfkit.from_string(html, pdf_path, options=pdf_options)
+        pdfkit.from_string(html, pdf_path, verbose=True, options=pdf_options)
 
     def generate_markdown(
         self,
@@ -204,6 +212,7 @@ class Renderer:
     ) -> str:
         for problem_id in problem_ids:
             contents = problem_attr[problem_id]["raw_statement"]
+            contents = self.replace_assets_path(contents, problem_id, is_problemset)
             problem_attr[problem_id]["statement"] = contents
 
         md = self.apply_template(
