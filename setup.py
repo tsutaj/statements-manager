@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="statements-manager",
-    version="1.6.1",
+    version="1.7.0",
     author="Yuya Sugie",
     author_email="y.sugie.15739d@gmail.com",
     url="https://github.com/tsutaj/statements-manager",
@@ -18,9 +18,9 @@ setup(
         "jinja2",
         "toml",
         "colorlog",
-        "pdfkit",
+        "pdfkit>=1.0.0",
         "pymdown-extensions",
-        "pyquery==1.2.4",
+        "pyquery>=1.2.4",
     ],
     packages=find_packages(exclude=("sample", "config")),
     entry_points={
