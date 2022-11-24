@@ -3,22 +3,21 @@ from __future__ import annotations
 import copy
 from logging import Logger, getLogger
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 import toml
 
 from statements_manager.src.manager import Manager
 from statements_manager.src.recognize_mode import recognize_mode
 from statements_manager.src.utils import resolve_path
-from statements_manager.template import default_template_html
 
-logger = getLogger(__name__)  # type: Logger
+logger: Logger = getLogger(__name__)
 
 
 class Project:
     def __init__(self, working_dir: str, ext: str) -> None:
-        self._cwd = Path(working_dir).resolve()
-        self._ext = ext  # type: str
+        self._cwd: Path = Path(working_dir).resolve()
+        self._ext: str = ext
         self.problem_attr = self._search_problem_attr()
         self._check_project()
         self.template_attr = self._search_template_attr()
@@ -32,7 +31,7 @@ class Project:
 
     def run_problems(self, make_problemset: bool) -> None:
         """問題文作成を実行する"""
-        problem_ids = sorted(list(self.problem_attr.keys()))  # type: List[str]
+        problem_ids: list[str] = sorted(list(self.problem_attr.keys()))
         self.stmts_manager.run(
             problem_ids=problem_ids,
             output_ext=self._ext,
@@ -72,6 +71,7 @@ class Project:
             "postprocess_path",
             # これ以下はユーザーが設定しない属性
             "template_html",
+            "sample_template_html",
             "output_path",
         ]
         for key in self.template_attr.keys():
@@ -125,7 +125,7 @@ class Project:
         問題ごとに設定ファイルを読み込む
         """
         ids = set()
-        result_dict = {}  # type: dict[str, Any]
+        result_dict: dict[str, Any] = {}
         for problem_file in sorted(self._cwd.glob("./**/problem.toml")):
             dir_name = problem_file.parent.resolve()
             problem_dict = toml.load(problem_file)
@@ -142,8 +142,8 @@ class Project:
 
             # statements で設定されているものそれぞれについて回す
             # id と、どの lang が何回来たかに応じてファイル名が決定
-            lang_count = {}  # type: dict[str, int]
-            lang_number = {}  # type: dict[str, int]
+            lang_count: dict[str, int] = {}
+            lang_number: dict[str, int] = {}
             for statement_info in problem_dict["statements"]:
                 lang = statement_info.get("lang", "en")
                 lang_number.setdefault(lang, 0)
@@ -223,13 +223,14 @@ class Project:
             logger.warning(f"{config_file} not found.")
             config_dict = {}
 
-        result_dict = {}  # type: Dict[str, Any]
+        result_dict: dict[str, Any] = {}
         # テンプレートファイル
         if "template_path" in config_dict:
             with open(dir_name / Path(config_dict["template_path"])) as f:
                 result_dict["template_html"] = f.read()
-        else:
-            result_dict["template_html"] = default_template_html
+        if "sample_template_path" in config_dict:
+            with open(dir_name / Path(config_dict["sample_template_path"])) as f:
+                result_dict["sample_template_html"] = f.read()
 
         result_dict["output_path"] = dir_name / "problemset"
         keys = ["preprocess_path", "postprocess_path"]

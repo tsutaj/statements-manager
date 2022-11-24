@@ -7,7 +7,7 @@ from logging import Logger, basicConfig, getLogger
 from statements_manager.src.project import Project
 from statements_manager.src.utils import ask_ok, create_token
 
-logger = getLogger(__name__)  # type: Logger
+logger: Logger = getLogger(__name__)
 
 
 def set_logger(debug_mode: bool) -> None:
