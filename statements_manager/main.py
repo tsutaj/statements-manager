@@ -67,6 +67,12 @@ def get_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="make problemset file",
     )
+    subparser.add_argument(
+        "-f",
+        "--force-dump",
+        action="store_true",
+        help="always dump output file",
+    )
 
     subparser = subparsers.add_parser(
         "reg-creds",
@@ -86,12 +92,13 @@ def subcommand_run(
     working_dir: str,
     output: str,
     make_problemset: bool,
+    force_dump: bool,
 ) -> None:
     working_dir = str(pathlib.Path(working_dir).resolve())
     logger.debug(f"run: working_dir = '{working_dir}'")
     project = Project(working_dir, output)  # Project
 
-    project.run_problems(make_problemset)
+    project.run_problems(make_problemset, force_dump)
     logger.debug("run command ended successfully.")
 
 
@@ -137,6 +144,7 @@ def main() -> None:
             working_dir=args.working_dir,
             output=args.output,
             make_problemset=args.make_problemset,
+            force_dump=args.force_dump,
         )
     elif args.subcommand == "reg-creds":
         subcommand_reg_creds(
