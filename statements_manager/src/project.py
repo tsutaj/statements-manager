@@ -10,7 +10,6 @@ import toml
 from statements_manager.src.manager import Manager
 from statements_manager.src.recognize_mode import recognize_mode
 from statements_manager.src.utils import resolve_path
-from statements_manager.template import default_template_html
 
 logger = getLogger(__name__)  # type: Logger
 
@@ -72,6 +71,7 @@ class Project:
             "postprocess_path",
             # これ以下はユーザーが設定しない属性
             "template_html",
+            "sample_template_html",
             "output_path",
         ]
         for key in self.template_attr.keys():
@@ -228,8 +228,9 @@ class Project:
         if "template_path" in config_dict:
             with open(dir_name / Path(config_dict["template_path"])) as f:
                 result_dict["template_html"] = f.read()
-        else:
-            result_dict["template_html"] = default_template_html
+        if "sample_template_path" in config_dict:
+            with open(dir_name / Path(config_dict["sample_template_path"])) as f:
+                result_dict["sample_template_html"] = f.read()
 
         result_dict["output_path"] = dir_name / "problemset"
         keys = ["preprocess_path", "postprocess_path"]

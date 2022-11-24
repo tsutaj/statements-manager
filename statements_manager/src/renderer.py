@@ -43,24 +43,25 @@ class Renderer:
     def __init__(
         self,
         template_html: str,
+        sample_template_html: str,
         preprocess_path: Union[str, None],
         postprocess_path: Union[str, None],
     ):
         self.template_html = template_html
+        self.sample_template_html = sample_template_html
         self.preprocess_path = preprocess_path
         self.postprocess_path = postprocess_path
         self.replace_sample_format = ReplaceSampleFormatExprExtension()
 
     def replace_vars(self, problem_attr: Dict[str, Any], statement_str: str) -> str:
-        vars_manager = VariablesConverter(problem_attr)
+        vars_manager = VariablesConverter(problem_attr, self.sample_template_html)
         env = Environment(
             variable_start_string="{@",
             variable_end_string="}",
             loader=DictLoader({"task": statement_str}),
             undefined=StrictUndefined,
         )
-        template = env.get_template("task")
-        replaced_html = template.render(
+        replaced_html = env.get_template("task").render(
             constraints=vars_manager["constraints"],
             samples=vars_manager["samples"],
         )
@@ -152,23 +153,28 @@ class Renderer:
         is_problemset: bool,
     ) -> str:
         for problem_id in problem_ids:
-            contents = problem_attr[problem_id]["raw_statement"]
-            contents = self.apply_preprocess(contents)
+            if "statement" not in problem_attr[problem_id]:
+                contents = problem_attr[problem_id]["raw_statement"]
+                contents = self.apply_preprocess(contents)
 
-            rendered_contents = markdown(
-                contents,
-                extensions=[
-                    self.replace_sample_format,
-                    "md_in_html",
-                    "tables",
-                    "fenced_code",
-                ],
-            )
+                rendered_contents = markdown(
+                    contents,
+                    extensions=[
+                        self.replace_sample_format,
+                        "md_in_html",
+                        "tables",
+                        "fenced_code",
+                    ],
+                )
+                rendered_contents = self.replace_vars(
+                    problem_attr[problem_id], rendered_contents
+                )
+                problem_attr[problem_id]["statement"] = rendered_contents
+
             # 問題セットの場合、添付ファイルのパスを置換する
-            rendered_contents = self.replace_assets_path(
-                rendered_contents, problem_id, is_problemset
+            problem_attr[problem_id]["statement"] = self.replace_assets_path(
+                problem_attr[problem_id]["statement"], problem_id, is_problemset
             )
-            problem_attr[problem_id]["statement"] = rendered_contents
 
         html = self.apply_template(
             problem_attr=problem_attr,
@@ -211,9 +217,13 @@ class Renderer:
         is_problemset: bool,
     ) -> str:
         for problem_id in problem_ids:
-            contents = problem_attr[problem_id]["raw_statement"]
-            contents = self.replace_assets_path(contents, problem_id, is_problemset)
-            problem_attr[problem_id]["statement"] = contents
+            if "statement" not in problem_attr[problem_id]:
+                contents = problem_attr[problem_id]["raw_statement"]
+                contents = self.replace_vars(problem_attr[problem_id], contents)
+                problem_attr[problem_id]["statement"] = contents
+            problem_attr[problem_id]["statement"] = self.replace_assets_path(
+                problem_attr[problem_id]["statement"], problem_id, is_problemset
+            )
 
         md = self.apply_template(
             problem_attr=problem_attr,
