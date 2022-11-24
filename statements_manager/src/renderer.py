@@ -3,7 +3,6 @@ import re
 from subprocess import PIPE, Popen, TimeoutExpired
 from typing import Any, Dict, List, Union
 
-import pdfkit
 from jinja2 import DictLoader, Environment, StrictUndefined
 from markdown import markdown
 from markdown.extensions import Extension
@@ -185,14 +184,13 @@ class Renderer:
         html = self.apply_postprocess(html)
         return html
 
-    def generate_and_dump_pdf(
+    def generate_html_for_pdf(
         self,
         problem_attr: Dict[str, Any],
         problem_ids: List[str],
         is_problemset: bool,
         pdf_path: str,
-        pdf_options: Dict[Any, Any],
-    ) -> None:
+    ) -> str:
         html = self.generate_html(
             problem_attr=problem_attr,
             problem_ids=problem_ids,
@@ -208,7 +206,7 @@ class Renderer:
                 )
             img.attr["src"] = str(img_url)
         html = dom.html()
-        pdfkit.from_string(html, pdf_path, verbose=True, options=pdf_options)
+        return html
 
     def generate_markdown(
         self,

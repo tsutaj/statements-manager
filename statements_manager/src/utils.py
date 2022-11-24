@@ -24,6 +24,14 @@ def ask_ok(question: str, default_response: bool = True) -> bool:
     return response in ["y", "ye", "yes"]
 
 
+def dict_merge(dct, merge_dct):
+    for k, _ in merge_dct.items():
+        if k in dct and isinstance(dct[k], dict) and isinstance(merge_dct[k], dict):
+            dict_merge(dct[k], merge_dct[k])
+        else:
+            dct[k] = merge_dct[k]
+
+
 def create_token(creds_path: str, token_path: Union[str, None] = None) -> Any:
     scopes = ["https://www.googleapis.com/auth/documents.readonly"]
     if not Path(creds_path).exists():

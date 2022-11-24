@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import hashlib
+import json
 import pathlib
 import shutil
 from enum import Enum
@@ -7,11 +9,12 @@ from logging import Logger, getLogger
 from pathlib import Path
 from typing import Any, List, Tuple, cast
 
+import pdfkit
 from googleapiclient.discovery import build
 
 from statements_manager.src.params_maker.lang_to_class import lang_to_class
 from statements_manager.src.renderer import Renderer
-from statements_manager.src.utils import create_token
+from statements_manager.src.utils import create_token, dict_merge
 from statements_manager.template import (
     default_sample_template_html,
     default_template_html,
@@ -143,7 +146,12 @@ class Manager:
             logger.warning("skip creating params: params_path is not set")
 
     # 添付ファイル群のコピー
-    def copy_assets(self, problem_id: str, output_path: Path) -> None:
+    def copy_assets(
+        self,
+        problem_id: str,
+        output_path: Path,
+    ) -> dict[str, str]:
+        cache = {}
         if "assets_path" in self.problem_attr[problem_id]:
             assets_src_path = Path(self.problem_attr[problem_id]["assets_path"])
             assets_dst_path = output_path
@@ -154,10 +162,18 @@ class Manager:
                         f"assets directory '{assets_dst_path}' already exists."
                     )
                 shutil.copytree(assets_src_path, assets_dst_path, dirs_exist_ok=True)
+
+                for path in assets_dst_path.glob("**/*"):
+                    with open(path, "rb") as f:
+                        hash = hashlib.sha256(f.read()).hexdigest()
+                        relpath = str(path.relative_to(output_path))
+                        cache[relpath] = hash
+
             else:
                 logger.warning(
                     f"assets_path '{self.problem_attr[problem_id]['assets_path']}' does not exist."
                 )
+        return cache
 
     def make_pdf_attr(self, is_problemset: bool) -> dict[str, Any]:
         if "common" in self.pdf_attr_raw:
@@ -177,7 +193,9 @@ class Manager:
         output_ext: str,
         problem_ids: List[str],
         is_problemset: bool,
-    ) -> None:
+        cache: dict[str, Any],
+        reference_cache: dict[str, Any],
+    ) -> dict[str, Any]:
         if is_problemset:
             output_path = str(output_dir / ("problemset." + output_ext))
         else:
@@ -189,29 +207,42 @@ class Manager:
                 problem_ids=problem_ids,
                 is_problemset=is_problemset,
             )
-            self.save_file(html, output_path)
+            cache["contents"] = hashlib.sha256(html.encode()).hexdigest()
+            if cache != reference_cache:
+                self.save_file(html, output_path)
+            else:
+                logger.warning("skip dumping html: same result as before")
         elif output_ext == "pdf":
             pdf_attr = self.make_pdf_attr(is_problemset)
-            wait_second = int(cast(int, pdf_attr["javascript-delay"]))
-            if wait_second > 0:
-                logger.info(f"please wait... ({wait_second} [msec] or greater)")
-            self.renderer.generate_and_dump_pdf(
+            html = self.renderer.generate_html_for_pdf(
                 problem_attr=self.problem_attr,
                 problem_ids=problem_ids,
                 is_problemset=is_problemset,
                 pdf_path=output_path,
-                pdf_options=pdf_attr,
             )
+            cache["contents"] = hashlib.sha256(html.encode()).hexdigest()
+            if cache != reference_cache:
+                wait_second = int(cast(int, pdf_attr["javascript-delay"]))
+                if wait_second > 0:
+                    logger.info(f"please wait... ({wait_second} [msec] or greater)")
+                pdfkit.from_string(html, output_path, verbose=True, options=pdf_attr)
+            else:
+                logger.warning("skip dumping pdf: same result as before")
         elif output_ext == "md":
             md = self.renderer.generate_markdown(
                 problem_attr=self.problem_attr,
                 problem_ids=problem_ids,
                 is_problemset=is_problemset,
             )
-            self.save_file(md, output_path)
+            cache["contents"] = hashlib.sha256(md.encode()).hexdigest()
+            if cache != reference_cache:
+                self.save_file(md, output_path)
+            else:
+                logger.warning("skip dumping md: same result as before")
         else:
             logger.error(f"invalid extension '{output_ext}'")
             raise ValueError(f"invalid extension '{output_ext}'")
+        return cache
 
     def run(
         self,
@@ -221,6 +252,7 @@ class Manager:
     ) -> None:
         # 問題文を取ってきて変換
         valid_problem_ids = []
+        problemset_cache: dict[str, Any] = {}
         for problem_id in problem_ids:
             logger.info(f"rendering [problem id: {problem_id}]")
             status, raw_statement = self.get_contents(problem_id)
@@ -243,13 +275,33 @@ class Manager:
                 logger.warning(f"output directory '{output_dir}' already exists.")
             else:
                 output_dir.mkdir()
-            self.copy_assets(problem_id, output_dir / "assets")
-            self.run_rendering(
+
+            # キャッシュの記録
+            problem_cache: dict[str, Any] = {"assets": {}}
+            reference_cache: dict[str, Any] = {}
+            if Path(output_dir / "cache.json").exists():
+                reference_cache = json.load(open(output_dir / "cache.json"))
+            reference_cache.setdefault(output_ext, {})
+            reference_cache[output_ext].setdefault(problem_id, {})
+
+            problem_cache["assets"] = self.copy_assets(
+                problem_id, output_dir / "assets"
+            )
+            reference_cache[output_ext][problem_id] = self.run_rendering(
                 output_dir=output_dir,
                 output_ext=output_ext,
                 problem_ids=[problem_id],
                 is_problemset=False,
+                cache=problem_cache,
+                reference_cache=reference_cache[output_ext][problem_id],
             )
+            json.dump(
+                reference_cache,
+                open(output_dir / "cache.json", "w"),
+                indent=4,
+                sort_keys=True,
+            )
+            dict_merge(problemset_cache, reference_cache[output_ext])
             logger.info("")
 
         # 問題セットに対応するものを出力
@@ -266,12 +318,27 @@ class Manager:
             # 添付ファイルのコピー
             for problem_id in valid_problem_ids:
                 self.copy_assets(
-                    problem_id, self.problemset_dir / "assets" / problem_id
+                    problem_id,
+                    self.problemset_dir / "assets" / problem_id,
                 )
             logger.info("rendering problemset")
-            self.run_rendering(
+            reference_problemset_cache: dict[str, Any] = {}
+            if Path(self.problemset_dir / "cache.json").exists():
+                reference_problemset_cache = json.load(
+                    open(self.problemset_dir / "cache.json")
+                )
+            reference_problemset_cache.setdefault(output_ext, {})
+            reference_problemset_cache[output_ext] = self.run_rendering(
                 output_dir=self.problemset_dir,
                 output_ext=output_ext,
                 problem_ids=valid_problem_ids,
                 is_problemset=True,
+                cache=problemset_cache,
+                reference_cache=reference_problemset_cache[output_ext],
+            )
+            json.dump(
+                reference_problemset_cache,
+                open(self.problemset_dir / "cache.json", "w"),
+                indent=4,
+                sort_keys=True,
             )
