@@ -187,6 +187,9 @@ ss-manager reg-creds CREDS_PATH
   - `template_path`
     - HTML および PDF 出力で使用されるテンプレート HTML へのパスを指定します (指定されていない場合、デフォルトのテンプレートが適用されます)
     - テンプレートでは、問題文本文に相当する部分に `{@problem.statement}` 文を記述する必要があります。詳細は `sample/templates/default.html` などをご覧ください
+  - `sample_template_path`
+    - 入出力例の部分に使われるテンプレート HTML へのパスを指定します (指定されていない場合、デフォルトのテンプレートが適用されます)
+    - テンプレートの書き方は `sample/templates/sample_default.html` などをご覧ください
   - `preprocess_path`
     - Markdown ファイルに関して前処理を行う **Python スクリプト** へのパスを指定します。Markdown が HTML 形式にレンダリングされる前に適用したい処理を記述してください (指定されていない場合、前処理は行われません)
     - Markdown ファイルの中身は標準入力で与えられ、前処理の結果は標準出力で返す必要があります。詳細は `sample/templates/icpc_domestic/preprocess.py` をご覧ください

@@ -1,0 +1,17 @@
+{% if sample_data.input_text is defined %}
+    <h3>{% if sample_data.language == "ja" %}入力例{% elif sample_data.language == "en" %}Sample Input{% endif %} {% if sample_data.do_numbering %}{{ sample_data.i_sample }}{% endif %}</h3>
+    <pre>{{ sample_data.input_text }}</pre>
+{% endif %}
+
+{% if sample_data.output_text is defined %}
+    <h3>{% if sample_data.language == "ja" %}出力例{% elif sample_data.language == "en" %}Sample Output{% endif %} {% if sample_data.do_numbering %}{{ sample_data.i_sample }}{% endif %}</h3>
+    <pre>{{ sample_data.output_text }}</pre>
+{% endif %}
+
+{% if sample_data.md_text is defined %}
+{{ sample_data.md_text }}
+{% endif %}
+
+{% if sample_data.explanation_text is defined %}
+{{ sample_data.explanation_text }}
+{% endif %}

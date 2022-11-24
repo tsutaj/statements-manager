@@ -1,5 +1,6 @@
 [template]
     template_path = "./templates/icpc_domestic/template.html"
+    sample_template_path = "./templates/sample_default.html"
     preprocess_path = "./templates/icpc_domestic/preprocess.py"
     postprocess_path = "./templates/icpc_domestic/postprocess.py"
 
