@@ -18,7 +18,7 @@ from statements_manager.template import (
     template_pdf_options,
 )
 
-logger = getLogger(__name__)  # type: Logger
+logger: Logger = getLogger(__name__)
 
 
 class ContentsStatus(Enum):
@@ -33,8 +33,8 @@ class Manager:
         pdf_attr_raw: dict[str, Any],
     ):
         self._cwd = Path.cwd()
-        self.problem_attr = problem_attr  # type: dict[str, Any]
-        self.pdf_attr_raw = pdf_attr_raw  # type: dict[str, Any]
+        self.problem_attr: dict[str, Any] = problem_attr
+        self.pdf_attr_raw: dict[str, Any] = pdf_attr_raw
         self.renderer = Renderer(
             template_attr.get("template_html", default_template_html),
             template_attr.get("sample_template_html", default_sample_template_html),
@@ -126,12 +126,12 @@ class Manager:
             "params_path" in self.problem_attr[problem_id]
             and "constraints" in self.problem_attr[problem_id]
         ):
-            ext = Path(self.problem_attr[problem_id]["params_path"]).suffix  # type: str
+            ext: str = Path(self.problem_attr[problem_id]["params_path"]).suffix
             if ext in lang_to_class:
                 params_maker = lang_to_class[ext](
                     self.problem_attr[problem_id]["constraints"],
                     self.problem_attr[problem_id]["params_path"],
-                )  # type: Any
+                )
                 params_maker.run()
             else:
                 logger.warning(

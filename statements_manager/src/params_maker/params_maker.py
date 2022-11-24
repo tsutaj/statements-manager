@@ -4,7 +4,7 @@ from abc import abstractmethod
 from logging import Logger, getLogger
 from typing import Any
 
-logger = getLogger(__name__)  # type: Logger
+logger: Logger = getLogger(__name__)
 
 
 class ParamsMaker:
@@ -13,7 +13,7 @@ class ParamsMaker:
         self.output_path = output_path
 
     def run(self) -> None:
-        params_lines = []  # type: list[str]
+        params_lines: list[str] = []
         params_lines.append(self.header())
         for key, value in self.params.items():
             if not all(ord(c) < 128 for c in str(value)):

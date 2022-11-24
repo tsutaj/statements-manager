@@ -4,11 +4,11 @@ import fnmatch
 import math
 import pathlib
 from logging import Logger, getLogger
-from typing import Any, List, Set
+from typing import Any, Set
 
 from jinja2 import DictLoader, Environment
 
-logger = getLogger(__name__)  # type: Logger
+logger: Logger = getLogger(__name__)
 
 
 def to_string(value: Any) -> str:
@@ -75,7 +75,7 @@ class SamplesConverter:
         statement_path: pathlib.Path,
         language: str,
         ignore_samples: Set,
-    ) -> List[str]:
+    ) -> list[str]:
         # sample_path 以下で、ファイル名に 'sample' を含むものはサンプルであるとする
         sample_names = set()
         for in_filename in sample_path.glob("./*.in"):
@@ -195,9 +195,9 @@ class SamplesConverter:
 
 class VariablesConverter:
     def __init__(self, problem_attr: dict[str, Any], sample_template: str) -> None:
-        self.vars = {}  # type: dict[str, Any]
-        self.vars["constraints"] = {}  # dict[str, str]
-        self.vars["samples"] = {}  # dict[str, str]
+        self.vars: dict[str, Any] = {}
+        self.vars["constraints"] = {}
+        self.vars["samples"] = {}
         self.constraints_converter = ConstraintsConverter()
         self.samples_converter = SamplesConverter()
 

@@ -5,7 +5,7 @@ from logging import Logger, getLogger
 from typing import Any
 from urllib.parse import urlparse
 
-logger = getLogger(__name__)  # type: Logger
+logger: Logger = getLogger(__name__)
 
 
 def is_valid_url(url: str) -> bool:
