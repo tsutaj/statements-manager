@@ -4,9 +4,11 @@ import fnmatch
 import math
 import pathlib
 from logging import Logger, getLogger
-from typing import Any, List, Set
+from typing import Any, Set
 
-logger = getLogger(__name__)  # type: Logger
+from jinja2 import DictLoader, Environment
+
+logger: Logger = getLogger(__name__)
 
 
 def to_string(value: Any) -> str:
@@ -27,33 +29,10 @@ def to_string(value: Any) -> str:
         return str(value)
 
 
-class NaturalLanguage:
-    HEADER_MD = "### "
-
-    def __init__(self, lang: str) -> None:
-        if lang == "ja":
-            self.language = "ja"
-        elif lang == "en":
-            self.language = "en"
-        else:
-            logger.error(f"unknown lang: '{lang}'")
-            raise ValueError(f"unknown lang: '{lang}'")
-
-    def lang(self) -> str:
-        return self.language
-
-    def header_input(self) -> str:
-        if self.language == "ja":
-            return self.HEADER_MD + "入力例"
-        elif self.language == "en":
-            return self.HEADER_MD + "Sample Input"
-        return ""
-
-    def header_output(self) -> str:
-        if self.language == "ja":
-            return self.HEADER_MD + "出力例"
-        elif self.language == "en":
-            return self.HEADER_MD + "Output for the Sample Input"
+def fetch_text(path: pathlib.Path) -> str:
+    try:
+        return open(path).read()
+    except OSError:
         return ""
 
 
@@ -88,25 +67,6 @@ class SampleFile:
             contents = f.read() + "\n"
             return contents
 
-    def make_markdown(
-        self, header_kind: str, lang: NaturalLanguage, n_sample: int, numbering: bool
-    ) -> str:
-        if not self.exists():
-            return ""
-
-        markdown_text = ""
-        with open(self.filename, "r") as f:
-            contents = f.read()
-            if header_kind == "input":
-                markdown_text += lang.header_input()
-            elif header_kind == "output":
-                markdown_text += lang.header_output()
-            if numbering:
-                markdown_text += f" {n_sample}"
-            markdown_text += "\n"
-            markdown_text += "<pre>\n" + contents + "</pre>\n"
-        return markdown_text
-
 
 class SamplesConverter:
     def get_sample_names_list(
@@ -115,7 +75,7 @@ class SamplesConverter:
         statement_path: pathlib.Path,
         language: str,
         ignore_samples: Set,
-    ) -> List[str]:
+    ) -> list[str]:
         # sample_path 以下で、ファイル名に 'sample' を含むものはサンプルであるとする
         sample_names = set()
         for in_filename in sample_path.glob("./*.in"):
@@ -148,20 +108,18 @@ class SamplesConverter:
     def print_warning(
         self,
         sample_name: str,
-        in_file: SampleFile,
-        out_file: SampleFile,
-        diff_file: SampleFile,
-        exp_file: SampleFile,
+        in_file: pathlib.Path,
+        out_file: pathlib.Path,
+        exp_file: pathlib.Path,
     ) -> None:
         # 入力 / 出力のいずれかが欠けている場合は警告だけにとどめる
-        out_exists = out_file.exists() or diff_file.exists()
-        if (not in_file.exists()) and (not out_exists):
+        if (not in_file.exists()) and (not out_file.exists()):
             logger.warning(f"{sample_name}: Neither input-file nor output-file exists.")
             logger.warning("Recognized as interactive sample.")
         elif not in_file.exists():
             logger.warning(f"{sample_name}: Input file does not exist.")
             logger.warning("Recognized as output-only sample.")
-        elif not out_exists:
+        elif not out_file.exists():
             logger.warning(f"{sample_name}: Output file does not exist.")
             logger.warning("Recognized as input-only sample.")
 
@@ -169,7 +127,9 @@ class SamplesConverter:
         if not exp_file.exists():
             logger.warning(f"{sample_name}: There is no explanation.")
 
-    def convert(self, samples: dict[str, Any], problem_attr: dict[str, Any]) -> None:
+    def convert(
+        self, samples: dict[str, Any], problem_attr: dict[str, Any], template: str
+    ) -> None:
         """
         - `sample_path` が指定されていない場合: 警告を出して抜ける
         - `sample_path` が指定されている場合
@@ -180,7 +140,6 @@ class SamplesConverter:
             logger.warning("samples are not set")
             return
 
-        language = NaturalLanguage(problem_attr["lang"])
         sample_names = self.get_sample_names_list(
             problem_attr["sample_path"],
             problem_attr["statement_path"],
@@ -190,56 +149,62 @@ class SamplesConverter:
         if len(sample_names) == 0:
             logger.warning("samples are not set")
 
-        numbering = len(sample_names) >= 2
+        env = Environment(
+            loader=DictLoader({"template": template}),
+        )
+        do_numbering = len(sample_names) >= 2
         sample_text_all = ""
-        for n_sample, sample_name in enumerate(sample_names, start=1):
-            logger.info(f"replace sample {n_sample} ({sample_name})")
+        for i_sample, sample_name in enumerate(sample_names, start=1):
+            logger.info(f"replace sample {i_sample} ({sample_name})")
 
-            in_file = SampleFile(
-                problem_attr["sample_path"] / pathlib.Path(f"{sample_name}.in")
+            input_file = pathlib.Path(problem_attr["sample_path"] / f"{sample_name}.in")
+            output_file = pathlib.Path(
+                problem_attr["sample_path"] / f"{sample_name}.out"
             )
-            out_file = SampleFile(
-                problem_attr["sample_path"] / pathlib.Path(f"{sample_name}.out")
+            if not output_file.exists():
+                output_file = pathlib.Path(
+                    problem_attr["sample_path"] / f"{sample_name}.diff"
+                )
+            md_file = pathlib.Path(problem_attr["sample_path"] / f"{sample_name}.md")
+            explanation_file = pathlib.Path(
+                problem_attr["sample_path"] / f"{problem_attr['lang']}/{sample_name}.md"
             )
-            diff_file = SampleFile(
-                problem_attr["sample_path"] / pathlib.Path(f"{sample_name}.diff")
-            )
-            md_file = SampleFile(
-                problem_attr["sample_path"] / pathlib.Path(f"{sample_name}.md")
-            )
-            exp_file = SampleFile(
-                problem_attr["sample_path"]
-                / pathlib.Path(f"{problem_attr['lang']}/{sample_name}.md")
-            )
-            self.print_warning(sample_name, in_file, out_file, diff_file, exp_file)
+            self.print_warning(sample_name, input_file, output_file, explanation_file)
 
-            name = "s" + str(n_sample)
-            sample_text = ""
-            sample_text += in_file.make_markdown("input", language, n_sample, numbering)
-            sample_text += out_file.make_markdown(
-                "output", language, n_sample, numbering
+            sample_data = {
+                "do_numbering": do_numbering,
+                "i_sample": i_sample,
+                "language": problem_attr["lang"],
+            }
+            if input_file.exists():
+                sample_data["input_text"] = fetch_text(input_file)
+            if output_file.exists():
+                sample_data["output_text"] = fetch_text(output_file)
+            if md_file.exists():
+                sample_data["md_text"] = fetch_text(md_file)
+            if explanation_file.exists():
+                sample_data["explanation_text"] = fetch_text(explanation_file)
+            sample_text = env.get_template("template").render(
+                sample_data=sample_data,
             )
-            sample_text += diff_file.make_markdown(
-                "output", language, n_sample, numbering
-            )
-            sample_text += md_file.print_raw()
-            sample_text += exp_file.print_raw()
-
-            samples[name] = sample_text
+            key = "s" + str(i_sample)
+            samples[key] = sample_text
             sample_text_all += sample_text
         samples["all"] = sample_text_all
 
 
 class VariablesConverter:
-    def __init__(self, problem_attr: dict[str, Any]) -> None:
-        self.vars = {}  # type: dict[str, Any]
-        self.vars["constraints"] = {}  # dict[str, str]
-        self.vars["samples"] = {}  # dict[str, str]
+    def __init__(self, problem_attr: dict[str, Any], sample_template: str) -> None:
+        self.vars: dict[str, Any] = {}
+        self.vars["constraints"] = {}
+        self.vars["samples"] = {}
         self.constraints_converter = ConstraintsConverter()
         self.samples_converter = SamplesConverter()
 
         self.constraints_converter.convert(self.vars["constraints"], problem_attr)
-        self.samples_converter.convert(self.vars["samples"], problem_attr)
+        self.samples_converter.convert(
+            self.vars["samples"], problem_attr, sample_template
+        )
 
     def __getitem__(self, key: str) -> dict[str, str]:
         if key not in self.vars:
