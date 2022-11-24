@@ -193,6 +193,7 @@ class Manager:
         output_ext: str,
         problem_ids: List[str],
         is_problemset: bool,
+        force_dump: bool,
         cache: dict[str, Any],
         reference_cache: dict[str, Any],
     ) -> dict[str, Any]:
@@ -208,7 +209,7 @@ class Manager:
                 is_problemset=is_problemset,
             )
             cache["contents"] = hashlib.sha256(html.encode()).hexdigest()
-            if cache != reference_cache:
+            if cache != reference_cache or force_dump:
                 self.save_file(html, output_path)
             else:
                 logger.warning("skip dumping html: same result as before")
@@ -221,7 +222,7 @@ class Manager:
                 pdf_path=output_path,
             )
             cache["contents"] = hashlib.sha256(html.encode()).hexdigest()
-            if cache != reference_cache:
+            if cache != reference_cache or force_dump:
                 wait_second = int(cast(int, pdf_attr["javascript-delay"]))
                 if wait_second > 0:
                     logger.info(f"please wait... ({wait_second} [msec] or greater)")
@@ -235,7 +236,7 @@ class Manager:
                 is_problemset=is_problemset,
             )
             cache["contents"] = hashlib.sha256(md.encode()).hexdigest()
-            if cache != reference_cache:
+            if cache != reference_cache or force_dump:
                 self.save_file(md, output_path)
             else:
                 logger.warning("skip dumping md: same result as before")
@@ -249,6 +250,7 @@ class Manager:
         problem_ids: List[str],
         output_ext: str,
         make_problemset: bool,
+        force_dump: bool,
     ) -> None:
         # 問題文を取ってきて変換
         valid_problem_ids = []
@@ -292,6 +294,7 @@ class Manager:
                 output_ext=output_ext,
                 problem_ids=[problem_id],
                 is_problemset=False,
+                force_dump=force_dump,
                 cache=problem_cache,
                 reference_cache=reference_cache[output_ext][problem_id],
             )
@@ -333,6 +336,7 @@ class Manager:
                 output_ext=output_ext,
                 problem_ids=valid_problem_ids,
                 is_problemset=True,
+                force_dump=force_dump,
                 cache=problemset_cache,
                 reference_cache=reference_problemset_cache[output_ext],
             )
