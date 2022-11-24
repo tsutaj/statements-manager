@@ -218,6 +218,7 @@ ss-manager run [-o OUTPUT] [-p] WORKING_DIR
   - `md`: Markdown を出力
   - `pdf`: PDF を出力
 - `-p, --make-problemset`: 問題セット全体のファイルも出力します。出力結果は `WORKING_DIR/problemset` 直下に保存されます
+- `-f, --force-dump`: 常に出力ファイルを更新します。通常は直前に実行した結果から変化がなければファイルは更新されませんが、強制的に更新したい場合に使用します。
 
 ## 運用例 (リポジトリにある問題文を半自動で更新する試み)
 
