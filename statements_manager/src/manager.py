@@ -28,6 +28,17 @@ class ContentsStatus(Enum):
     OK, NG = range(2)
 
 
+def need_to_save(
+    cache: dict[str, Any],
+    reference_cache: dict[str, Any],
+    force_dump: bool,
+    output_path: str,
+):
+    return (
+        cache != reference_cache or force_dump or not pathlib.Path(output_path).exists()
+    )
+
+
 class Manager:
     def __init__(
         self,
@@ -209,7 +220,12 @@ class Manager:
                 is_problemset=is_problemset,
             )
             cache["contents"] = hashlib.sha256(html.encode()).hexdigest()
-            if cache != reference_cache or force_dump:
+            if need_to_save(
+                cache,
+                reference_cache,
+                force_dump,
+                output_path,
+            ):
                 self.save_file(html, output_path)
             else:
                 logger.warning("skip dumping html: same result as before")
@@ -222,7 +238,12 @@ class Manager:
                 pdf_path=output_path,
             )
             cache["contents"] = hashlib.sha256(html.encode()).hexdigest()
-            if cache != reference_cache or force_dump:
+            if need_to_save(
+                cache,
+                reference_cache,
+                force_dump,
+                output_path,
+            ):
                 wait_second = int(cast(int, pdf_attr["javascript-delay"]))
                 if wait_second > 0:
                     logger.info(f"please wait... ({wait_second} [msec] or greater)")
@@ -236,7 +257,12 @@ class Manager:
                 is_problemset=is_problemset,
             )
             cache["contents"] = hashlib.sha256(md.encode()).hexdigest()
-            if cache != reference_cache or force_dump:
+            if need_to_save(
+                cache,
+                reference_cache,
+                force_dump,
+                output_path,
+            ):
                 self.save_file(md, output_path)
             else:
                 logger.warning("skip dumping md: same result as before")
