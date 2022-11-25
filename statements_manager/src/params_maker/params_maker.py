@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import pathlib
 from abc import abstractmethod
 from logging import Logger, getLogger
 from typing import Any
@@ -29,10 +30,21 @@ class ParamsMaker:
                 params_lines.append(self.parse_str(key, value))
             else:
                 logger.warning(f"ignored parameter: {key} => {value}")
+        params_lines.append("")
+
+        # if params file is the same as the existing one, do nothing
+        params_text = "\n".join(params_lines)
+        if pathlib.Path(self.output_path).exists():
+            with open(self.output_path, "r") as f:
+                reference = f.read()
+                if params_text == reference:
+                    logger.warning(
+                        "skip dumping constraints file: same result as before"
+                    )
+                    return
 
         with open(self.output_path, "w") as f:
-            for line in params_lines:
-                f.write(line + "\n")
+            f.write(params_text)
 
     @abstractmethod
     def header(self) -> str:
