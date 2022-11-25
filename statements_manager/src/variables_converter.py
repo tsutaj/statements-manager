@@ -175,6 +175,8 @@ class SamplesConverter:
                 "do_numbering": do_numbering,
                 "i_sample": i_sample,
                 "language": problem_attr["lang"],
+                "is_first": i_sample == 1,
+                "is_last": i_sample == len(sample_names),
             }
             if input_file.exists():
                 sample_data["input_text"] = fetch_text(input_file)
