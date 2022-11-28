@@ -6,6 +6,9 @@
 Welcome to statements-manager's documentation!
 ==============================================
 
+.. warning:: 
+   これは日本語のドキュメントです
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

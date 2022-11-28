@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: statements-manager \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-28 23:29+0900\n"
+"POT-Creation-Date: 2022-11-29 01:13+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.11.0\n"
 
-#: ../../index.rst:9
+#: ../../index.rst:12
 msgid "Contents:"
 msgstr ""
 
@@ -26,19 +26,23 @@ msgstr ""
 msgid "Welcome to statements-manager's documentation!"
 msgstr ""
 
-#: ../../index.rst:16
+#: ../../index.rst:10
+msgid "これは日本語のドキュメントです"
+msgstr "This is English document."
+
+#: ../../index.rst:19
 msgid "Indices and tables"
 msgstr ""
 
-#: ../../index.rst:18
+#: ../../index.rst:21
 msgid ":ref:`genindex`"
 msgstr ""
 
-#: ../../index.rst:19
+#: ../../index.rst:22
 msgid ":ref:`modindex`"
 msgstr ""
 
-#: ../../index.rst:20
+#: ../../index.rst:23
 msgid ":ref:`search`"
 msgstr ""
 
