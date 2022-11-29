@@ -1,0 +1,68 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, tsutaj
+# This file is distributed under the same license as the statements-manager
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: statements-manager \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-11-30 01:59+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.11.0\n"
+
+#: ../../what_is_this.rst:4
+msgid "What is this?"
+msgstr ""
+
+#: ../../what_is_this.rst:7
+msgid "TODO(tsutaj): 分かりやすく書く"
+msgstr ""
+
+#: ../../what_is_this.rst:9
+msgid ""
+"Markdown 形式で記述された「制約やサンプルの情報を外部に委ねた」問題文ファイルを、 HTML / PDF / Markdown "
+"形式に変換して出力します"
+msgstr ""
+
+#: ../../what_is_this.rst:10
+msgid "制約やサンプルは問題文に直接的には書きません。詳しくは :ref:`how_to_use` をご覧ください"
+msgstr ""
+
+#: ../../what_is_this.rst:14
+msgid "**特長**: 問題の制約・サンプル管理の一本化"
+msgstr ""
+
+#: ../../what_is_this.rst:12
+msgid "問題制約は、問題設定ファイル内で記述します"
+msgstr ""
+
+#: ../../what_is_this.rst:13
+msgid "定義したものを問題文ファイルで利用することができるほか、generator / validator で利用可能な形で出力することができます"
+msgstr ""
+
+#: ../../what_is_this.rst:14
+msgid ""
+"**「制約やサンプルを途中で変更したので、問題文・generator / validator "
+"の双方をそれぞれ変更する」という作業をする必要がなくなります**"
+msgstr ""
+
+#: ../../what_is_this.rst:15
+msgid "**問題文とデータセットでサンプルが一致しているかを確認する必要がなくなります**"
+msgstr ""
+
+#: ../../what_is_this.rst:17
+msgid "Google Docs 上の問題文 / ローカル上の問題文の両方に対応"
+msgstr ""
+
+#: ../../what_is_this.rst:17
+msgid "**Google Docs で管理している問題文** であっても、制約やサンプルを一元的に管理できます"
+msgstr ""
+

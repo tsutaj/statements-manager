@@ -1,0 +1,562 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, tsutaj
+# This file is distributed under the same license as the statements-manager
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: statements-manager \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-11-30 01:59+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.11.0\n"
+
+#: ../../how_to_use.rst:4
+msgid "How to use"
+msgstr ""
+
+#: ../../how_to_use.rst:7
+msgid "TODO(tsutaj): 分かりやすく書く"
+msgstr ""
+
+#: ../../how_to_use.rst:9
+msgid "以下のようなディレクトリ構成を推奨しています。作問支援ツールである Rime を使用するときのディレクトリ構成と似ています。 ::"
+msgstr ""
+
+#: ../../how_to_use.rst:27
+msgid "statements-manager をダウンロードする"
+msgstr ""
+
+#: ../../how_to_use.rst:29
+msgid "以下のコマンドを打って ``statements-manager`` をダウンロードできます。"
+msgstr ""
+
+#: ../../how_to_use.rst:36
+msgid "Google Docs API を使用可能にする (optional)"
+msgstr ""
+
+#: ../../how_to_use.rst:39
+msgid ""
+"**Google Docs にある問題文を扱いたい場合は、この操作が必須となります。** "
+"問題文がすべてローカル環境に存在する場合はこの操作は不要です。"
+msgstr ""
+
+#: ../../how_to_use.rst:41
+msgid "作業ディレクトリ ``WORKING_DIR`` に対して、以下で説明する credentials というものを登録します。"
+msgstr ""
+
+#: ../../how_to_use.rst:44
+msgid ""
+"`Google Docs - Quickstart "
+"<https://developers.google.com/docs/api/quickstart/python>`_ の手順通りに進め、API"
+" を使える状態にします。リンク先のサンプルを実行できるかどうかで動作確認が可能です。"
+msgstr ""
+
+#: ../../how_to_use.rst:44
+msgid "扱いたい Docs ファイルが閲覧できる権限を持っているアカウントで作成しなければならないはずですので、アカウントの選択に注意してください"
+msgstr ""
+
+#: ../../how_to_use.rst:46
+msgid ""
+"`Google Cloud Platform <https://console.cloud.google.com/>`_ にアクセスし、「API "
+"とサービス」→「認証情報」に進みます"
+msgstr ""
+
+#: ../../how_to_use.rst:-1
+msgid "「認証情報」セクションの場所を示す画像"
+msgstr ""
+
+#: ../../how_to_use.rst:52
+msgid "以下の画面で OAuth クライアントをダウンロードします。JSON ファイルを任意の場所にダウンロードしてください"
+msgstr ""
+
+#: ../../how_to_use.rst:52
+msgid "以降の説明では、ダウンロードした場所が ``CREDS_PATH`` であるとします"
+msgstr ""
+
+#: ../../how_to_use.rst:-1
+msgid "OAuth クライアントをダウンロードできる場所を示す画像"
+msgstr ""
+
+#: ../../how_to_use.rst:-1
+msgid "JSON ファイルをダウンロードできる場所を示す画像"
+msgstr ""
+
+#: ../../how_to_use.rst:62
+msgid "以下のコマンドを打って、JSON ファイルを登録します"
+msgstr ""
+
+#: ../../how_to_use.rst:61
+msgid "登録が終われば、 ``CREDS_PATH`` にある json ファイルは削除しても構いません"
+msgstr ""
+
+#: ../../how_to_use.rst:62
+msgid "JSON ファイルは、ホームディレクトリに生成される隠しフォルダ ``.ss-manager`` の中に格納されます"
+msgstr ""
+
+#: ../../how_to_use.rst:69
+msgid "問題ごとに設定ファイル ``problem.toml`` を作る"
+msgstr ""
+
+#: ../../how_to_use.rst:71
+msgid ""
+"問題ディレクトリごとに設定ファイルを作ります。 ``problem.toml`` という名前にして ``toml`` 形式で記述します。詳しい例は"
+" ``sample/A/problem.toml`` (`link to toml <https://github.com/tsutaj"
+"/statements-manager/blob/master/sample/A/problem.toml>`_) などの、 ``sample``"
+" ディレクトリにある設定ファイルをご覧ください。"
+msgstr ""
+
+#: ../../how_to_use.rst:74
+msgid ""
+"**Rime を使用したことがある方向け**: このファイルは Rime で言うところの ``PROBLEM`` ファイルに似た位置づけです。 "
+"``PROBLEM`` と同じ階層に保存することを推奨します。"
+msgstr ""
+
+#: ../../how_to_use.rst:77
+msgid "パスの記述は絶対パスでも良いですし、 ``problem.toml`` からの相対パスでも構いません。"
+msgstr ""
+
+#: ../../how_to_use.rst:79
+msgid "設定する項目は以下の通りです。"
+msgstr ""
+
+#: ../../how_to_use.rst:84
+msgid "``id`` (**必須**)"
+msgstr ""
+
+#: ../../how_to_use.rst:82
+msgid "問題 ID を指定します"
+msgstr ""
+
+#: ../../how_to_use.rst:83
+msgid "アプリケーション実行中の問題判別や、出力される HTML の名前に使用されます"
+msgstr ""
+
+#: ../../how_to_use.rst:84
+msgid ""
+"ID は、実行時に操作対象となる設定ファイルそれぞれで **一意でなければなりません**。例えば、 ``id = \"A\"`` "
+"となる設定ファイルが複数存在してはいけません"
+msgstr ""
+
+#: ../../how_to_use.rst:88
+msgid "``assets_path`` (任意)"
+msgstr ""
+
+#: ../../how_to_use.rst:87
+msgid "問題文に添付する画像などが含まれているディレクトリへのパスを指定します (問題文に図が必要な場合などにご利用ください)"
+msgstr ""
+
+#: ../../how_to_use.rst:88
+msgid ""
+"``assets_path`` 以下に存在する全てのファイル・ディレクトリが ``ss-out`` ディレクトリ中の ``assets`` "
+"ディレクトリにコピーされます。画像などのリンクを張る際は、この仕様を念頭に置いて指定してください。"
+msgstr ""
+
+#: ../../how_to_use.rst:100
+msgid "``sample_path`` (任意)"
+msgstr ""
+
+#: ../../how_to_use.rst:91
+msgid "サンプルケースが含まれているディレクトリへのパスを指定します"
+msgstr ""
+
+#: ../../how_to_use.rst:92
+msgid "何も指定しなかった場合は、 ``problem.toml`` が存在する階層下の ``tests`` ディレクトリが設定されます"
+msgstr ""
+
+#: ../../how_to_use.rst:100
+msgid "指定されたディレクトリ内のファイルであって、以下に全て当てはまるものはサンプルケース関連のファイルとみなし、問題文に記載されます"
+msgstr ""
+
+#: ../../how_to_use.rst:98
+msgid "拡張子が ``.in`` / ``.out`` / ``.diff`` / ``.md`` のいずれかである"
+msgstr ""
+
+#: ../../how_to_use.rst:95
+msgid "``.in`` ファイル: 入力例を表すファイル"
+msgstr ""
+
+#: ../../how_to_use.rst:96
+msgid "``.out`` / ``.diff`` ファイル: 出力例を表すファイル"
+msgstr ""
+
+#: ../../how_to_use.rst:97
+msgid "``.md`` ファイル: インタラクティブの入出力例を表すファイル (``sample`` ディレクトリの I 問題参照)"
+msgstr ""
+
+#: ../../how_to_use.rst:98
+msgid "``[言語名]/*.md`` ファイル: 入出力例に関する説明 (``sample`` ディレクトリの A 問題参照)"
+msgstr ""
+
+#: ../../how_to_use.rst:99
+msgid ""
+"例: 日本語で ``00_sample_00`` に関する説明をしたいならば、 "
+"``[sample_path]/ja/00_sample_00.md`` というファイルを用意します"
+msgstr ""
+
+#: ../../how_to_use.rst:100
+msgid "ファイル名に ``sample`` が部分文字列として含まれる"
+msgstr ""
+
+#: ../../how_to_use.rst:103
+msgid ""
+"v1.5.0 より、インタラクティブの入出力例のために用意する Markdown ファイルと、入出力例に関する説明のために用意する "
+"Markdown ファイルは、想定する格納場所が明確に異なります"
+msgstr ""
+
+#: ../../how_to_use.rst:109
+msgid "``ignore_samples`` (任意)"
+msgstr ""
+
+#: ../../how_to_use.rst:106
+msgid ""
+"``sample_path`` "
+"で指定されたディレクトリにある、サンプルケースとして認識されるファイル名のうち、問題文に反映してほしくないものをリスト形式で指定します。拡張子は含めてはなりません"
+msgstr ""
+
+#: ../../how_to_use.rst:107
+msgid ""
+"例えば ``00_sample_00`` および ``00_sample_hoge`` を問題文に含めてほしくない場合、 "
+"``ignore_samples = [\"00_sample_00\", \"00_sample_hoge\"]`` のように設定します"
+msgstr ""
+
+#: ../../how_to_use.rst:108
+msgid ""
+"`Unix のシェル形式のワイルドカード "
+"<https://docs.python.org/ja/3/library/fnmatch.html>`_ に対応しています"
+msgstr ""
+
+#: ../../how_to_use.rst:109
+msgid "何も指定されなかった場合、見つかった全てのサンプルケースが問題文に反映されます"
+msgstr ""
+
+#: ../../how_to_use.rst:115
+msgid "``params_path`` (任意)"
+msgstr ""
+
+#: ../../how_to_use.rst:113
+msgid ""
+"問題制約となるパラメータの値を、generator や validator "
+"で利用できるようにファイルに出力したいときに、パラメータを記載したファイルの出力パスを指定します"
+msgstr ""
+
+#: ../../how_to_use.rst:113
+msgid ""
+"例: ``path/to/constraints.hpp`` "
+"としたならば、当該パスにファイルが生成されて出力されます。既存のファイルと全く同じ出力になる場合、出力をスキップします。"
+msgstr ""
+
+#: ../../how_to_use.rst:114
+msgid "何も指定しなかった場合は、ファイルが出力されません"
+msgstr ""
+
+#: ../../how_to_use.rst:115
+msgid "指定されたパスの拡張子から言語を推定し、その言語に合ったパラメータファイルを出力するようになっています"
+msgstr ""
+
+#: ../../how_to_use.rst:118
+msgid "現状は C++ のみ (``.cpp``, ``.cc``, ``.h``, ``.hpp``) 対応しています。今後対応言語は増やす予定です"
+msgstr ""
+
+#: ../../how_to_use.rst:135
+msgid "``[[statements]]`` (**必須**)"
+msgstr ""
+
+#: ../../how_to_use.rst:123
+msgid "用意する問題文ファイルそれぞれについて設定します。設定方法の例は ``sample`` ディレクトリにある A 問題・C 問題などを参照してください"
+msgstr ""
+
+#: ../../how_to_use.rst:123
+msgid "A 問題では、英語・日本語の両方で問題文を作成する例を示しています"
+msgstr ""
+
+#: ../../how_to_use.rst:124
+msgid "C 問題では、英語・日本語の両方で問題文を作成することに加えて、制約のみが異なる問題を作成する例も示しています"
+msgstr ""
+
+#: ../../how_to_use.rst:135
+msgid "各問題文ファイルについて以下を設定します"
+msgstr ""
+
+#: ../../how_to_use.rst:127
+msgid "``path`` (**必須**)"
+msgstr ""
+
+#: ../../how_to_use.rst:127
+msgid "ローカルに問題文が存在する場合: 問題文が記載されているファイル名を指定します"
+msgstr ""
+
+#: ../../how_to_use.rst:128
+msgid ""
+"Google Docs に問題文が存在する場合: Google Docs の ID か、もしくは Google Docs のファイルの URL "
+"を指定します。設定方法の例は ``sample`` の H 問題を参照してください。"
+msgstr ""
+
+#: ../../how_to_use.rst:131
+msgid "``lang`` (任意)"
+msgstr ""
+
+#: ../../how_to_use.rst:130
+msgid "問題文が書かれている言語を設定します"
+msgstr ""
+
+#: ../../how_to_use.rst:131
+msgid "``ja`` (日本語) もしくは ``en`` (英語) のいずれか一方を指定します"
+msgstr ""
+
+#: ../../how_to_use.rst:132
+msgid "何も指定しなかった場合は ``en`` が設定されているとみなして実行します"
+msgstr ""
+
+#: ../../how_to_use.rst:135
+msgid "``mode`` (任意)"
+msgstr ""
+
+#: ../../how_to_use.rst:134
+msgid "``docs`` または ``local`` のどちらかを指定します。問題文ファイルが存在する場所に応じて設定ください"
+msgstr ""
+
+#: ../../how_to_use.rst:135
+msgid "何も設定しなかった場合はモードが自動で認識されますので、通常は ``mode`` を設定する必要はありません"
+msgstr ""
+
+#: ../../how_to_use.rst:139
+msgid "``[constraints]`` (任意)"
+msgstr ""
+
+#: ../../how_to_use.rst:138
+msgid "問題制約を記述します"
+msgstr ""
+
+#: ../../how_to_use.rst:139
+msgid "``[定数名] = [定数]`` のように記載します"
+msgstr ""
+
+#: ../../how_to_use.rst:142
+msgid "問題文を用意する"
+msgstr ""
+
+#: ../../how_to_use.rst:145
+msgid "書き方を直感的に把握するために、 ``sample`` ディレクトリにある問題文ファイルを参考にすることをお勧めします"
+msgstr ""
+
+#: ../../how_to_use.rst:147
+msgid "ローカル・Google Docs のいずれにおいても、問題文は Markdown 形式で記述してください。"
+msgstr ""
+
+#: ../../how_to_use.rst:158
+msgid "問題文中では以下の記法が使用できます。いずれの記法に関しても、出力ファイル上では何らかのパラメータ・ファイルに置換されます。"
+msgstr ""
+
+#: ../../how_to_use.rst:150
+msgid "``{@constraints.<CONSTRAINT_NAME>}``"
+msgstr ""
+
+#: ../../how_to_use.rst:150
+msgid "問題制約のパラメータに置換されます"
+msgstr ""
+
+#: ../../how_to_use.rst:151
+msgid ""
+"パラメータ名 ``<CONSTRAINT_NAME>`` は ``problem.toml`` の ``[constraints]`` "
+"で記述されていた定数名である必要があります"
+msgstr ""
+
+#: ../../how_to_use.rst:154
+msgid "``{@samples.s<NUMBER>}``"
+msgstr ""
+
+#: ../../how_to_use.rst:153
+msgid "サンプルに関連するファイル群のうち、 ``<NUMBER>`` 番目 (leading-zero は許容しない) のものに置換されます"
+msgstr ""
+
+#: ../../how_to_use.rst:154
+msgid "サンプルの名前は拡張子を無視した状態で集合として管理されており、辞書順で小さいものから 1, 2, 3, ... と番号付けられています"
+msgstr ""
+
+#: ../../how_to_use.rst:155
+msgid ""
+"例えばサンプルに関連するファイルが ``00_sample_00.in``, ``00_sample_00.out``, "
+"``00_sample_00.md``, ``00_sample_01.in``, ``00_sample_01.out`` の 5 "
+"つであった場合、 ``00_sample_00`` が 1 番目・ ``00_sample_01`` が 2 番目となります"
+msgstr ""
+
+#: ../../how_to_use.rst:158
+msgid "``{@samples.all}``"
+msgstr ""
+
+#: ../../how_to_use.rst:157
+msgid ""
+"``problem.toml`` の ``sample_path`` "
+"で指定されたディレクトリ以下にある、サンプルに関連するすべてのファイル群に置換されます"
+msgstr ""
+
+#: ../../how_to_use.rst:158
+msgid "サンプルの挿入順番は、上述した「サンプルの番号付け」で得られた順番通りに行われます"
+msgstr ""
+
+#: ../../how_to_use.rst:161
+msgid "テンプレート設定ファイルを用意する (optional)"
+msgstr ""
+
+#: ../../how_to_use.rst:164
+msgid "書き方を直感的に把握するために、 ``sample`` ディレクトリにある ``problemset.toml`` を参考にすることをお勧めします"
+msgstr ""
+
+#: ../../how_to_use.rst:166
+msgid ""
+"必要であれば、HTML・PDF に適用されるテンプレートを指定するためのファイル ``problemset.toml`` "
+"を作成します。このファイルが無い場合は、デフォルトのテンプレートが使用されます。"
+msgstr ""
+
+#: ../../how_to_use.rst:168
+msgid ""
+"``problemset.toml`` は、 ``ss-manager run`` を実行するときの ``WORKING_DIR`` "
+"の階層と一致しているときにのみ参照されます。"
+msgstr ""
+
+#: ../../how_to_use.rst:181
+msgid "``[template]``: テンプレートファイルの設定"
+msgstr ""
+
+#: ../../how_to_use.rst:172
+msgid "``template_path``"
+msgstr ""
+
+#: ../../how_to_use.rst:172
+msgid ""
+"HTML および PDF 出力で使用されるテンプレート HTML へのパスを指定します "
+"(指定されていない場合、デフォルトのテンプレートが適用されます)"
+msgstr ""
+
+#: ../../how_to_use.rst:173
+msgid ""
+"テンプレートでは、問題文本文に相当する部分に ``{@problem.statement}`` 文を記述する必要があります。詳細は "
+"``sample/templates/default.html`` などをご覧ください"
+msgstr ""
+
+#: ../../how_to_use.rst:175
+msgid "``sample_template_path``"
+msgstr ""
+
+#: ../../how_to_use.rst:175
+msgid "入出力例の部分に使われるテンプレート HTML へのパスを指定します (指定されていない場合、デフォルトのテンプレートが適用されます)"
+msgstr ""
+
+#: ../../how_to_use.rst:176
+msgid "テンプレートの書き方は ``sample/templates/sample_default.html`` などをご覧ください"
+msgstr ""
+
+#: ../../how_to_use.rst:178
+msgid "``preprocess_path``"
+msgstr ""
+
+#: ../../how_to_use.rst:178
+msgid ""
+"Markdown ファイルに関して前処理を行う **Python スクリプト** へのパスを指定します。Markdown が HTML "
+"形式にレンダリングされる前に適用したい処理を記述してください (指定されていない場合、前処理は行われません)"
+msgstr ""
+
+#: ../../how_to_use.rst:179
+msgid ""
+"Markdown ファイルの中身は標準入力で与えられ、前処理の結果は標準出力で返す必要があります。詳細は "
+"``sample/templates/icpc_domestic/preprocess.py`` をご覧ください"
+msgstr ""
+
+#: ../../how_to_use.rst:181
+msgid "``postprocess_path``"
+msgstr ""
+
+#: ../../how_to_use.rst:181
+msgid ""
+"HTML ファイルに関して後処理を行う **Python スクリプト** へのパスを指定します。HTML "
+"形式にレンダリングされた後に適用したい処理を記述してください (指定されていない場合、後処理は行われません)"
+msgstr ""
+
+#: ../../how_to_use.rst:182
+msgid ""
+"HTML ファイルの中身は標準入力で与えられ、後処理の結果は標準出力で返す必要があります。詳細は "
+"``sample/templates/icpc_domestic/postprocess.py`` をご覧ください"
+msgstr ""
+
+#: ../../how_to_use.rst:189
+msgid ""
+"``[pdf]``: PDF 出力時の `wkhtmltopdf <https://wkhtmltopdf.org/>`_ (PDF "
+"にレンダリングする際に使用されるサードパーティライブラリ) の設定"
+msgstr ""
+
+#: ../../how_to_use.rst:184
+msgid "``[pdf.common]``"
+msgstr ""
+
+#: ../../how_to_use.rst:185
+msgid "各問題のファイルにも、問題セットのファイルにも適用されてほしい設定をここに記載します"
+msgstr ""
+
+#: ../../how_to_use.rst:186
+msgid "``[pdf.problem]``"
+msgstr ""
+
+#: ../../how_to_use.rst:187
+msgid "各問題のファイルにのみ適用されてほしい設定をここに記載します"
+msgstr ""
+
+#: ../../how_to_use.rst:189
+msgid "``[pdf.problemset]``"
+msgstr ""
+
+#: ../../how_to_use.rst:189
+msgid "問題セットのファイルにのみ適用されてほしい設定をここに記載します"
+msgstr ""
+
+#: ../../how_to_use.rst:192
+msgid "ファイルを HTML / PDF / Markdown 化する"
+msgstr ""
+
+#: ../../how_to_use.rst:194
+msgid ""
+"以下のコマンドで、プロジェクトファイルで定義された各問題を HTML 化できます。出力された HTML は、各問題ディレクトリ内の ``ss-"
+"out`` ディレクトリに格納されます。使い方の詳細は ``ss-manager run -h`` をご覧ください。"
+msgstr ""
+
+#: ../../how_to_use.rst:201
+msgid "``WORKING_DIR``: 各問題ディレクトリの 1 つ上の階層"
+msgstr ""
+
+#: ../../how_to_use.rst:204
+msgid ""
+"``-o OUTPUT, --output OUTPUT``: 以下のうちいずれか 1 つを指定します。指定しなかった場合は ``html`` "
+"が指定されているものとして扱われます。"
+msgstr ""
+
+#: ../../how_to_use.rst:203
+msgid "``html`` (default): HTML を出力"
+msgstr ""
+
+#: ../../how_to_use.rst:204
+msgid "``md```: Markdown を出力"
+msgstr ""
+
+#: ../../how_to_use.rst:205
+msgid "``pdf``: PDF を出力"
+msgstr ""
+
+#: ../../how_to_use.rst:206
+msgid ""
+"``-p, --make-problemset``: 問題セット全体のファイルも出力します。出力結果は "
+"``WORKING_DIR/problemset`` 直下に保存されます"
+msgstr ""
+
+#: ../../how_to_use.rst:207
+msgid ""
+"``-f, --force-dump``: "
+"常に出力ファイルを更新します。通常は直前に実行した結果から変化がなければファイルは更新されませんが、強制的に更新したい場合に使用します。"
+msgstr ""
+

@@ -1,0 +1,41 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, tsutaj
+# This file is distributed under the same license as the statements-manager
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: statements-manager \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-11-30 01:59+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.11.0\n"
+
+#: ../../examples.rst:4
+msgid "運用例"
+msgstr ""
+
+#: ../../examples.rst:7
+msgid "リポジトリにある問題文を半自動で更新する"
+msgstr ""
+
+#: ../../examples.rst:9
+msgid ""
+"GitHub Actions などの CI サービスと併用することで、リポジトリに変更が加えられたときに問題文に関する成果物の差分を push "
+"し、常にリポジトリ内の問題文を最新の状態に保つことが可能です。"
+msgstr ""
+
+#: ../../examples.rst:11
+msgid ""
+"設定の一例を以下に示します。これは ``master`` ブランチに push された際に ``ss-manager run`` "
+"を実行し、差分を自動で push するものです。以下の実装を、リポジトリに ``.github/workflows/statements-"
+"manager.yml`` として保存すると動作するはずです。"
+msgstr ""
+
