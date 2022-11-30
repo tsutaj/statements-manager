@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: statements-manager \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-30 01:59+0900\n"
+"POT-Creation-Date: 2022-11-30 22:49+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,72 +18,84 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.11.0\n"
 
-#: ../../index.rst:11
-msgid "Contents"
+#: ../../index.rst:12
+msgid "Getting Started"
 msgstr ""
 
-#: ../../index.rst:7
+#: ../../index.rst:19
+msgid "References"
+msgstr ""
+
+#: ../../index.rst:25
+msgid "Examples"
+msgstr ""
+
+#: ../../index.rst:8
 msgid "statements-manager"
 msgstr ""
 
-#: ../../index.rst:9
+#: ../../index.rst:10
 msgid "競技プログラミングの問題文作成を支援するツール"
 msgstr ""
 
-#: ../../index.rst:21
+#: ../../index.rst:32
 msgid "Links"
 msgstr ""
 
-#: ../../index.rst:24
+#: ../../index.rst:35
 msgid "`Rime <https://github.com/icpc-jag/rime>`_"
 msgstr ""
 
-#: ../../index.rst:24
+#: ../../index.rst:35
 msgid ""
 "作問するならまずこれを使うべきでしょう。これのプラグインとして開発しようか迷いましたが、Rime v3 でプラグインが廃止される (かもしれない)"
 " らしいので、独立に作ることにしています"
 msgstr ""
 
-#: ../../index.rst:25
+#: ../../index.rst:36
 msgid "statements-manager がもっと発展したら merge することも考えています"
 msgstr ""
 
-#: ../../index.rst:28
+#: ../../index.rst:39
 msgid ""
 "`library-checker-problems <https://github.com/yosupo06/library-checker-"
 "problems>`_"
 msgstr ""
 
-#: ../../index.rst:27
+#: ../../index.rst:38
 msgid "当アプリケーションの機能は、これの影響を強く受けています"
 msgstr ""
 
-#: ../../index.rst:28
+#: ../../index.rst:39
 msgid ""
 "library-cheker-problems の作問機能で出来ることを網羅しつつ、Rime と親和性が良い設計にし、さらに作問時に便利な "
 "Google Docs とも連携させたいというモチベーションがあり、このアプリケーションが作られました"
 msgstr ""
 
-#: ../../index.rst:31
+#: ../../index.rst:42
 msgid "For Contributors"
 msgstr ""
 
-#: ../../index.rst:33
+#: ../../index.rst:44
 msgid "本リポジトリへの Issue / PR など、なんでも歓迎です。詳細は ``CONTRIBUTING`` をご覧ください。"
 msgstr ""
 
-#: ../../index.rst:36
+#: ../../index.rst:47
 msgid "Indices and tables"
 msgstr ""
 
-#: ../../index.rst:38
+#: ../../index.rst:49
 msgid ":ref:`genindex`"
 msgstr ""
 
-#: ../../index.rst:39
+#: ../../index.rst:50
 msgid ":ref:`modindex`"
 msgstr ""
 
-#: ../../index.rst:40
+#: ../../index.rst:51
 msgid ":ref:`search`"
 msgstr ""
+
+#~ msgid "Contents"
+#~ msgstr ""
+

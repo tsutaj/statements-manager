@@ -1,7 +1,8 @@
 .. _how_to_use:
 
-How to use
-==========
+======
+使い方
+======
 
 .. warning:: 
     TODO(tsutaj): 分かりやすく書く
@@ -24,16 +25,17 @@ How to use
         ...
 
 statements-manager をダウンロードする
--------------------------------------
+=====================================
 
 以下のコマンドを打って ``statements-manager`` をダウンロードできます。
 
 .. code-block:: bash
+    :class: highlight
 
     $ pip install statements-manager
 
 Google Docs API を使用可能にする (optional)
----------------------------------------------------------------------------
+===========================================
 
 .. warning:: 
     **Google Docs にある問題文を扱いたい場合は、この操作が必須となります。** 問題文がすべてローカル環境に存在する場合はこの操作は不要です。
@@ -62,11 +64,12 @@ Google Docs API を使用可能にする (optional)
     - JSON ファイルは、ホームディレクトリに生成される隠しフォルダ ``.ss-manager`` の中に格納されます
 
 .. code-block:: bash
+    :class: highlight
 
     $ ss-manager reg-creds CREDS_PATH
 
 問題ごとに設定ファイル ``problem.toml`` を作る
-----------------------------------------------
+==============================================
 
 問題ディレクトリごとに設定ファイルを作ります。 ``problem.toml`` という名前にして ``toml`` 形式で記述します。詳しい例は ``sample/A/problem.toml`` (`link to toml <https://github.com/tsutaj/statements-manager/blob/master/sample/A/problem.toml>`_) などの、 ``sample`` ディレクトリにある設定ファイルをご覧ください。
 
@@ -139,7 +142,7 @@ Google Docs API を使用可能にする (optional)
     - ``[定数名] = [定数]`` のように記載します
 
 問題文を用意する
-----------------
+================
 
 .. hint::
     書き方を直感的に把握するために、 ``sample`` ディレクトリにある問題文ファイルを参考にすることをお勧めします
@@ -158,7 +161,7 @@ Google Docs API を使用可能にする (optional)
         - サンプルの挿入順番は、上述した「サンプルの番号付け」で得られた順番通りに行われます
 
 テンプレート設定ファイルを用意する (optional)
----------------------------------------------
+=============================================
 
 .. hint::
     書き方を直感的に把握するために、 ``sample`` ディレクトリにある ``problemset.toml`` を参考にすることをお勧めします
@@ -189,11 +192,12 @@ Google Docs API を使用可能にする (optional)
         - 問題セットのファイルにのみ適用されてほしい設定をここに記載します
 
 ファイルを HTML / PDF / Markdown 化する
----------------------------------------
+=======================================
 
 以下のコマンドで、プロジェクトファイルで定義された各問題を HTML 化できます。出力された HTML は、各問題ディレクトリ内の ``ss-out`` ディレクトリに格納されます。使い方の詳細は ``ss-manager run -h`` をご覧ください。
 
 .. code-block:: bash
+    :class: highlight
 
     $ ss-manager run [-o OUTPUT] [-p] WORKING_DIR
 

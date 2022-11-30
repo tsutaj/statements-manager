@@ -3,18 +3,29 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+==================
 statements-manager
 ==================
 
 競技プログラミングの問題文作成を支援するツール
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents
+   :maxdepth: 1
+   :caption: Getting Started
 
    what_is_this
    quickstart
+
+.. toctree:: 
+   :maxdepth: 2
+   :caption: References
+
    how_to_use
+
+.. toctree:: 
+   :maxdepth: 2
+   :caption: Examples
+
    examples
 
 Links
