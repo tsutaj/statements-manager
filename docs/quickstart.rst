@@ -55,12 +55,12 @@ H 問題の問題文は Google Docs にあるため、この手順だけでは H
 
 問題文を普通に書くと、以下のような Markdown ファイル ``statement.md`` を作ることになるでしょう。(数式は MathJax を想定した記法になっています)
 
-.. literalinclude:: codes/quickstart/statement_en_1.md
+.. literalinclude:: codes/quickstart/statement_hardcode.md
     :language: markdown
 
 この Markdown にはいくつか問題点があります。
 
-- 入力 :math:`A, B` に対する制約がファイルに直接書かれています。仮に :math:`A, B` の上限をともに :math:`10^{18}` に変更しなければならないとき、問題文の制約とデータセット生成器で使う制約を両方変更しなければなりませんが、これを別々に変更するとミスが起きやすいです。
+- 入力 :math:`A, B` に対する制約がファイルに直接書かれています。仮に :math:`A, B` の上限をともに :math:`10^{9}` から :math:`10^{18}` に変更しなければならないとき、問題文の制約とデータセット生成器で使う制約を両方変更しなければなりませんが、これを別々に変更するとミスが起きやすいです。
 - サンプル入出力も直接書かれているため、上で述べたことと同様の問題が起きやすいです。また、サンプルのナンバリングもファイルに直接書かれているため、番号が重複したり抜け落ちたりする可能性があります。
 
 これらの問題を解消するため、statements-manager を導入して問題文を書き直していきます。
@@ -77,20 +77,22 @@ H 問題の問題文は Google Docs にあるため、この手順だけでは H
 
 これで問題制約とサンプル入出力を問題文から分離できました！最後に、問題文のファイル ``statement.md`` を次のように書き換えます。
 
-.. literalinclude:: codes/quickstart/statement_en_2.md
+.. literalinclude:: codes/quickstart/statement.md
     :language: Markdown
 
 重要なのは、 **問題制約とサンプル入出力が問題文ファイルに直接書かれていない** ことです。
 
-ここまで作ったファイルの階層を整理してみましょう。以下と同じであれば OK です。 ::
+ここまで作ったファイルの階層を整理してみましょう。以下と同じであれば OK です。
+   
+.. code-block:: text
 
     problem.toml
     statement.md
     tests/
-    |---- 00_sample_00.in
-    |---- 00_sample_00.out
-    |---- 00_sample_01.in
-    |---- 00_sample_01.out
+    ├─ 00_sample_00.in
+    ├─ 00_sample_00.out
+    ├─ 00_sample_01.in
+    └─ 00_sample_01.out
 
 ツールを実行して出力結果を得る
 ------------------------------

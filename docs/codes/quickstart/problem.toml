@@ -6,7 +6,7 @@ params_path = "./tests/constraints.hpp"
 
 # path to statements
 [[statements]]
-path = "./statement/statement.md"
+path = "./statement.md"
 lang = "en"
 
 # write constraints
