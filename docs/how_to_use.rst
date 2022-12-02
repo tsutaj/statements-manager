@@ -34,6 +34,9 @@ statements-manager をダウンロードする
 
     $ pip install statements-manager
 
+
+.. _google_docs_api:
+
 Google Docs API を使用可能にする (optional)
 ===========================================
 
