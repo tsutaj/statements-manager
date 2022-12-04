@@ -19,7 +19,7 @@
 
 ``ss-manager run ./sample`` を実行した後は、H 問題以外の各問題ディレクトリについて、 ``ss-out`` ディレクトリ内に HTML が生成されており、 ``tests`` ディレクトリ内に制約ファイルが生成されているはずです。
 
-H 問題の問題文は Google Docs にあるため、この手順だけでは HTML 生成ができません。:ref:`google_docs_api` で述べられている設定を行うと、H 問題に関しても HTML 生成が可能です。
+H 問題の問題文は Google Docs にあるため、この手順だけでは HTML 生成ができません。:ref:`register_credentials` で述べられている設定を行うと、H 問題に関しても HTML 生成が可能です。
 
 デフォルトでは HTML が生成されますが、Markdown や PDF の出力にも対応しています。出力形式を指定するには ``-o``, ``--output`` オプションを使います。
 
@@ -38,7 +38,7 @@ H 問題の問題文は Google Docs にあるため、この手順だけでは H
     # generate problemset PDF
     ss-manager run ./sample -o pdf -p
 
-さらに詳しく使い方を知りたい方は、 :ref:`how_to_use` をご覧ください。
+さらに詳しく使い方を知りたい方は、 :ref:`how_to_run` をご覧ください。
 
 .. _introduce_this_tool:
 
@@ -97,7 +97,13 @@ H 問題の問題文は Google Docs にあるため、この手順だけでは H
 ツールを実行して出力結果を得る
 ------------------------------
 
-ここまで用意できたら、statements-manager を実行していきます。 ``problem.toml`` と同じ階層で以下のコマンドを実行します。
+ここまで用意できたら、statements-manager を実行していきます。まだインストールしていない方は、次のコマンドでインストールしてください。
+
+.. code-block:: bash
+
+    $ pip install statements-manager
+    
+インストール後、 ``problem.toml`` と同じ階層で以下のコマンドを実行します。
 
 .. code-block:: bash
 
@@ -114,4 +120,4 @@ H 問題の問題文は Google Docs にあるため、この手順だけでは H
 .. literalinclude:: codes/quickstart/constraints.hpp
     :language: cpp
 
-問題文を編集して statements-manager を実行することで、問題文の出力結果と問題制約のファイルが得られることを学んできました。さらに詳しく使い方を知りたい方は、 :ref:`how_to_use` をご覧ください。
+問題文を編集して statements-manager を実行することで、問題文の出力結果と問題制約のファイルが得られることを学んできました。さらに詳しく使い方を知りたい方は、 :ref:`how_to_run` をご覧ください。

@@ -20,7 +20,9 @@ statements-manager
    :maxdepth: 2
    :caption: References
 
-   how_to_use
+   commands
+   register_credentials
+   how_to_run
 
 .. toctree:: 
    :maxdepth: 2
