@@ -1,0 +1,118 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, tsutaj
+# This file is distributed under the same license as the statements-manager
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: statements-manager \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-12-06 23:13+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.11.0\n"
+
+#: ../../commands.rst:5
+msgid "コマンド"
+msgstr ""
+
+#: ../../commands.rst:7
+msgid "statements-manager の実行は次のように行います。"
+msgstr ""
+
+#: ../../commands.rst:13
+msgid "使用できるコマンド ``COMMAND`` は以下のとおりです。"
+msgstr ""
+
+#: ../../commands.rst:16
+msgid "run"
+msgstr ""
+
+#: ../../commands.rst:22
+msgid ""
+"用意した Markdown "
+"ファイルを読み込み、指定された形式の出力ファイルを作成します。また、制約ファイルを出力する設定になっているときは、制約ファイルも出力します。"
+msgstr ""
+
+#: ../../commands.rst:25
+msgid "オプション"
+msgstr ""
+
+#: ../../commands.rst:29
+msgid "問題文の生成対象となるディレクトリを指定します。何も指定しない場合、コマンドが実行された階層を指定したとみなします。"
+msgstr ""
+
+#: ../../commands.rst:31
+msgid "``working_dir`` 以下を再帰的に探索し、見つかった ``problem.toml`` それぞれについて問題文の生成が行われます。"
+msgstr ""
+
+#: ../../commands.rst:35
+msgid "出力ファイルの形式を指定します。このオプションが指定されていない場合、 ``html`` が指定されているとみなして実行されます。"
+msgstr ""
+
+#: ../../commands.rst:39
+msgid "問題セットのファイルも出力します。出力形式は ``-o, --output`` オプションで指定されたものに従います。"
+msgstr ""
+
+#: ../../commands.rst:43
+msgid "キャッシュファイルの情報を無視し、常に出力ファイルを更新します。"
+msgstr ""
+
+#: ../../commands.rst:45
+msgid "このオプションが付いておらず、既に存在する出力ファイルから内容が変化していない場合は、出力ファイルは更新されません。"
+msgstr ""
+
+#: ../../commands.rst:49
+msgid "ヘルプメッセージを出力します。"
+msgstr ""
+
+#: ../../commands.rst:52
+msgid "実行例"
+msgstr ""
+
+#: ../../commands.rst:54
+msgid "次のコマンドを考えます。"
+msgstr ""
+
+#: ../../commands.rst:60
+msgid "このコマンドは次のように実行されます。"
+msgstr ""
+
+#: ../../commands.rst:62
+msgid "``./problems`` 以下にある問題文を対象として出力ファイルを作成する"
+msgstr ""
+
+#: ../../commands.rst:63
+msgid "PDF 形式で出力する"
+msgstr ""
+
+#: ../../commands.rst:64
+msgid "問題セットも出力する"
+msgstr ""
+
+#: ../../commands.rst:65
+msgid "出力ファイルの内容に変化がなければファイルを更新しない"
+msgstr ""
+
+#: ../../commands.rst:68
+msgid "reg-creds"
+msgstr ""
+
+#: ../../commands.rst:74
+msgid ""
+"Google Docs の API credentials を登録します。詳しい登録方法は :ref:`register_credentials`"
+" をご覧ください。"
+msgstr ""
+
+#: ../../commands.rst:77
+msgid ""
+"**Google Docs にある問題文を扱いたい場合は、このコマンドによる API credential の登録が必須となります。** "
+"問題文がすべてローカル環境に存在する場合はこの操作は不要です。"
+msgstr ""
+
