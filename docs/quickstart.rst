@@ -113,7 +113,7 @@ H 問題の問題文は Google Docs にあるため、この手順だけでは H
 
 ``ss-out/A.html`` ファイルは、問題制約やサンプルが埋め込まれた後の HTML 形式の問題文です。
 
-.. image:: images/quickstart/a_plus_b.png
+.. thumbnail:: images/quickstart/a_plus_b.png
 
 ``tests/constraints.hpp`` は、問題制約が書かれた C++ 形式のファイルであり、内容は以下のとおりです。 **このファイルを使ってデータセットを作ることで、問題文と同じ制約でデータセットを作ることができます。**
 

@@ -21,7 +21,7 @@ Screencast
 
 問題文中に制約やサンプルの情報が直接的には書かれていないファイルを statements-manager でビルドすると、それらの情報を埋め込んだ HTML ファイルが出力されていることが確認できます。また、制約を表すファイル ``constraints.hpp`` が自動で生成されていることも確認できます。
 
-.. image:: https://user-images.githubusercontent.com/19629946/131149286-39111b9b-9719-4693-98f9-88ed8caea34d.gif
+.. thumbnail:: https://user-images.githubusercontent.com/19629946/131149286-39111b9b-9719-4693-98f9-88ed8caea34d.gif
 
 .. _feature:
 
@@ -44,4 +44,4 @@ Google Docs 上の問題文 / ローカル上の問題文の両方に対応
 
 Google Docs では、テキストに対して修正の提案を出すことができますが、本ツールの実行時には **未解決の提案が存在するかどうかを確認できます。** これは例えば、問題準備の終盤に未解決の提案が存在するかどうか調べるときに役立ちます。
 
-.. image:: images/quickstart/suggestions.png
+.. thumbnail:: images/quickstart/suggestions.png
