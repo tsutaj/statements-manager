@@ -1,0 +1,112 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, tsutaj
+# This file is distributed under the same license as the statements-manager
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: statements-manager \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-12-06 23:13+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.11.0\n"
+
+#: ../../what_is_this.rst:5
+msgid "ツールの概要"
+msgstr ""
+
+#: ../../what_is_this.rst:7
+msgid ""
+"statements-manager (略称: ss-manager) は、Markdown "
+"形式で記述された競技プログラミングの問題文ファイルを、 HTML / PDF / Markdown 形式のいずれかに変換して出力します。"
+msgstr ""
+
+#: ../../what_is_this.rst:9
+msgid "競技プログラミングの問題を準備するとき、何らかのヒューマンエラーによって、意図しない状態の問題文やデータセットを作ってしまう危険性があります。例えば以下のようなミスが考えられます。"
+msgstr ""
+
+#: ../../what_is_this.rst:11
+msgid "問題文に書いてある制約と、データセットで利用している制約が食い違っており、データセットで制約違反を起こしてしまった"
+msgstr ""
+
+#: ../../what_is_this.rst:12
+msgid "想定解法が変化し、あるサンプル入力に対応するサンプル出力を修正する必要があったが、修正前のものをそのまま問題文に書いてしまった"
+msgstr ""
+
+#: ../../what_is_this.rst:13
+msgid "Google Docs で問題文を管理し、定期的にローカルファイルに転記して問題文を作っていたが、古いバージョンのものを問題文として利用してしまった"
+msgstr ""
+
+#: ../../what_is_this.rst:15
+msgid ""
+"このツールでは、このようなミスを防止するための機能が備わっており、コマンドを打つだけで適切に問題文を作ることができます。これについての詳細は "
+":ref:`feature` をご覧ください。"
+msgstr ""
+
+#: ../../what_is_this.rst:17
+msgid ""
+"サンプルファイルを使って、このツールをすぐに試してみたい方は :ref:`quickstart` を、詳しい使い方を知りたい方は "
+":ref:`how_to_run` をご覧ください。"
+msgstr ""
+
+#: ../../what_is_this.rst:20
+msgid "Screencast"
+msgstr ""
+
+#: ../../what_is_this.rst:22
+msgid ""
+"問題文中に制約やサンプルの情報が直接的には書かれていないファイルを statements-manager でビルドすると、それらの情報を埋め込んだ"
+" HTML ファイルが出力されていることが確認できます。また、制約を表すファイル ``constraints.hpp`` "
+"が自動で生成されていることも確認できます。"
+msgstr ""
+
+#: ../../what_is_this.rst:29
+msgid "特長"
+msgstr ""
+
+#: ../../what_is_this.rst:32
+msgid "問題の制約・サンプルの一元的な管理を実現"
+msgstr ""
+
+#: ../../what_is_this.rst:34
+msgid ""
+"このツールでは、問題それぞれについて ``problem.toml`` "
+"という設定ファイルを作ります。この設定ファイルに、問題制約やサンプルへのパスなどの情報を記載します。"
+msgstr ""
+
+#: ../../what_is_this.rst:36
+msgid ""
+"statements-manager では、この設定ファイルをもとに制約ファイル ``constraints.hpp`` "
+"を自動生成します。データセットを作成するスクリプト内でこのファイルを利用することで、 "
+"**問題文の制約と同じ制約でデータセットを作ることができます。** また、statements-manager "
+"は問題文中に制約やサンプル入出力の情報を自動で埋め込むため、 **問題文中に制約やサンプル入出力をハードコーディングする必要がありません。**"
+msgstr ""
+
+#: ../../what_is_this.rst:38
+msgid ""
+"実際にどのように設定ファイルを作ればよいかは、:ref:`introduce_this_tool` や :ref:`how_to_run` "
+"をご覧ください。"
+msgstr ""
+
+#: ../../what_is_this.rst:41
+msgid "Google Docs 上の問題文 / ローカル上の問題文の両方に対応"
+msgstr ""
+
+#: ../../what_is_this.rst:43
+msgid ""
+"ローカルに保存されている問題文だけでなく、Google Docs "
+"で管理している問題文にも対応しています。この場合ももちろん、先ほどの例のように制約やサンプルを一元的に管理できます。"
+msgstr ""
+
+#: ../../what_is_this.rst:45
+msgid ""
+"Google Docs では、テキストに対して修正の提案を出すことができますが、本ツールの実行時には "
+"**未解決の提案が存在するかどうかを確認できます。** これは例えば、問題準備の終盤に未解決の提案が存在するかどうか調べるときに役立ちます。"
+msgstr ""

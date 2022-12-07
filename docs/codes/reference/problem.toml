@@ -1,10 +1,10 @@
-# problem id (it is used for the name of output html file)
 id = "A"
 
-# output params
 params_path = "./tests/constraints.hpp"
+assets_path = "./statement/assets/"
+sample_path = "./tests/"
+ignored_samples = []
 
-# path to statements
 [[statements]]
 path = "./statement/statement_ja.md"
 lang = "ja"
@@ -13,7 +13,10 @@ lang = "ja"
 path = "./statement/statement_en.md"
 lang = "en"
 
-# write constraints
 [constraints]
-    MIN_AB = 1
-    MAX_AB = 1_000_000_000
+    MIN_N = 1
+    MAX_N = 100_000
+    MIN_M = 1
+    MAX_M = 100_000
+    MIN_D = 0
+    MAX_D = 2_000_000_000

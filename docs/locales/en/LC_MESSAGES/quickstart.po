@@ -1,0 +1,169 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, tsutaj
+# This file is distributed under the same license as the statements-manager
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: statements-manager \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-12-06 23:13+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.11.0\n"
+
+#: ../../quickstart.rst:5
+msgid "クイックスタート"
+msgstr ""
+
+#: ../../quickstart.rst:8
+msgid "リポジトリにある例を試してみたい方へ"
+msgstr ""
+
+#: ../../quickstart.rst:10
+msgid "まずは動作させてみたいという方は、以下のようにコマンドを実行してください。"
+msgstr ""
+
+#: ../../quickstart.rst:20
+msgid ""
+"``ss-manager run ./sample`` を実行した後は、H 問題以外の各問題ディレクトリについて、 ``ss-out`` "
+"ディレクトリ内に HTML が生成されており、 ``tests`` ディレクトリ内に制約ファイルが生成されているはずです。"
+msgstr ""
+
+#: ../../quickstart.rst:22
+msgid ""
+"H 問題の問題文は Google Docs にあるため、この手順だけでは HTML "
+"生成ができません。:ref:`register_credentials` で述べられている設定を行うと、H 問題に関しても HTML "
+"生成が可能です。"
+msgstr ""
+
+#: ../../quickstart.rst:24
+msgid ""
+"デフォルトでは HTML が生成されますが、Markdown や PDF の出力にも対応しています。出力形式を指定するには ``-o``, "
+"``--output`` オプションを使います。"
+msgstr ""
+
+#: ../../quickstart.rst:34
+msgid "また、 ``-p``, ``--make-problemset`` オプションによって、問題セット全体をまとめたファイルの生成も可能です。"
+msgstr ""
+
+#: ../../quickstart.rst:41
+msgid "さらに詳しく使い方を知りたい方は、 :ref:`how_to_run` をご覧ください。"
+msgstr ""
+
+#: ../../quickstart.rst:46
+msgid "本ツールの導入の流れを知りたい方へ"
+msgstr ""
+
+#: ../../quickstart.rst:48
+msgid "問題文と設定ファイルを実際に用意して動作させることで、本ツールの導入の流れを説明します。"
+msgstr ""
+
+#: ../../quickstart.rst:50
+msgid ""
+"ここでは、「整数 :math:`A` と :math:`B` が与えられるので、 :math:`A + B` "
+"の計算結果を出力してください」という問題を作りたいときに、どのように問題文を準備すればよいか説明します。ファイル構成などの詳細を確認したいときは "
+"`リポジトリ内のサンプル <https://github.com/tsutaj/statements-"
+"manager/tree/master/sample/A>`_ を参照してください。"
+msgstr ""
+
+#: ../../quickstart.rst:54
+msgid "問題文を用意する"
+msgstr ""
+
+#: ../../quickstart.rst:56
+msgid ""
+"問題文を普通に書くと、以下のような Markdown ファイル ``statement.md`` を作ることになるでしょう。(数式は "
+"MathJax を想定した記法になっています)"
+msgstr ""
+
+#: ../../quickstart.rst:61
+msgid "この Markdown にはいくつか問題点があります。"
+msgstr ""
+
+#: ../../quickstart.rst:63
+msgid ""
+"入力 :math:`A, B` に対する制約がファイルに直接書かれています。仮に :math:`A, B` の上限をともに "
+":math:`10^{9}` から :math:`10^{18}` "
+"に変更しなければならないとき、問題文の制約とデータセット生成器で使う制約を両方変更しなければなりませんが、これを別々に変更するとミスが起きやすいです。"
+msgstr ""
+
+#: ../../quickstart.rst:64
+msgid "サンプル入出力も直接書かれているため、上で述べたことと同様の問題が起きやすいです。また、サンプルのナンバリングもファイルに直接書かれているため、番号が重複したり抜け落ちたりする可能性があります。"
+msgstr ""
+
+#: ../../quickstart.rst:66
+msgid "これらの問題を解消するため、statements-manager を導入して問題文を書き直していきます。"
+msgstr ""
+
+#: ../../quickstart.rst:69
+msgid "問題制約とサンプル入出力を別ファイルに移す"
+msgstr ""
+
+#: ../../quickstart.rst:71
+msgid ""
+"サンプル入出力を別ファイルに移します。入力例 1 に対応するファイルは ``00_sample_00.in`` に、出力例 1 "
+"に対応するファイルは ``00_sample_00.out`` に用意します。同様に入出力例 2 に対応するファイル "
+"``00_sample_01.in``, ``00_sample_01.out`` も用意します。これらのファイルは全て ``tests`` "
+"というディレクトリ内に格納しておきます。"
+msgstr ""
+
+#: ../../quickstart.rst:73
+msgid "また、問題制約を問題文ファイルから分離するため、以下のような設定ファイル ``problem.toml`` を用意します。"
+msgstr ""
+
+#: ../../quickstart.rst:78
+msgid "これで問題制約とサンプル入出力を問題文から分離できました！最後に、問題文のファイル ``statement.md`` を次のように書き換えます。"
+msgstr ""
+
+#: ../../quickstart.rst:83
+msgid "重要なのは、 **問題制約とサンプル入出力が問題文ファイルに直接書かれていない** ことです。"
+msgstr ""
+
+#: ../../quickstart.rst:85
+msgid "ここまで作ったファイルの階層を整理してみましょう。以下と同じであれば OK です。"
+msgstr ""
+
+#: ../../quickstart.rst:98
+msgid "ツールを実行して出力結果を得る"
+msgstr ""
+
+#: ../../quickstart.rst:100
+msgid ""
+"ここまで用意できたら、statements-manager "
+"を実行していきます。まだインストールしていない方は、次のコマンドでインストールしてください。"
+msgstr ""
+
+#: ../../quickstart.rst:106
+msgid "インストール後、 ``problem.toml`` と同じ階層で以下のコマンドを実行します。"
+msgstr ""
+
+#: ../../quickstart.rst:112
+msgid ""
+"実行が終わると ``ss-out/A.html`` というファイルと、 ``tests/constraints.hpp`` "
+"というファイルが出来ているはずです。"
+msgstr ""
+
+#: ../../quickstart.rst:114
+msgid "``ss-out/A.html`` ファイルは、問題制約やサンプルが埋め込まれた後の HTML 形式の問題文です。"
+msgstr ""
+
+#: ../../quickstart.rst:118
+msgid ""
+"``tests/constraints.hpp`` は、問題制約が書かれた C++ 形式のファイルであり、内容は以下のとおりです。 "
+"**このファイルを使ってデータセットを作ることで、問題文と同じ制約でデータセットを作ることができます。**"
+msgstr ""
+
+#: ../../quickstart.rst:123
+msgid ""
+"問題文を編集して statements-manager "
+"を実行することで、問題文の出力結果と問題制約のファイルが得られることを学んできました。さらに詳しく使い方を知りたい方は、 "
+":ref:`how_to_run` をご覧ください。"
+msgstr ""
+

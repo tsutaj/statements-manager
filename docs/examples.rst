@@ -1,0 +1,67 @@
+.. _examples:
+
+=======================
+Rime と組み合わせて使う
+=======================
+
+statements-manager は、問題作成支援ツール :github:`Rime <icpc-jag/rime>` と組み合わせて使うことを想定した作りになっています。statements-manager は問題文の準備作業を補助し、Rime は問題文作成を除くすべての工程の準備作業を補助するツールです。
+
+このため、想定しているディレクトリ構成も Rime と似ています。設定ファイル類は以下のように配置することを推奨しています。
+
+- 問題セットに関する設定を行うファイル ``problemset.toml`` は、Rime のプロジェクト設定ファイル ``PROJECT`` と同じ階層に置く
+- 各問題に関する設定を行うファイル ``problem.toml`` は、Rime の問題設定ファイル ``PROBLEM`` と同じ階層に置く
+- 制約ファイルの出力先 ``params_path`` は、Rime で入力生成器・入力検証器を配置するディレクトリ ``tests`` と同じ階層のパスにする
+
+また、組み合わせて使う際に推奨している実行順は以下のとおりです。
+
+.. code-block:: text
+
+    $ ss-manager run WORKING_DIR
+    $ rime test WORKING_DIR
+
+statements-manager によって、問題文の出力ファイルと制約ファイルを更新します。その後、その制約ファイルを使って Rime でデータセットを生成し、用意された解法が正しく動作するかどうかをチェックします。この順番で操作することで、問題文とデータセットの制約のズレを減らすことができます。
+
+========================================
+リポジトリにある問題文を半自動で更新する
+========================================
+
+GitHub Actions などの CI サービスと併用することで、リポジトリに変更が加えられたときに問題文に関する成果物の差分を push し、常にリポジトリ内の問題文を最新の状態に保つことが可能です。
+
+設定の一例を以下に示します。これは ``master`` ブランチに push された際に ``ss-manager run`` を実行し、差分を自動で push するものです。以下の実装を、リポジトリに ``.github/workflows/statements-manager.yml`` として保存すると動作するはずです。
+
+.. code-block:: yaml
+    :linenos:
+    
+    # run statements-manager and commit/push diffs
+    name: update-statements
+
+    on:
+    push:
+        branches: [master]
+
+    jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v2
+        - name: Set up Python 3
+            uses: actions/setup-python@v2
+            with:
+            python-version: 3.8
+        - name: Install dependencies
+            run: |
+            python -m pip install --upgrade pip
+            pip install statements-manager
+        - name: Run statements-manager
+            run: |
+            ss-manager run ./
+        - name: Commit files
+            run: |
+            git add --all
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git commit -m "[ci skip] [bot] Updating to ${{ github.sha }}."
+        - name: Push changes
+            uses: ad-m/github-push-action@master
+            with:
+            branch: ${{ github.ref }}

@@ -1,12 +1,8 @@
 [template]
     template_path = "./templates/default.html"
     sample_template_path = "./templates/sample_default.html"
-
-    # (icpc-domestic like template)
-    # template_path = "./templates/icpc_domestic/template.html"
-    # sample_template_path = "./templates/sample_default.html"
-    # preprocess_path = "./templates/icpc_domestic/preprocess.py"
-    # postprocess_path = "./templates/icpc_domestic/postprocess.py"
+    preprocess_path = "./templates/preprocess.py"
+    postprocess_path = "./templates/postprocess.py"
 
 [pdf]
     [pdf.common]
@@ -23,7 +19,7 @@
         javascript-delay = 1000
     [pdf.problemset]
         javascript-delay = 10000
-        header-center = "International Collegiate Programming Contest\nPractice Contest for ICPC YYYY Domestic Contest, YYYY-MM-DD"
+        header-center = "Practice Contest, YYYY-MM-DD"
         header-font-name = "Times New Roman"
         header-font-size = 12
         header-spacing = 12
