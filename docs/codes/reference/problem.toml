@@ -1,0 +1,22 @@
+id = "A"
+
+params_path = "./tests/constraints.hpp"
+assets_path = "./statement/assets/"
+sample_path = "./tests/"
+ignored_samples = []
+
+[[statements]]
+path = "./statement/statement_ja.md"
+lang = "ja"
+
+[[statements]]
+path = "./statement/statement_en.md"
+lang = "en"
+
+[constraints]
+    MIN_N = 1
+    MAX_N = 100_000
+    MIN_M = 1
+    MAX_M = 100_000
+    MIN_D = 0
+    MAX_D = 2_000_000_000

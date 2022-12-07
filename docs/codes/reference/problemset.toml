@@ -1,0 +1,29 @@
+[template]
+    template_path = "./templates/default.html"
+    sample_template_path = "./templates/sample_default.html"
+    preprocess_path = "./templates/preprocess.py"
+    postprocess_path = "./templates/postprocess.py"
+
+[pdf]
+    [pdf.common]
+        encoding = "UTF-8"
+        page-size = "A4"
+        margin-top = 24
+        margin-right = 16
+        margin-bottom = 16
+        margin-left = 16
+        enable-local-file-access = ""
+        disable-smart-shrinking = ""
+        debug-javascript = ""
+    [pdf.problem]
+        javascript-delay = 1000
+    [pdf.problemset]
+        javascript-delay = 10000
+        header-center = "Practice Contest, YYYY-MM-DD"
+        header-font-name = "Times New Roman"
+        header-font-size = 12
+        header-spacing = 12
+        footer-center = "[page] / [toPage]"
+        footer-font-name = "Times New Roman"
+        footer-font-size = 10
+        footer-spacing = 8

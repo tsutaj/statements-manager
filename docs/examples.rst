@@ -4,7 +4,7 @@
 Rime と組み合わせて使う
 =======================
 
-statements-manager は、問題作成支援ツール `Rime <https://github.com/icpc-jag/rime>`_ と組み合わせて使うことを想定した作りになっています。statements-manager は問題文の準備作業を補助し、Rime は問題文作成を除くすべての工程の準備作業を補助するツールです。
+statements-manager は、問題作成支援ツール :github:`Rime <icpc-jag/rime>` と組み合わせて使うことを想定した作りになっています。statements-manager は問題文の準備作業を補助し、Rime は問題文作成を除くすべての工程の準備作業を補助するツールです。
 
 このため、想定しているディレクトリ構成も Rime と似ています。設定ファイル類は以下のように配置することを推奨しています。
 
@@ -32,7 +32,7 @@ GitHub Actions などの CI サービスと併用することで、リポジト�
 .. code-block:: yaml
     :linenos:
     
-    # statements-manager を動かし、変更点があれば commit & push する
+    # run statements-manager and commit/push diffs
     name: update-statements
 
     on:

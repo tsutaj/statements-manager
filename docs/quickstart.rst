@@ -38,7 +38,7 @@ H 問題の問題文は Google Docs にあるため、この手順だけでは H
     # generate problemset PDF
     ss-manager run ./sample -o pdf -p
 
-さらに詳しく使い方を知りたい方は、 :ref:`how_to_run` をご覧ください。
+コマンドの詳しい使い方については :ref:`commands` をご覧ください。
 
 .. _introduce_this_tool:
 
@@ -48,7 +48,7 @@ H 問題の問題文は Google Docs にあるため、この手順だけでは H
 問題文と設定ファイルを実際に用意して動作させることで、本ツールの導入の流れを説明します。
 
 ここでは、「整数 :math:`A` と :math:`B` が与えられるので、
-:math:`A + B` の計算結果を出力してください」という問題を作りたいときに、どのように問題文を準備すればよいか説明します。ファイル構成などの詳細を確認したいときは `リポジトリ内のサンプル <https://github.com/tsutaj/statements-manager/tree/master/sample/A>`_ を参照してください。
+:math:`A + B` の計算結果を出力してください」という問題を作りたいときに、どのように問題文を準備すればよいか説明します。ファイル構成などの詳細を確認したいときは :tree:`リポジトリ内のサンプル <sample/A>` を参照してください。
 
 問題文を用意する
 ----------------
@@ -119,5 +119,3 @@ H 問題の問題文は Google Docs にあるため、この手順だけでは H
 
 .. literalinclude:: codes/quickstart/constraints.hpp
     :language: cpp
-
-問題文を編集して statements-manager を実行することで、問題文の出力結果と問題制約のファイルが得られることを学んできました。さらに詳しく使い方を知りたい方は、 :ref:`how_to_run` をご覧ください。
