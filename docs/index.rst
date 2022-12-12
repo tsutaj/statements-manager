@@ -45,10 +45,3 @@ For Contributors
 ================
 
 Issue / PR など contribute してくださる方を募集しています。詳細は :blob:`CONTRIBUTING.md` をご覧ください。
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

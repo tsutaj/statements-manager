@@ -16,8 +16,14 @@ statements-manager は、問題作成支援ツール :github:`Rime <icpc-jag/rim
 
 .. code-block:: text
 
+    # create constraints files
     $ ss-manager run WORKING_DIR
+
+    # create correct sample outputs
     $ rime test WORKING_DIR
+
+    # create problem statements
+    $ ss-manager run WORKING_DIR
 
 statements-manager によって、問題文の出力ファイルと制約ファイルを更新します。その後、その制約ファイルを使って Rime でデータセットを生成し、用意された解法が正しく動作するかどうかをチェックします。この順番で操作することで、問題文とデータセットの制約のズレを減らすことができます。
 
