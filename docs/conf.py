@@ -1,3 +1,4 @@
+import datetime
 import os
 
 import pkg_resources
@@ -10,12 +11,13 @@ import pkg_resources
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "statements-manager"
-copyright = "2022, tsutaj"
-author = "tsutaj"
-release = "1.7.4"
-
 __version__ = pkg_resources.get_distribution('statements-manager').version
+__year__ = datetime.date.today().year
+
+project = "statements-manager"
+copyright = f"{__year__}, tsutaj"
+author = "tsutaj"
+release = f"v{__version__}"
 
 rtd_version = os.environ.get('READTHEDOCS_VERSION')
 if rtd_version == 'latest':
