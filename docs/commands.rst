@@ -17,7 +17,7 @@ run
 
 .. code-block:: text
     
-    usage: ss-manager run [-h] [-o {html, md, pdf}] [-p] [-f] [working_dir]
+    usage: ss-manager run [-h] [-o {html, md, pdf}] [-p] [-f] [-c] [working_dir]
 
 用意した Markdown ファイルを読み込み、指定された形式の出力ファイルを作成します。また、制約ファイルを出力する設定になっているときは、制約ファイルも出力します。
 
