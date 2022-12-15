@@ -73,6 +73,12 @@ def get_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="always dump output file",
     )
+    subparser.add_argument(
+        "-c",
+        "--constraints-only",
+        action="store_true",
+        help="update constraints file only",
+    )
 
     subparser = subparsers.add_parser(
         "reg-creds",
@@ -93,12 +99,13 @@ def subcommand_run(
     output: str,
     make_problemset: bool,
     force_dump: bool,
+    constraints_only: bool,
 ) -> None:
     working_dir = str(pathlib.Path(working_dir).resolve())
     logger.debug(f"run: working_dir = '{working_dir}'")
     project = Project(working_dir, output)  # Project
 
-    project.run_problems(make_problemset, force_dump)
+    project.run_problems(make_problemset, force_dump, constraints_only)
     logger.debug("run command ended successfully.")
 
 
@@ -145,6 +152,7 @@ def main() -> None:
             output=args.output,
             make_problemset=args.make_problemset,
             force_dump=args.force_dump,
+            constraints_only=args.constraints_only,
         )
     elif args.subcommand == "reg-creds":
         subcommand_reg_creds(

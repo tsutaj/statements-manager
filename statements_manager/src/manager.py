@@ -277,6 +277,7 @@ class Manager:
         output_ext: str,
         make_problemset: bool,
         force_dump: bool,
+        constraints_only: bool,
     ) -> None:
         # 問題文を取ってきて変換
         valid_problem_ids = []
@@ -296,6 +297,9 @@ class Manager:
 
             # パラメータファイル作成
             self.create_params_file(problem_id)
+            # 制約ファイルのみを更新する場合はこれで終了
+            if constraints_only:
+                continue
 
             # 問題文ファイル出力先
             output_dir = self.problem_attr[problem_id]["output_path"]
