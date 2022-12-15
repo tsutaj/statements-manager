@@ -29,7 +29,9 @@ class Project:
             pdf_attr_raw=self.pdf_attr_raw,
         )
 
-    def run_problems(self, make_problemset: bool, force_dump: bool) -> None:
+    def run_problems(
+        self, make_problemset: bool, force_dump: bool, constraints_only: bool
+    ) -> None:
         """問題文作成を実行する"""
         problem_ids: list[str] = sorted(list(self.problem_attr.keys()))
         self.stmts_manager.run(
@@ -37,6 +39,7 @@ class Project:
             output_ext=self._ext,
             make_problemset=make_problemset,
             force_dump=force_dump,
+            constraints_only=constraints_only,
         )
 
     def _check_project(self) -> None:
