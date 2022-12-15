@@ -17,7 +17,7 @@ statements-manager は、問題作成支援ツール :github:`Rime <icpc-jag/rim
 .. code-block:: text
 
     # create constraints files
-    $ ss-manager run WORKING_DIR
+    $ ss-manager run -c WORKING_DIR
 
     # create correct sample outputs
     $ rime test WORKING_DIR
