@@ -7,6 +7,7 @@ from logging import Logger, getLogger
 from typing import Any, Set
 
 from jinja2 import DictLoader, Environment
+from markdown import markdown
 
 logger: Logger = getLogger(__name__)
 
@@ -183,9 +184,27 @@ class SamplesConverter:
             if output_file.exists():
                 sample_data["output_text"] = fetch_text(output_file)
             if md_file.exists():
-                sample_data["md_text"] = fetch_text(md_file)
+                md_text = fetch_text(md_file)
+                md_text = markdown(
+                    md_text,
+                    extensions=[
+                        "md_in_html",
+                        "tables",
+                        "fenced_code",
+                    ],
+                )
+                sample_data["md_text"] = md_text
             if explanation_file.exists():
-                sample_data["explanation_text"] = fetch_text(explanation_file)
+                explanation_text = fetch_text(explanation_file)
+                explanation_text = markdown(
+                    explanation_text,
+                    extensions=[
+                        "md_in_html",
+                        "tables",
+                        "fenced_code",
+                    ],
+                )
+                sample_data["explanation_text"] = explanation_text
             sample_text = env.get_template("template").render(
                 sample_data=sample_data,
             )
