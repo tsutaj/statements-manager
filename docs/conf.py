@@ -26,9 +26,9 @@ else:
     tag = 'v{}'.format(__version__)
 
 extlinks = {
-    'github': ('https://github.com/%s', ''),
-    'blob': (f'https://github.com/tsutaj/statements-manager/blob/{tag}/%s', ''),
-    'tree': (f'https://github.com/tsutaj/statements-manager/tree/{tag}/%s', ''),
+    'github': ('https://github.com/%s', '%s'),
+    'blob': (f'https://github.com/tsutaj/statements-manager/blob/{tag}/%s', '%s'),
+    'tree': (f'https://github.com/tsutaj/statements-manager/tree/{tag}/%s', '%s'),
 }
 
 # -- General configuration ---------------------------------------------------
