@@ -79,22 +79,22 @@ class SamplesConverter:
         # sample_path 以下で、ファイル名に 'sample' を含むものはサンプルであるとする
         sample_names = set()
         for in_filename in sample_path.glob("./*.in"):
-            if str(in_filename).lower().find("sample") >= 0:
+            if str(in_filename.stem).lower().find("sample") >= 0:
                 sample_names.add(in_filename.stem)
         for out_filename in sample_path.glob("./*.out"):
-            if str(out_filename).lower().find("sample") >= 0:
+            if str(out_filename.stem).lower().find("sample") >= 0:
                 sample_names.add(out_filename.stem)
         for diff_filename in sample_path.glob("./*.diff"):
-            if str(diff_filename).lower().find("sample") >= 0:
+            if str(diff_filename.stem).lower().find("sample") >= 0:
                 sample_names.add(diff_filename.stem)
         for md_filename in sample_path.glob("./*.md"):
             if (
                 pathlib.Path(md_filename).resolve() != statement_path.resolve()
-                and str(md_filename).lower().find("sample") >= 0
+                and str(md_filename.stem).lower().find("sample") >= 0
             ):
                 sample_names.add(md_filename.stem)
         for exp_filename in sample_path.glob(f"./{language}/*.md"):
-            if str(exp_filename).lower().find("sample") >= 0:
+            if str(exp_filename.stem).lower().find("sample") >= 0:
                 sample_names.add(exp_filename.stem)
 
         filtered_sample = list()
