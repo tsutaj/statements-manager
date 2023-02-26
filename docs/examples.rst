@@ -20,6 +20,7 @@ statements-manager は、問題作成支援ツール :github:`Rime <icpc-jag/rim
     $ ss-manager run -c WORKING_DIR
 
     # create correct sample outputs
+    $ rime clean WORKING_DIR
     $ rime test WORKING_DIR
 
     # create problem statements
