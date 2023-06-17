@@ -115,7 +115,7 @@ class Manager:
         logger.warning(
             "tips: try 'ss-manager reg-creds' before running on docs mode.\n"
             "how to create credentials file: "
-            "see https://github.com/tsutaj/statements-manager/blob/master/README.md#how-to-use"
+            "see https://statements-manager.readthedocs.io/ja/stable/register_credentials.html"
         )
         return (ContentsStatus.NG, "")
 
