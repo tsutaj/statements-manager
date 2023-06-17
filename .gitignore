@@ -132,13 +132,11 @@ dmypy.json
 credentials.json
 token.pickle
 *~
-#*
+\#*
 output/
 batch.sh
 run.sh
 ss-out/
 constraints.hpp
 virtualenv/
-problemset.html
-problemset.md
-problemset.pdf
+problemset/

@@ -156,17 +156,17 @@ class Renderer:
                 contents = problem_attr[problem_id]["raw_statement"]
                 contents = self.apply_preprocess(contents)
 
+                rendered_contents = self.replace_vars(
+                    problem_attr[problem_id], contents
+                )
                 rendered_contents = markdown(
-                    contents,
+                    rendered_contents,
                     extensions=[
                         self.replace_sample_format,
                         "md_in_html",
                         "tables",
                         "fenced_code",
                     ],
-                )
-                rendered_contents = self.replace_vars(
-                    problem_attr[problem_id], rendered_contents
                 )
                 problem_attr[problem_id]["statement"] = rendered_contents
 
