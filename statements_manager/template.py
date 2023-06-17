@@ -141,7 +141,7 @@ default_sample_template_html = """
 {% endif %}
 
 {% if sample_data.output_text is defined %}
-## {% if sample_data.language == "ja" %}出力例{% elif sample_data.language == "en" %}Sample Output{% endif %} {% if sample_data.do_numbering %}{{ sample_data.i_sample }}{% endif %}
+### {% if sample_data.language == "ja" %}出力例{% elif sample_data.language == "en" %}Sample Output{% endif %} {% if sample_data.do_numbering %}{{ sample_data.i_sample }}{% endif %}
 ```
 {{ sample_data.output_text }}```
 {% endif %}
