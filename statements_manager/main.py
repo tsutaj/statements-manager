@@ -89,7 +89,7 @@ def get_parser() -> argparse.ArgumentParser:
         "creds_path",
         help="path to credentials file (json)\n"
         "how to create credentials file: "
-        "see https://github.com/tsutaj/statements-manager/blob/master/README.md#how-to-use",
+        "see https://statements-manager.readthedocs.io/ja/stable/register_credentials.html",
     )
     return parser
 
