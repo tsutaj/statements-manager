@@ -9,20 +9,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+      - uses: actions/checkout@v1
 
-    - name: Set up Python
-      uses: actions/setup-python@v1
+      - name: Set up Python
+        uses: actions/setup-python@v1
 
-    - name: Install dependencies
-      run: |
-        pip3 install .
-        pip3 install setuptools wheel
-    - name: Build package
-      run: python3 setup.py bdist_wheel
+      - name: Install dependencies
+        run: |
+          pip3 install .
+          pip3 install setuptools wheel
 
-    - name: Publish package
-      uses: pypa/gh-action-pypi-publish@master
-      with:
-        user: __token__
-        password: ${{ secrets.pypi_password }}
+      - name: Version check
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0 | cut -c 2-)
+          LATEST_PIP=$(python3 <<< "import statements_manager as ss; print(ss.__version__)")
+          if [ $LATEST_TAG != $LATEST_PIP ]; then
+            echo "different version: tag = ${LATEST_TAG}, pip = ${LATEST_PIP}"
+            exit 1
+          fi
+
+      - name: Build package
+        run: python3 setup.py bdist_wheel
+
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}
