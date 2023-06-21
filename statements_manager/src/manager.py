@@ -284,22 +284,19 @@ class Manager:
         problemset_cache: dict[str, Any] = {}
         for problem_id in problem_ids:
             logger.info(f"rendering [problem id: {problem_id}]")
-            status, raw_statement = self.get_contents(problem_id)
 
+            self.create_params_file(problem_id)
+            if constraints_only:
+                continue
+
+            status, raw_statement = self.get_contents(problem_id)
             if status == ContentsStatus.NG:
                 logger.info(f"skipped [problem id: {problem_id}]")
                 logger.info("")
                 continue
 
-            # 問題文取得
             valid_problem_ids.append(problem_id)
             self.problem_attr[problem_id]["raw_statement"] = raw_statement
-
-            # パラメータファイル作成
-            self.create_params_file(problem_id)
-            # 制約ファイルのみを更新する場合はこれで終了
-            if constraints_only:
-                continue
 
             # 問題文ファイル出力先
             output_dir = self.problem_attr[problem_id]["output_path"]
