@@ -335,7 +335,7 @@ class Manager:
             logger.info("")
 
         # 問題セットに対応するものを出力
-        if not valid_problem_ids:
+        if not valid_problem_ids and not constraints_only:
             logger.warning("problem files not found")
         elif make_problemset:
             if self.problemset_dir.exists():
