@@ -12,13 +12,14 @@ params_path = "./tests/constraints.hpp"
 path = "1MoguVNpp2SgJvF0ncPbp_8_x2_GhClMijUjF3U3g8ns"
 # path = "https://docs.google.com/document/d/1MoguVNpp2SgJvF0ncPbp_8_x2_GhClMijUjF3U3g8ns/edit?usp=sharing"
 lang = "en"
+markdown_extensions = ["md_in_html", "tables", "fenced_code"]
 
 [constraints]
-    MIN_N = 1
-    MAX_N = 1000
-    MIN_C = 1
-    MAX_C = 100_000
-    MIN_Q = 1
-    MAX_Q = 100_000
-    MIN_D = 1
-    MAX_D = 100_000
+MIN_N = 1
+MAX_N = 1000
+MIN_C = 1
+MAX_C = 100_000
+MIN_Q = 1
+MAX_Q = 100_000
+MIN_D = 1
+MAX_D = 100_000

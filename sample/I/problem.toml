@@ -12,8 +12,9 @@ assets_path = "./statement/assets/"
 [[statements]]
 path = "./statement/statement.md"
 lang = "ja"
+markdown_extensions = ["md_in_html", "tables", "fenced_code"]
 
 # 問題制約を書く
 [constraints]
-    MIN_N = 1
-    MAX_N = 10000
+MIN_N = 1
+MAX_N = 10000

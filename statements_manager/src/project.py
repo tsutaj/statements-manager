@@ -60,11 +60,15 @@ class Project:
             "statement_path",
             "mode",
             "lang",
+            "markdown_extensions",
         ]
         for problem in self.problem_attr.values():
             for key in problem.keys():
                 if key not in acceptable_attr:
                     logger.warning(
+                        ""
+                        if "id" not in problem.keys()
+                        else f"problem {problem['id']}: "
                         f"unknown attribute in problem setting file: '{key}'"
                     )
 
@@ -88,6 +92,7 @@ class Project:
             "path",  # これは後で 'statement_path' に置換される
             "lang",
             "mode",
+            "markdown_extensions",
         ]
         for key in statement_info.keys():
             if key not in acceptable_attr:

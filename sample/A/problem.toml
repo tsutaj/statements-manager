@@ -8,12 +8,14 @@ params_path = "./tests/constraints.hpp"
 [[statements]]
 path = "./statement/statement_ja.md"
 lang = "ja"
+markdown_extensions = ["md_in_html", "tables", "fenced_code"]
 
 [[statements]]
 path = "./statement/statement_en.md"
 lang = "en"
+markdown_extensions = ["md_in_html", "tables", "fenced_code"]
 
 # write constraints
 [constraints]
-    MIN_AB = 1
-    MAX_AB = 1_000_000_000
+MIN_AB = 1
+MAX_AB = 1_000_000_000

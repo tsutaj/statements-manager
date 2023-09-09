@@ -7,11 +7,12 @@ params_path = "./tests/constraints.hpp"
 # path to statements
 [[statements]]
 path = "./statement/statement.md"
-lang = "en" # 見出しを英語にするため
+lang = "en"                                                   # 見出しを英語にするため
+markdown_extensions = ["md_in_html", "tables", "fenced_code"]
 
 # write constraints
 [constraints]
-    MIN_AB = 1
-    MAX_AB = 1_000_000_000
-    MIN_T = 1
-    MAX_T = 100_000
+MIN_AB = 1
+MAX_AB = 1_000_000_000
+MIN_T = 1
+MAX_T = 100_000
