@@ -90,6 +90,10 @@ problem.toml の書き方
         
         何も指定しなかった場合は ``en`` が設定されているとみなして実行します。
     
+    .. problemtoml:: markdown_extensions
+
+        `Python-Markdown が公式でサポートしている拡張機能 <https://python-markdown.github.io/extensions/>`_ のうち、使用したいものの Entry Point をリスト形式で指定します。
+    
     .. problemtoml:: mode
         
         ``docs`` または ``local`` のどちらかを指定します。問題文ファイルが存在する場所に応じて設定ください。
