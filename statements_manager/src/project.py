@@ -7,7 +7,7 @@ from typing import Any
 
 import toml
 
-from statements_manager.src.manager import Manager
+from statements_manager.src.convert_task_runner import ConvertTaskRunner
 from statements_manager.src.recognize_mode import recognize_mode
 from statements_manager.src.utils import resolve_path
 
@@ -23,7 +23,7 @@ class Project:
         self.template_attr = self._search_template_attr()
         self._check_template()
         self.pdf_attr_raw = self._search_pdf_attr_raw()
-        self.stmts_manager = Manager(
+        self.task_runner = ConvertTaskRunner(
             problem_attr=self.problem_attr,
             template_attr=self.template_attr,
             pdf_attr_raw=self.pdf_attr_raw,
@@ -34,7 +34,7 @@ class Project:
     ) -> None:
         """問題文作成を実行する"""
         problem_ids: list[str] = sorted(list(self.problem_attr.keys()))
-        self.stmts_manager.run(
+        self.task_runner.run(
             problem_ids=problem_ids,
             output_ext=self._ext,
             make_problemset=make_problemset,

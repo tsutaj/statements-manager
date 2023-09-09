@@ -39,7 +39,7 @@ def need_to_save(
     )
 
 
-class Manager:
+class ConvertTaskRunner:
     def __init__(
         self,
         problem_attr: dict[str, Any],
