@@ -8,15 +8,17 @@ ignored_samples = []
 [[statements]]
 path = "./statement/statement_ja.md"
 lang = "ja"
+markdown_extensions = ["md_in_html", "tables", "fenced_code"]
 
 [[statements]]
 path = "./statement/statement_en.md"
 lang = "en"
+markdown_extensions = ["md_in_html", "tables", "fenced_code"]
 
 [constraints]
-    MIN_N = 1
-    MAX_N = 100_000
-    MIN_M = 1
-    MAX_M = 100_000
-    MIN_D = 0
-    MAX_D = 2_000_000_000
+MIN_N = 1
+MAX_N = 100_000
+MIN_M = 1
+MAX_M = 100_000
+MIN_D = 0
+MAX_D = 2_000_000_000

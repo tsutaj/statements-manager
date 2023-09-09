@@ -8,30 +8,34 @@ params_path = "./tests/constraints.hpp"
 [[statements]]
 path = "./statement/en/statement_1.md"
 lang = "en"
+markdown_extensions = ["md_in_html", "tables", "fenced_code"]
 
 [[statements]]
 path = "./statement/en/statement_2.md"
 lang = "en"
+markdown_extensions = ["md_in_html", "tables", "fenced_code"]
 
 [[statements]]
 path = "./statement/ja/statement_1.md"
 lang = "ja"
+markdown_extensions = ["md_in_html", "tables", "fenced_code"]
 
 [[statements]]
 path = "./statement/ja/statement_2.md"
 lang = "ja"
+markdown_extensions = ["md_in_html", "tables", "fenced_code"]
 
 # write constraints
 [constraints]
-    MIN_A = -1_000_000_000
-    MAX_A = +1_000_000_000
+MIN_A = -1_000_000_000
+MAX_A = +1_000_000_000
 
-    MIN_N_SMALL = 1
-    MAX_N_SMALL = 1000
-    MIN_Q_SMALL = 1
-    MAX_Q_SMALL = 1000
+MIN_N_SMALL = 1
+MAX_N_SMALL = 1000
+MIN_Q_SMALL = 1
+MAX_Q_SMALL = 1000
 
-    MIN_N_LARGE = 1
-    MAX_N_LARGE = 100_000
-    MIN_Q_LARGE = 1
-    MAX_Q_LARGE = 100_000
+MIN_N_LARGE = 1
+MAX_N_LARGE = 100_000
+MIN_Q_LARGE = 1
+MAX_Q_LARGE = 100_000

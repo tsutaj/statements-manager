@@ -9,10 +9,11 @@ params_path = "./tests/constraints.hpp"
 [[statements]]
 path = "./statement/statement.md"
 lang = "ja"
+markdown_extensions = ["md_in_html", "tables", "fenced_code"]
 
 # 問題制約を書く
 [constraints]
-    MIN_N = 1
-    MAX_N = 100_000
-    N_IS_ODD = "$N$ は奇数であることが保証される"
-    GIVEN_STRING_IS_LOWERCASE = "与えられる文字列は英小文字のみからなる"
+MIN_N = 1
+MAX_N = 100_000
+N_IS_ODD = "$N$ は奇数であることが保証される"
+GIVEN_STRING_IS_LOWERCASE = "与えられる文字列は英小文字のみからなる"

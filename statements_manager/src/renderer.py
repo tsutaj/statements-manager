@@ -159,14 +159,12 @@ class Renderer:
                 rendered_contents = self.replace_vars(
                     problem_attr[problem_id], contents
                 )
+                markdown_extensions = [
+                    self.replace_sample_format,
+                    *problem_attr[problem_id].get("markdown_extensions", list()),
+                ]
                 rendered_contents = markdown(
-                    rendered_contents,
-                    extensions=[
-                        self.replace_sample_format,
-                        "md_in_html",
-                        "tables",
-                        "fenced_code",
-                    ],
+                    rendered_contents, extensions=markdown_extensions
                 )
                 problem_attr[problem_id]["statement"] = rendered_contents
 
