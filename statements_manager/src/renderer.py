@@ -1,7 +1,7 @@
 import pathlib
 import re
-from subprocess import PIPE, Popen, TimeoutExpired
 from logging import Logger, getLogger
+from subprocess import PIPE, Popen, TimeoutExpired
 from typing import Any, Dict, List, Union
 
 from jinja2 import DictLoader, Environment, StrictUndefined
