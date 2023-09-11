@@ -34,13 +34,13 @@ problemset.toml の書き方
         
         Markdown ファイルに関して前処理を行う **Python スクリプト** へのパスを指定します。Markdown が HTML 形式にレンダリングされる前に適用したい処理を記述してください。指定されていない場合、前処理は行われません。
         
-        Markdown ファイルの中身は標準入力で与えられ、前処理の結果は標準出力で返す必要があります。詳細は :blob:`sample/templates/icpc_domestic/preprocess.py` をご覧ください。
+        Markdown ファイルの中身は標準入力で与えられ、前処理の結果は標準出力で返す必要があります。終了コードが 0 以外であった場合は異常終了とみなし、エラーになります。詳細は :blob:`sample/templates/icpc_domestic/preprocess.py` をご覧ください。
     
     .. problemsettoml:: postprocess_path
         
         HTML ファイルに関して後処理を行う **Python スクリプト** へのパスを指定します。HTML 形式にレンダリングされた後に適用したい処理を記述してください。指定されていない場合、後処理は行われません。
         
-        HTML ファイルの中身は標準入力で与えられ、後処理の結果は標準出力で返す必要があります。詳細は :blob:`sample/templates/icpc_domestic/postprocess.py` をご覧ください。
+        HTML ファイルの中身は標準入力で与えられ、後処理の結果は標準出力で返す必要があります。終了コードが 0 以外であった場合は異常終了とみなし、エラーになります。詳細は :blob:`sample/templates/icpc_domestic/postprocess.py` をご覧ください。
 
 .. problemsettoml:: [pdf]
 
