@@ -1,5 +1,6 @@
 import pathlib
 import re
+from logging import Logger, getLogger
 from subprocess import PIPE, Popen, TimeoutExpired
 from typing import Any, Dict, List, Union
 
@@ -11,6 +12,8 @@ from pyquery import PyQuery as pq
 
 from statements_manager.src.variables_converter import VariablesConverter
 from statements_manager.template import default_template_markdown
+
+logger: Logger = getLogger(__name__)
 
 
 class ReplaceSampleFormatExpr(Preprocessor):
@@ -120,10 +123,15 @@ class Renderer:
             stderr=PIPE,
         )
         try:
-            processed_text, _ = proc.communicate(
+            processed_text, stderr = proc.communicate(
                 input=markdown_text.encode(encoding="utf-8"), timeout=10
             )
+            if proc.returncode != 0:
+                logger.error("preprocess execution failed!")
+                logger.error(stderr.decode(encoding="utf-8"))
+                raise RuntimeError("preprocess execution failed")
         except TimeoutExpired:
+            proc.kill()
             raise TimeoutError("too long preprocess")
         return processed_text.decode(encoding="utf-8")
 
@@ -138,10 +146,15 @@ class Renderer:
             stderr=PIPE,
         )
         try:
-            processed_text, _ = proc.communicate(
+            processed_text, stderr = proc.communicate(
                 input=html_text.encode(encoding="utf-8"), timeout=10
             )
+            if proc.returncode != 0:
+                logger.error("postprocess execution failed!")
+                logger.error(stderr.decode(encoding="utf-8"))
+                raise RuntimeError("postprocess execution failed")
         except TimeoutExpired:
+            proc.kill()
             raise TimeoutError("too long postprocess")
         return processed_text.decode(encoding="utf-8")
 
