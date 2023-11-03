@@ -7,6 +7,7 @@ from logging import Logger, getLogger
 from typing import Any
 
 from jinja2 import DictLoader, Environment
+
 from statements_manager.src.execute_config import ProblemConfig
 
 logger: Logger = getLogger(__name__)

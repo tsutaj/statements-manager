@@ -1,9 +1,10 @@
 from __future__ import annotations
+
 import pickle
-import toml
 from pathlib import Path
 from typing import Any, Union
 
+import toml
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 

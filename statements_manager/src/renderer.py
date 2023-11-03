@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import pathlib
 import re
 from logging import Logger, getLogger
@@ -11,8 +12,8 @@ from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
 from pyquery import PyQuery as pq
 
-from statements_manager.src.variables_converter import VariablesConverter
 from statements_manager.src.execute_config import ProblemConfig, ProblemSetConfig
+from statements_manager.src.variables_converter import VariablesConverter
 from statements_manager.template import default_template_markdown
 
 logger: Logger = getLogger(__name__)

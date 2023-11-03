@@ -1,12 +1,14 @@
 from __future__ import annotations
+
+import pathlib
 from logging import Logger, getLogger
 from typing import Any
 from urllib.parse import urlparse
-import toml
-import pathlib
 
-from statements_manager.src.recognize_mode import recognize_mode, is_valid_url
-from statements_manager.src.utils import resolve_path, read_text_file
+import toml
+
+from statements_manager.src.recognize_mode import is_valid_url, recognize_mode
+from statements_manager.src.utils import read_text_file, resolve_path
 from statements_manager.template import (
     default_sample_template_html,
     default_template_html,
