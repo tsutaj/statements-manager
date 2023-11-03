@@ -4,9 +4,10 @@ import fnmatch
 import math
 import pathlib
 from logging import Logger, getLogger
-from typing import Any, Set
+from typing import Any
 
 from jinja2 import DictLoader, Environment
+from statements_manager.src.execute_config import ProblemConfig
 
 logger: Logger = getLogger(__name__)
 
@@ -38,14 +39,14 @@ def fetch_text(path: pathlib.Path) -> str:
 
 class ConstraintsConverter:
     def convert(
-        self, constraints: dict[str, Any], problem_attr: dict[str, Any]
+        self, constraints: dict[str, Any], problem_config: ProblemConfig
     ) -> None:
         """
         - 制約を文字列型に変換しつつ格納
         - 数値について: 桁が大きい場合は指数表記に直され、そうでない場合はカンマがつく
         """
-        if "constraints" in problem_attr:
-            for name, value in problem_attr["constraints"].items():
+        if problem_config.constraints is not None:
+            for name, value in problem_config.constraints.items():
                 logger.info(f"constraints: {name} => {value}")
                 constraints[name] = to_string(value)
         else:
@@ -74,7 +75,7 @@ class SamplesConverter:
         sample_path: pathlib.Path,
         statement_path: pathlib.Path,
         language: str,
-        ignore_samples: Set,
+        ignore_samples: list[str],
     ) -> list[str]:
         # sample_path 以下で、ファイル名に 'sample' を含むものはサンプルであるとする
         sample_names = set()
@@ -128,7 +129,7 @@ class SamplesConverter:
             logger.warning(f"{sample_name}: There is no explanation.")
 
     def convert(
-        self, samples: dict[str, Any], problem_attr: dict[str, Any], template: str
+        self, samples: dict[str, Any], problem_config: ProblemConfig, template: str
     ) -> None:
         """
         - `sample_path` が指定されていない場合: 警告を出して抜ける
@@ -136,15 +137,15 @@ class SamplesConverter:
             - 指定ディレクトリ以下で `sample` を含むものは、すべてサンプルに関するファイルとみなす
             - 入出力の存在判定によってどのような形式 (通常 / input-only / output-only / インタラクティブ) かを判断
         """
-        if "sample_path" not in problem_attr:
+        if problem_config.sample_path is None:
             logger.warning("samples are not set")
             return
 
         sample_names = self.get_sample_names_list(
-            problem_attr["sample_path"],
-            problem_attr["statement_path"],
-            problem_attr["lang"],
-            problem_attr.get("ignore_samples", list()),
+            pathlib.Path(problem_config.sample_path),
+            pathlib.Path(problem_config.statement.path),
+            problem_config.statement.lang,
+            problem_config.ignore_samples,
         )
         if len(sample_names) == 0:
             logger.warning("samples are not set")
@@ -157,24 +158,24 @@ class SamplesConverter:
         for i_sample, sample_name in enumerate(sample_names, start=1):
             logger.info(f"replace sample {i_sample} ({sample_name})")
 
-            input_file = pathlib.Path(problem_attr["sample_path"] / f"{sample_name}.in")
-            output_file = pathlib.Path(
-                problem_attr["sample_path"] / f"{sample_name}.out"
-            )
+            input_file = pathlib.Path(problem_config.sample_path, f"{sample_name}.in")
+            output_file = pathlib.Path(problem_config.sample_path, f"{sample_name}.out")
             if not output_file.exists():
                 output_file = pathlib.Path(
-                    problem_attr["sample_path"] / f"{sample_name}.diff"
+                    problem_config.sample_path, f"{sample_name}.diff"
                 )
-            md_file = pathlib.Path(problem_attr["sample_path"] / f"{sample_name}.md")
+            md_file = pathlib.Path(problem_config.sample_path, f"{sample_name}.md")
             explanation_file = pathlib.Path(
-                problem_attr["sample_path"] / f"{problem_attr['lang']}/{sample_name}.md"
+                problem_config.sample_path,
+                problem_config.statement.lang,
+                f"{sample_name}.md",
             )
             self.print_warning(sample_name, input_file, output_file, explanation_file)
 
             sample_data = {
                 "do_numbering": do_numbering,
                 "i_sample": i_sample,
-                "language": problem_attr["lang"],
+                "language": problem_config.statement.lang,
                 "is_first": i_sample == 1,
                 "is_last": i_sample == len(sample_names),
             }
@@ -198,20 +199,11 @@ class SamplesConverter:
 
 
 class VariablesConverter:
-    def __init__(self, problem_attr: dict[str, Any], sample_template: str) -> None:
-        self.vars: dict[str, Any] = {}
-        self.vars["constraints"] = {}
-        self.vars["samples"] = {}
+    def __init__(self, problem_config: ProblemConfig, sample_template: str) -> None:
+        self.constraints: dict = {}
+        self.samples: dict = {}
         self.constraints_converter = ConstraintsConverter()
         self.samples_converter = SamplesConverter()
 
-        self.constraints_converter.convert(self.vars["constraints"], problem_attr)
-        self.samples_converter.convert(
-            self.vars["samples"], problem_attr, sample_template
-        )
-
-    def __getitem__(self, key: str) -> dict[str, str]:
-        if key not in self.vars:
-            logger.error(f"unknown key: {key}")
-            raise KeyError(f"unknown key: {key}")
-        return self.vars[key]
+        self.constraints_converter.convert(self.constraints, problem_config)
+        self.samples_converter.convert(self.samples, problem_config, sample_template)

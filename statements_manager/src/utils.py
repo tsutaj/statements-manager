@@ -1,4 +1,6 @@
+from __future__ import annotations
 import pickle
+import toml
 from pathlib import Path
 from typing import Any, Union
 
@@ -6,7 +8,24 @@ from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 
-def resolve_path(base_path: Path, path: Path) -> Path:
+def read_toml_file(path: Path | None) -> dict | None:
+    if path is None or not path.exists():
+        return None
+    return toml.load(path)
+
+
+def read_text_file(path: Path | None) -> str | None:
+    if path is None or not path.exists():
+        return None
+    with open(path) as f:
+        return f.read()
+
+
+def resolve_path(base_path: Path, path_str: str | None) -> Path | None:
+    if path_str is None:
+        return None
+
+    path = Path(path_str)
     if path.is_absolute():
         return path
     else:
