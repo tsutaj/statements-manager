@@ -279,7 +279,7 @@ class ConvertTaskRunner:
             problem_config.statement.raw_text = raw_statement
 
             # 問題文ファイル出力先
-            output_dir = problem_config.output_path
+            output_dir = pathlib.Path(problem_config.output_path)
             if output_dir.exists():
                 logger.warning(f"output directory '{output_dir}' already exists.")
             else:

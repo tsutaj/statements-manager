@@ -118,20 +118,20 @@ class ProblemConfig(AttributeConstraints):
         statement_config: StatementConfig,
     ) -> None:
         self.id = id
-        self.assets_path = raw_config.assets_path
-        self.sample_path = raw_config.sample_path
-        self.ignore_samples = raw_config.ignore_samples
-        self.params_path = raw_config.params_path
-        self.statement = statement_config
-        self.constraints = raw_config.constraints
+        self.assets_path: str | None = raw_config.assets_path
+        self.sample_path: str = raw_config.sample_path
+        self.ignore_samples: list[str] = raw_config.ignore_samples
+        self.params_path: str | None = raw_config.params_path
+        self.statement: StatementConfig = statement_config
+        self.constraints: dict | None = raw_config.constraints
 
         dirname = filename.parent.resolve()
         self.assets_path = resolve_path(dirname, self.assets_path)
-        self.sample_path = resolve_path(dirname, self.sample_path)
+        self.sample_path = resolve_path(dirname, self.sample_path)  # type: ignore
         self.params_path = resolve_path(dirname, self.params_path)
-        self.output_path = resolve_path(dirname, "ss-out")
+        self.output_path: str = resolve_path(dirname, "ss-out")  # type: ignore
         if self.statement.mode == "local":
-            self.statement.path = resolve_path(dirname, self.statement.path)
+            self.statement.path = resolve_path(dirname, self.statement.path)  # type: ignore
 
 
 def get_numbered_ids(config: RawProblemConfig) -> list[str]:
@@ -171,12 +171,12 @@ class ProblemSetConfig(AttributeConstraints):
 
         dirname = problemset_filename.parent.resolve()
         self.output_path = dirname / "problemset"
-        self.template_html = read_text_file(self.template.template_path)
-        if self.template_html is None:
-            self.template_html = default_template_html
-        self.sample_template_html = read_text_file(self.template.sample_template_path)
-        if self.sample_template_html is None:
-            self.sample_template_html = default_sample_template_html
+        self.template_html: str = read_text_file(
+            self.template.template_path, default_template_html
+        )
+        self.sample_template_html: str = read_text_file(
+            self.template.sample_template_path, default_sample_template_html
+        )
 
     def get_problem(self, id: str) -> ProblemConfig:
         return self.required("ProblemConfigs", self.problem_configs, id)
