@@ -44,7 +44,7 @@ class StatementConfig(AttributeConstraints):
         if self.mode is None:
             dirname = filename.parent.resolve()
             self.mode = recognize_mode(self.path, dirname)
-            logger.info(f"recognize mode: file = {self.path}, mode = {self.mode}")
+            logger.debug(f"recognize mode: file = {self.path}, mode = {self.mode}")
             if self.mode == "docs" and is_valid_url(self.path):
                 self.path = urlparse(self.path).path.split("/")[3]
 
