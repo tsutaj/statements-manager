@@ -40,12 +40,7 @@ def recognize_mode(
     """
     recognize execute mode. ("docs" or "local")
     """
-
-    # if "statement_path" is valid as local path, it may be "local"
     if (base_path / pathlib.Path(statement_path)).exists():
         return StatementLocationMode.LOCAL
-    # otherwise, it may be "docs"
-    # it is either in URL-format or in ID-format.
-    # URL-format: https://docs.google.com/document/d/{DOCUMENT_ID}/...
     else:
         return StatementLocationMode.DOCS

@@ -51,6 +51,8 @@ class StatementConfig(AttributeConstraints):
             dirname = filename.parent.resolve()
             self.mode = recognize_mode(self.path, dirname)
             logger.debug(f"recognize mode: file = {self.path}, mode = {self.mode}")
+            # When docs mode, the path is either in URL-format or in ID-format.
+            # URL-format: https://docs.google.com/document/d/{DOCUMENT_ID}/...
             if self.mode == StatementLocationMode.DOCS and is_valid_url(self.path):
                 self.path = urlparse(self.path).path.split("/")[3]
 
