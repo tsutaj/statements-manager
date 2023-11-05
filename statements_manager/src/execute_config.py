@@ -7,7 +7,11 @@ from urllib.parse import urlparse
 
 import toml
 
-from statements_manager.src.recognize_mode import is_valid_url, recognize_mode
+from statements_manager.src.statement_location_mode import (
+    StatementLocationMode,
+    is_valid_url,
+    recognize_mode,
+)
 from statements_manager.src.utils import read_text_file, resolve_path
 from statements_manager.template import (
     default_sample_template_html,
@@ -40,12 +44,14 @@ class StatementConfig(AttributeConstraints):
         self.markdown_extensions: list[Any] = self.optional(
             filename, config, "markdown_extensions", []
         )
-        self.mode: str | None = self.optional(filename, config, "mode", None)
-        if self.mode is None:
+        self.mode = StatementLocationMode.read(
+            self.optional(filename, config, "mode", None)
+        )
+        if self.mode == StatementLocationMode.UNKNOWN:
             dirname = filename.parent.resolve()
             self.mode = recognize_mode(self.path, dirname)
             logger.debug(f"recognize mode: file = {self.path}, mode = {self.mode}")
-            if self.mode == "docs" and is_valid_url(self.path):
+            if self.mode == StatementLocationMode.DOCS and is_valid_url(self.path):
                 self.path = urlparse(self.path).path.split("/")[3]
 
         # below are used on rendering.
@@ -130,7 +136,7 @@ class ProblemConfig(AttributeConstraints):
         self.sample_path = resolve_path(dirname, self.sample_path)  # type: ignore
         self.params_path = resolve_path(dirname, self.params_path)
         self.output_path: str = resolve_path(dirname, "ss-out")  # type: ignore
-        if self.statement.mode == "local":
+        if self.statement.mode == StatementLocationMode.LOCAL:
             self.statement.path = resolve_path(dirname, self.statement.path)  # type: ignore
 
 

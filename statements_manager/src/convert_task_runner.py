@@ -15,6 +15,7 @@ from googleapiclient.discovery import build
 from statements_manager.src.execute_config import ProblemSetConfig
 from statements_manager.src.params_maker.lang_to_class import lang_to_class
 from statements_manager.src.renderer import Renderer
+from statements_manager.src.statement_location_mode import StatementLocationMode
 from statements_manager.src.utils import create_token, dict_merge
 
 logger: Logger = getLogger(__name__)
@@ -103,9 +104,9 @@ class ConvertTaskRunner:
     # ローカルまたは Google Docs から問題文のテキストファイルを取得
     def get_contents(self, problem_id: str) -> Tuple[ContentsStatus, str]:
         mode = self.problemset_config.get_problem(problem_id).statement.mode
-        if mode == "local":
+        if mode == StatementLocationMode.LOCAL:
             return self.get_local_contents(problem_id)
-        elif mode == "docs":
+        elif mode == StatementLocationMode.DOCS:
             return self.get_docs_contents(problem_id)
         else:
             logger.error(f"unknown mode: {mode}")
