@@ -140,3 +140,4 @@ ss-out/
 constraints.hpp
 virtualenv/
 problemset/
+.idea/

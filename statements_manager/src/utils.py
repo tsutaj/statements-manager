@@ -1,16 +1,36 @@
+from __future__ import annotations
+
 import pickle
 from pathlib import Path
 from typing import Any, Union
 
+import toml
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 
-def resolve_path(base_path: Path, path: Path) -> Path:
+def read_toml_file(path: Path | None) -> dict:
+    if path is None or not path.exists():
+        return {}
+    return toml.load(path)
+
+
+def read_text_file(path: str | Path | None, default: str) -> str:
+    if path is None or not Path(path).exists():
+        return default
+    with open(path) as f:
+        return f.read()
+
+
+def resolve_path(base_path: Path, path_str: str | None) -> str | None:
+    if path_str is None:
+        return None
+
+    path = Path(path_str)
     if path.is_absolute():
-        return path
+        return str(path)
     else:
-        return base_path / path
+        return str(base_path / path)
 
 
 def ask_ok(question: str, default_response: bool = True) -> bool:
