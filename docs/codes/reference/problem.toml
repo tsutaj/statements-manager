@@ -3,7 +3,7 @@ id = "A"
 params_path = "./tests/constraints.hpp"
 assets_path = "./statement/assets/"
 sample_path = "./tests/"
-ignored_samples = []
+ignore_samples = []
 
 [[statements]]
 path = "./statement/statement_ja.md"
