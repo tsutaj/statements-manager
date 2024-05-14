@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pathlib
 import re
 from logging import Logger, getLogger
@@ -10,6 +12,7 @@ from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
 from pyquery import PyQuery as pq
 
+from statements_manager.src.execute_config import ProblemConfig, ProblemSetConfig
 from statements_manager.src.variables_converter import VariablesConverter
 from statements_manager.template import default_template_markdown
 
@@ -55,8 +58,13 @@ class Renderer:
         self.postprocess_path = postprocess_path
         self.replace_sample_format = ReplaceSampleFormatExprExtension()
 
-    def replace_vars(self, problem_attr: Dict[str, Any], statement_str: str) -> str:
-        vars_manager = VariablesConverter(problem_attr, self.sample_template_html)
+    def replace_vars(
+        self, problem_config: ProblemConfig, statement_str: str | None
+    ) -> str:
+        if statement_str is None:
+            logger.error("statement_str is None")
+            raise RuntimeError("statement_str is None")
+        vars_manager = VariablesConverter(problem_config, self.sample_template_html)
         env = Environment(
             variable_start_string="{@",
             variable_end_string="}",
@@ -64,8 +72,8 @@ class Renderer:
             undefined=StrictUndefined,
         )
         replaced_html = env.get_template("task").render(
-            constraints=vars_manager["constraints"],
-            samples=vars_manager["samples"],
+            constraints=vars_manager.constraints,
+            samples=vars_manager.samples,
         )
         return replaced_html
 
@@ -81,24 +89,28 @@ class Renderer:
         return contents
 
     def get_render_context(
-        self, problem_attr: Dict[str, Any], problem_ids: List[str], is_problemset: bool
+        self,
+        problemset_config: ProblemSetConfig,
+        problem_ids: List[str],
+        is_problemset: bool,
     ) -> Dict[str, Any]:
         context: Dict[str, Any] = {
             "problems": [],
             "is_problemset": is_problemset,
         }
         for problem_id in problem_ids:
+            problem_config = problemset_config.get_problem(problem_id)
             problem_dict = {
                 "id": problem_id,
-                "lang": problem_attr[problem_id]["lang"],
-                "statement": problem_attr[problem_id]["statement"],
+                "lang": problem_config.statement.lang,
+                "statement": problem_config.statement.rendered_text,
             }
             context["problems"].append(problem_dict)
         return context
 
     def apply_template(
         self,
-        problem_attr: Dict[str, Any],
+        problemset_config: ProblemSetConfig,
         problem_ids: List[str],
         template: str,
         is_problemset: bool,
@@ -108,11 +120,17 @@ class Renderer:
             variable_end_string="}",
             loader=DictLoader({"template": template}),
         )
-        problems = self.get_render_context(problem_attr, problem_ids, is_problemset)
+        problems = self.get_render_context(
+            problemset_config, problem_ids, is_problemset
+        )
         replaced_html = env.get_template("template").render(problemset=problems)
         return replaced_html
 
-    def apply_preprocess(self, markdown_text: str) -> str:
+    def apply_preprocess(self, markdown_text: str | None) -> str:
+        if markdown_text is None:
+            logger.error("markdown_text is None")
+            raise RuntimeError("markdown_text is None")
+
         if self.preprocess_path is None:
             return markdown_text
 
@@ -160,34 +178,33 @@ class Renderer:
 
     def generate_html(
         self,
-        problem_attr: Dict[str, Any],
+        problemset_config: ProblemSetConfig,
         problem_ids: List[str],
         is_problemset: bool,
     ) -> str:
         for problem_id in problem_ids:
-            if "statement" not in problem_attr[problem_id]:
-                contents = problem_attr[problem_id]["raw_statement"]
+            problem_config = problemset_config.get_problem(problem_id)
+            if problem_config.statement.rendered_text is None:
+                contents = problem_config.statement.raw_text
                 contents = self.apply_preprocess(contents)
 
-                rendered_contents = self.replace_vars(
-                    problem_attr[problem_id], contents
-                )
+                rendered_contents = self.replace_vars(problem_config, contents)
                 markdown_extensions = [
                     self.replace_sample_format,
-                    *problem_attr[problem_id].get("markdown_extensions", list()),
+                    *problem_config.statement.markdown_extensions,
                 ]
                 rendered_contents = markdown(
                     rendered_contents, extensions=markdown_extensions
                 )
-                problem_attr[problem_id]["statement"] = rendered_contents
+                problem_config.statement.rendered_text = rendered_contents
 
             # 問題セットの場合、添付ファイルのパスを置換する
-            problem_attr[problem_id]["statement"] = self.replace_assets_path(
-                problem_attr[problem_id]["statement"], problem_id, is_problemset
+            problem_config.statement.rendered_text = self.replace_assets_path(
+                problem_config.statement.rendered_text, problem_id, is_problemset
             )
 
         html = self.apply_template(
-            problem_attr=problem_attr,
+            problemset_config=problemset_config,
             problem_ids=problem_ids,
             template=self.template_html,
             is_problemset=is_problemset,
@@ -197,13 +214,13 @@ class Renderer:
 
     def generate_html_for_pdf(
         self,
-        problem_attr: Dict[str, Any],
+        problemset_config: ProblemSetConfig,
         problem_ids: List[str],
         is_problemset: bool,
         pdf_path: str,
     ) -> str:
         html = self.generate_html(
-            problem_attr=problem_attr,
+            problemset_config=problemset_config,
             problem_ids=problem_ids,
             is_problemset=is_problemset,
         )
@@ -221,21 +238,22 @@ class Renderer:
 
     def generate_markdown(
         self,
-        problem_attr: Dict[str, Any],
+        problemset_config: ProblemSetConfig,
         problem_ids: List[str],
         is_problemset: bool,
     ) -> str:
         for problem_id in problem_ids:
-            if "statement" not in problem_attr[problem_id]:
-                contents = problem_attr[problem_id]["raw_statement"]
-                contents = self.replace_vars(problem_attr[problem_id], contents)
-                problem_attr[problem_id]["statement"] = contents
-            problem_attr[problem_id]["statement"] = self.replace_assets_path(
-                problem_attr[problem_id]["statement"], problem_id, is_problemset
+            problem_config = problemset_config.get_problem(problem_id)
+            if problem_config.statement.rendered_text is None:
+                contents = problem_config.statement.raw_text
+                contents = self.replace_vars(problem_config, contents)
+                problem_config.statement.rendered_text = contents
+            problem_config.statement.rendered_text = self.replace_assets_path(
+                problem_config.statement.rendered_text, problem_id, is_problemset
             )
 
         md = self.apply_template(
-            problem_attr=problem_attr,
+            problemset_config=problemset_config,
             problem_ids=problem_ids,
             template=default_template_markdown,
             is_problemset=is_problemset,
