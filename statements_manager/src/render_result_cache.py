@@ -85,13 +85,12 @@ class RenderResultCache:
 
     def save_and_check_diff(self, cache_dict: dict[str, Any]) -> bool:
         self.cache[self.output_ext.value][self.problem_id] = cache_dict
-        with open(self.cache_path, "w") as f:
-            json.dump(
-                self.cache,
-                open(self.cache_path, "w"),
-                indent=4,
-                sort_keys=True,
-            )
+        json.dump(
+            self.cache,
+            open(self.cache_path, "w"),
+            indent=4,
+            sort_keys=True,
+        )
         has_diff = (
             self.cache[self.output_ext.value][self.problem_id]
             != self.prev_cache[self.output_ext.value][self.problem_id]
