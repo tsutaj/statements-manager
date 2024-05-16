@@ -175,6 +175,7 @@ class ProblemSetConfig(AttributeConstraints):
         )
         self.pdf_config = PDFRenderingConfig(problemset_filename, config.get("pdf", {}))
         self.known_ids: set[str] = set()
+        self.id_groups: list[list[str]] = list()
         self.problem_configs: dict[str, ProblemConfig] = dict()
 
         dirname = problemset_filename.parent.resolve()
@@ -192,10 +193,18 @@ class ProblemSetConfig(AttributeConstraints):
     def get_problem_ids(self) -> list[str]:
         return sorted(list(self.problem_configs.keys()))
 
+    def get_problem_group(self, id: str) -> list[str]:
+        for group in self.id_groups:
+            if id in group:
+                return group
+        logger.error("problem id not found in any group")
+        raise ValueError("problem id not found in any group")
+
     def add_problem_configs(self, filename: pathlib.Path) -> None:
         raw_config = RawProblemConfig(filename, toml.load(filename))
         self._check_id(raw_config)
         numbered_ids = get_numbered_ids(raw_config)
+        self.id_groups.append(numbered_ids)
         for id, statement_config in zip(numbered_ids, raw_config.statements):
             self.problem_configs[id] = ProblemConfig(
                 filename, id, raw_config, statement_config

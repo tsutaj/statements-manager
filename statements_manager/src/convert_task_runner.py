@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import glob
 import hashlib
 import json
+import os
 import pathlib
 import shutil
 from enum import Enum
@@ -155,9 +157,10 @@ class ConvertTaskRunner:
                 logger.info("copy assets file")
                 if assets_dst_path.exists():
                     logger.warning(
-                        f"assets directory '{assets_dst_path}' already exists."
+                        f"assets directory '{assets_dst_path}' already exists. overwriting..."
                     )
-                shutil.copytree(assets_src_path, assets_dst_path, dirs_exist_ok=True)
+                    shutil.rmtree(assets_dst_path)
+                shutil.copytree(assets_src_path, assets_dst_path)
 
                 for path in assets_dst_path.glob("**/*"):
                     with open(path, "rb") as f:
@@ -293,6 +296,15 @@ class ConvertTaskRunner:
                 reference_cache = json.load(open(output_dir / "cache.json"))
             reference_cache.setdefault(output_ext, {})
             reference_cache[output_ext].setdefault(problem_id, {})
+            problem_group = self.problemset_config.get_problem_group(problem_id)
+            for ext in reference_cache.keys():
+                obsoleted_ids = list(
+                    filter(
+                        lambda id: id not in problem_group, reference_cache[ext].keys()
+                    )
+                )
+                for id in obsoleted_ids:
+                    reference_cache[ext].pop(id)
 
             problem_cache["assets"] = self.copy_assets(
                 problem_id, output_dir / "assets"
@@ -313,6 +325,21 @@ class ConvertTaskRunner:
                 sort_keys=True,
             )
             dict_merge(problemset_cache, reference_cache[output_ext])
+
+            filenames = list(
+                filter(
+                    lambda filename: pathlib.Path(filename).stem not in problem_group,
+                    sum(
+                        [
+                            list(glob.glob(str(output_dir) + f"/*.{ext}"))
+                            for ext in ["html", "pdf", "md"]
+                        ],
+                        [],
+                    ),
+                )
+            )
+            for filename in filenames:
+                os.remove(filename)
             logger.info("")
 
         # 問題セットに対応するものを出力
