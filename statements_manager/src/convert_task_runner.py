@@ -15,10 +15,12 @@ import pdfkit
 from googleapiclient.discovery import build
 
 from statements_manager.src.execute_config import ProblemSetConfig
+from statements_manager.src.output_file_kind import OutputFileKind
+from statements_manager.src.render_result_cache import RenderResultCache
 from statements_manager.src.params_maker.lang_to_class import lang_to_class
 from statements_manager.src.renderer import Renderer
 from statements_manager.src.statement_location_mode import StatementLocationMode
-from statements_manager.src.utils import create_token, dict_merge
+from statements_manager.src.utils import create_token
 
 logger: Logger = getLogger(__name__)
 
@@ -185,7 +187,7 @@ class ConvertTaskRunner:
     def run_rendering(
         self,
         output_dir: Path,
-        output_ext: str,
+        output_ext: OutputFileKind,
         problem_ids: List[str],
         is_problemset: bool,
         force_dump: bool,
@@ -193,11 +195,11 @@ class ConvertTaskRunner:
         reference_cache: dict[str, Any],
     ) -> dict[str, Any]:
         if is_problemset:
-            output_path = str(output_dir / ("problemset." + output_ext))
+            output_path = str(output_dir / ("problemset." + output_ext.value))
         else:
-            output_path = str(output_dir / (problem_ids[0] + "." + output_ext))
-        logger.info(f"saving replaced {output_ext}")
-        if output_ext == "html":
+            output_path = str(output_dir / (problem_ids[0] + "." + output_ext.value))
+        logger.info(f"saving replaced {output_ext.value}")
+        if output_ext == OutputFileKind.HTML:
             html = self.renderer.generate_html(
                 problemset_config=self.problemset_config,
                 problem_ids=problem_ids,
@@ -213,7 +215,7 @@ class ConvertTaskRunner:
                 self.save_file(html, output_path)
             else:
                 logger.warning("skip dumping html: same result as before")
-        elif output_ext == "pdf":
+        elif output_ext == OutputFileKind.PDF:
             pdf_attr = self.make_pdf_attr(is_problemset)
             html = self.renderer.generate_html_for_pdf(
                 problemset_config=self.problemset_config,
@@ -234,7 +236,7 @@ class ConvertTaskRunner:
                 pdfkit.from_string(html, output_path, verbose=True, options=pdf_attr)
             else:
                 logger.warning("skip dumping pdf: same result as before")
-        elif output_ext == "md":
+        elif output_ext == OutputFileKind.MARKDOWN:
             md = self.renderer.generate_markdown(
                 problemset_config=self.problemset_config,
                 problem_ids=problem_ids,
@@ -251,21 +253,21 @@ class ConvertTaskRunner:
             else:
                 logger.warning("skip dumping md: same result as before")
         else:
-            logger.error(f"invalid extension '{output_ext}'")
-            raise ValueError(f"invalid extension '{output_ext}'")
+            logger.error(f"invalid extension '{output_ext.value}'")
+            raise ValueError(f"invalid extension '{output_ext.value}'")
         return cache
 
     def run(
         self,
         problem_ids: List[str],
-        output_ext: str,
+        output_ext: OutputFileKind,
         make_problemset: bool,
         force_dump: bool,
         constraints_only: bool,
     ) -> None:
         # 問題文を取ってきて変換
         valid_problem_ids = []
-        problemset_cache: dict[str, Any] = {}
+        has_diff = False
         for problem_id in problem_ids:
             logger.info(f"rendering [problem id: {problem_id}]")
             problem_config = self.problemset_config.get_problem(problem_id)
@@ -290,56 +292,24 @@ class ConvertTaskRunner:
                 output_dir.mkdir()
 
             # キャッシュの記録
-            problem_cache: dict[str, Any] = {"assets": {}}
-            reference_cache: dict[str, Any] = {}
-            if Path(output_dir / "cache.json").exists():
-                reference_cache = json.load(open(output_dir / "cache.json"))
-            reference_cache.setdefault(output_ext, {})
-            reference_cache[output_ext].setdefault(problem_id, {})
-            problem_group = self.problemset_config.get_problem_group(problem_id)
-            for ext in reference_cache.keys():
-                obsoleted_ids = list(
-                    filter(
-                        lambda id: id not in problem_group, reference_cache[ext].keys()
-                    )
-                )
-                for id in obsoleted_ids:
-                    reference_cache[ext].pop(id)
-
-            problem_cache["assets"] = self.copy_assets(
-                problem_id, output_dir / "assets"
+            cache = RenderResultCache(
+                output_dir,
+                output_ext,
+                problem_id,
+                self.problemset_config.get_problem_group(problem_id),
             )
-            reference_cache[output_ext][problem_id] = self.run_rendering(
-                output_dir=output_dir,
-                output_ext=output_ext,
-                problem_ids=[problem_id],
-                is_problemset=False,
-                force_dump=force_dump,
-                cache=problem_cache,
-                reference_cache=reference_cache[output_ext][problem_id],
-            )
-            json.dump(
-                reference_cache,
-                open(output_dir / "cache.json", "w"),
-                indent=4,
-                sort_keys=True,
-            )
-            dict_merge(problemset_cache, reference_cache[output_ext])
-
-            filenames = list(
-                filter(
-                    lambda filename: pathlib.Path(filename).stem not in problem_group,
-                    sum(
-                        [
-                            list(glob.glob(str(output_dir) + f"/*.{ext}"))
-                            for ext in ["html", "pdf", "md"]
-                        ],
-                        [],
-                    ),
+            cache.set_assets(self.copy_assets(problem_id, output_dir / "assets"))
+            has_diff |= cache.save_and_check_diff(
+                self.run_rendering(
+                    output_dir=output_dir,
+                    output_ext=output_ext,
+                    problem_ids=[problem_id],
+                    is_problemset=False,
+                    force_dump=force_dump,
+                    cache=cache.get_current(),
+                    reference_cache=cache.get_previous(),
                 )
             )
-            for filename in filenames:
-                os.remove(filename)
             logger.info("")
 
         # 問題セットに対応するものを出力
@@ -360,24 +330,15 @@ class ConvertTaskRunner:
                     self.problemset_dir / "assets" / problem_id,
                 )
             logger.info("rendering problemset")
-            reference_problemset_cache: dict[str, Any] = {}
-            if Path(self.problemset_dir / "cache.json").exists():
-                reference_problemset_cache = json.load(
-                    open(self.problemset_dir / "cache.json")
+            cache = RenderResultCache(self.problemset_dir, output_ext)
+            cache.save_and_check_diff(
+                self.run_rendering(
+                    output_dir=self.problemset_dir,
+                    output_ext=output_ext,
+                    problem_ids=valid_problem_ids,
+                    is_problemset=True,
+                    force_dump=force_dump or has_diff,
+                    cache=cache.get_current(),
+                    reference_cache=cache.get_previous(),
                 )
-            reference_problemset_cache.setdefault(output_ext, {})
-            reference_problemset_cache[output_ext] = self.run_rendering(
-                output_dir=self.problemset_dir,
-                output_ext=output_ext,
-                problem_ids=valid_problem_ids,
-                is_problemset=True,
-                force_dump=force_dump,
-                cache=problemset_cache,
-                reference_cache=reference_problemset_cache[output_ext],
-            )
-            json.dump(
-                reference_problemset_cache,
-                open(self.problemset_dir / "cache.json", "w"),
-                indent=4,
-                sort_keys=True,
             )
