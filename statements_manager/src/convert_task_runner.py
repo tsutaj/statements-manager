@@ -13,8 +13,8 @@ from googleapiclient.discovery import build
 
 from statements_manager.src.execute_config import ProblemSetConfig
 from statements_manager.src.output_file_kind import OutputFileKind
-from statements_manager.src.render_result_cache import RenderResultCache
 from statements_manager.src.params_maker.lang_to_class import lang_to_class
+from statements_manager.src.render_result_cache import RenderResultCache
 from statements_manager.src.renderer import Renderer
 from statements_manager.src.statement_location_mode import StatementLocationMode
 from statements_manager.src.utils import create_token

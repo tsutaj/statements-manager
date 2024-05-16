@@ -4,9 +4,9 @@ import pickle
 import shutil
 from logging import Logger, basicConfig, getLogger
 
+from statements_manager.src.output_file_kind import OutputFileKind
 from statements_manager.src.project import Project
 from statements_manager.src.utils import ask_ok, create_token
-from statements_manager.src.output_file_kind import OutputFileKind
 
 logger: Logger = getLogger(__name__)
 

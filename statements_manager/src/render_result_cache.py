@@ -1,11 +1,13 @@
 from __future__ import annotations
-import enum
-import pathlib
-import json
-import glob
-import os
+
 import copy
+import enum
+import glob
+import json
+import os
+import pathlib
 from typing import Any, Optional
+
 from statements_manager.src.output_file_kind import OutputFileKind
 
 
