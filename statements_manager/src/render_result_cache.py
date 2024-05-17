@@ -52,11 +52,14 @@ class RenderResultCache:
 
     def _cleanup(self, cache: dict) -> dict:
         for ext in cache.keys():
-            obsoleted_ids = list(
-                filter(lambda id: id not in self.problem_group, cache[ext].keys())
-            )
-            for id in obsoleted_ids:
-                cache[ext].pop(id)
+            if ext not in OutputFileKind.values():
+                cache.pop(ext)
+            else:
+                obsoleted_ids = list(
+                    filter(lambda id: id not in self.problem_group, cache[ext].keys())
+                )
+                for id in obsoleted_ids:
+                    cache[ext].pop(id)
         obsolete_filenames = list(
             filter(
                 lambda filename: pathlib.Path(filename).stem not in self.problem_group,
