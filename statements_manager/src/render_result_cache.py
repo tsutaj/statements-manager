@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import enum
 import glob
+import hashlib
 import json
 import os
 import pathlib
@@ -26,7 +27,7 @@ class RenderResultCache:
         problem_group: Optional[list[str]] = None,
     ):
         self.output_dir = output_dir
-        self.output_ext = output_ext
+        self.output_ext = output_ext.value
         self.cache_path = output_dir / "cache.json"
         self.problem_id = "problemset" if problem_id is None else problem_id
         self.problem_group = ["problemset"] if problem_group is None else problem_group
@@ -40,11 +41,9 @@ class RenderResultCache:
             return self._cleanup(json.load(f))
 
     def _setup_cache(self, cache: dict) -> dict:
-        cache.setdefault(self.output_ext.value, {})
-        cache[self.output_ext.value].setdefault(self.problem_id, {})
-        cache[self.output_ext.value][self.problem_id].setdefault(
-            CacheKey.ASSETS.value, {}
-        )
+        cache.setdefault(self.output_ext, {})
+        cache[self.output_ext].setdefault(self.problem_id, {})
+        cache[self.output_ext][self.problem_id].setdefault(CacheKey.ASSETS.value, {})
         return cache
 
     def _load_and_setup_cache(self) -> dict:
@@ -75,18 +74,28 @@ class RenderResultCache:
         return cache
 
     def get_current(self) -> dict[str, Any]:
-        return self.cache[self.output_ext.value][self.problem_id]
+        return self.cache[self.output_ext][self.problem_id]
 
     def get_previous(self) -> dict[str, Any]:
-        return self.prev_cache[self.output_ext.value][self.problem_id]
+        return self.prev_cache[self.output_ext][self.problem_id]
 
     def set_assets(self, assets_dict: dict[str, Any]):
-        self.cache[self.output_ext.value][self.problem_id][
+        self.cache[self.output_ext][self.problem_id][
             CacheKey.ASSETS.value
         ] = assets_dict
 
-    def save_and_check_diff(self, cache_dict: dict[str, Any]) -> bool:
-        self.cache[self.output_ext.value][self.problem_id] = cache_dict
+    def set_content(self, content: str):
+        self.cache[self.output_ext][self.problem_id][CacheKey.CONTENTS.value] = (
+            hashlib.sha256(content.encode()).hexdigest()
+        )
+
+    def need_to_save(self, force_dump: bool):
+        return force_dump or (
+            self.cache[self.output_ext][self.problem_id]
+            != self.prev_cache[self.output_ext][self.problem_id]
+        )
+
+    def save_and_check_diff(self) -> bool:
         json.dump(
             self.cache,
             open(self.cache_path, "w"),
@@ -94,8 +103,8 @@ class RenderResultCache:
             sort_keys=True,
         )
         has_diff = (
-            self.cache[self.output_ext.value][self.problem_id]
-            != self.prev_cache[self.output_ext.value][self.problem_id]
+            self.cache[self.output_ext][self.problem_id]
+            != self.prev_cache[self.output_ext][self.problem_id]
         )
         self.prev_cache = copy.deepcopy(self.cache)
         return has_diff

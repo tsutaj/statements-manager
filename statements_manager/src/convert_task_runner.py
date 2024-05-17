@@ -26,17 +26,6 @@ class ContentsStatus(Enum):
     OK, NG = range(2)
 
 
-def need_to_save(
-    cache: dict[str, Any],
-    reference_cache: dict[str, Any],
-    force_dump: bool,
-    output_path: str,
-):
-    return (
-        cache != reference_cache or force_dump or not pathlib.Path(output_path).exists()
-    )
-
-
 class ConvertTaskRunner:
     def __init__(self, problemset_config: ProblemSetConfig):
         self._cwd = Path.cwd()
@@ -188,9 +177,8 @@ class ConvertTaskRunner:
         problem_ids: List[str],
         is_problemset: bool,
         force_dump: bool,
-        cache: dict[str, Any],
-        reference_cache: dict[str, Any],
-    ) -> dict[str, Any]:
+        cache: RenderResultCache,
+    ) -> None:
         if is_problemset:
             output_path = str(output_dir / ("problemset." + output_ext.value))
         else:
@@ -202,13 +190,8 @@ class ConvertTaskRunner:
                 problem_ids=problem_ids,
                 is_problemset=is_problemset,
             )
-            cache["contents"] = hashlib.sha256(html.encode()).hexdigest()
-            if need_to_save(
-                cache,
-                reference_cache,
-                force_dump,
-                output_path,
-            ):
+            cache.set_content(html)
+            if cache.need_to_save(force_dump):
                 self.save_file(html, output_path)
             else:
                 logger.warning("skip dumping html: same result as before")
@@ -220,13 +203,8 @@ class ConvertTaskRunner:
                 is_problemset=is_problemset,
                 pdf_path=output_path,
             )
-            cache["contents"] = hashlib.sha256(html.encode()).hexdigest()
-            if need_to_save(
-                cache,
-                reference_cache,
-                force_dump,
-                output_path,
-            ):
+            cache.set_content(html)
+            if cache.need_to_save(force_dump):
                 wait_second = int(cast(int, pdf_attr["javascript-delay"]))
                 if wait_second > 0:
                     logger.info(f"please wait... ({wait_second} [msec] or greater)")
@@ -239,20 +217,14 @@ class ConvertTaskRunner:
                 problem_ids=problem_ids,
                 is_problemset=is_problemset,
             )
-            cache["contents"] = hashlib.sha256(md.encode()).hexdigest()
-            if need_to_save(
-                cache,
-                reference_cache,
-                force_dump,
-                output_path,
-            ):
+            cache.set_content(md)
+            if cache.need_to_save(force_dump):
                 self.save_file(md, output_path)
             else:
                 logger.warning("skip dumping md: same result as before")
         else:
             logger.error(f"invalid extension '{output_ext.value}'")
             raise ValueError(f"invalid extension '{output_ext.value}'")
-        return cache
 
     def run(
         self,
@@ -296,17 +268,15 @@ class ConvertTaskRunner:
                 self.problemset_config.get_problem_group(problem_id),
             )
             cache.set_assets(self.copy_assets(problem_id, output_dir / "assets"))
-            has_diff |= cache.save_and_check_diff(
-                self.run_rendering(
-                    output_dir=output_dir,
-                    output_ext=output_ext,
-                    problem_ids=[problem_id],
-                    is_problemset=False,
-                    force_dump=force_dump,
-                    cache=cache.get_current(),
-                    reference_cache=cache.get_previous(),
-                )
+            self.run_rendering(
+                output_dir=output_dir,
+                output_ext=output_ext,
+                problem_ids=[problem_id],
+                is_problemset=False,
+                force_dump=force_dump,
+                cache=cache,
             )
+            has_diff |= cache.save_and_check_diff()
             logger.info("")
 
         # 問題セットに対応するものを出力
@@ -328,14 +298,12 @@ class ConvertTaskRunner:
                 )
             logger.info("rendering problemset")
             cache = RenderResultCache(self.problemset_dir, output_ext)
-            cache.save_and_check_diff(
-                self.run_rendering(
-                    output_dir=self.problemset_dir,
-                    output_ext=output_ext,
-                    problem_ids=valid_problem_ids,
-                    is_problemset=True,
-                    force_dump=force_dump or has_diff,
-                    cache=cache.get_current(),
-                    reference_cache=cache.get_previous(),
-                )
+            self.run_rendering(
+                output_dir=self.problemset_dir,
+                output_ext=output_ext,
+                problem_ids=valid_problem_ids,
+                is_problemset=True,
+                force_dump=force_dump or has_diff,
+                cache=cache,
             )
+            cache.save_and_check_diff()
