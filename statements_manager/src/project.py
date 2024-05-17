@@ -5,6 +5,7 @@ from pathlib import Path
 
 from statements_manager.src.convert_task_runner import ConvertTaskRunner
 from statements_manager.src.execute_config import ProblemSetConfig
+from statements_manager.src.output_file_kind import OutputFileKind
 from statements_manager.src.utils import read_toml_file
 
 logger: Logger = getLogger(__name__)
@@ -13,7 +14,7 @@ logger: Logger = getLogger(__name__)
 class Project:
     def __init__(self, working_dir: str, ext: str) -> None:
         self._cwd: Path = Path(working_dir).resolve()
-        self._ext: str = ext
+        self._ext: OutputFileKind = OutputFileKind(ext)
         self.problemset_config = self._fetch_problemset_config()
         self.task_runner = ConvertTaskRunner(
             problemset_config=self.problemset_config,
