@@ -41,6 +41,9 @@ class StatementConfig(AttributeConstraints):
     def __init__(self, filename: pathlib.Path, config: dict) -> None:
         self.path: str = self.required(filename, config, "path")
         self.lang: str = self.optional(filename, config, "lang", "en")
+        self.digit_separator: str = self.optional(
+            filename, config, "digit_separator", ","
+        )
         self.markdown_extensions: list[Any] = self.optional(
             filename, config, "markdown_extensions", []
         )

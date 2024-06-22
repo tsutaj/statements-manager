@@ -8,12 +8,12 @@ from typing import Any
 
 from jinja2 import DictLoader, Environment
 
-from statements_manager.src.execute_config import ProblemConfig
+from statements_manager.src.execute_config import ProblemConfig, StatementConfig
 
 logger: Logger = getLogger(__name__)
 
 
-def to_string(value: Any) -> str:
+def to_string(value: Any, config: StatementConfig) -> str:
     if isinstance(value, int):
         if str(value).endswith("000000"):
             k = math.floor(math.log10(abs(value)))
@@ -26,7 +26,14 @@ def to_string(value: Any) -> str:
             else:
                 return f"{value / 10 ** k} \\times 10^{{{k}}}"
         else:
-            return format(value, ",").replace(",", "{,}")
+            formatted = format(value, ",")
+            if config.digit_separator == ",":
+                return formatted.replace(",", "{,}")
+            elif config.digit_separator == " ":
+                return formatted.replace(",", r"\\,")
+            else:
+                logger.error(f"unknown digit separator: {config.digit_separator}")
+                raise KeyError(f"unknown digit separator: {config.digit_separator}")
     else:
         return str(value)
 
@@ -49,7 +56,7 @@ class ConstraintsConverter:
         if problem_config.constraints is not None:
             for name, value in problem_config.constraints.items():
                 logger.info(f"constraints: {name} => {value}")
-                constraints[name] = to_string(value)
+                constraints[name] = to_string(value, problem_config.statement)
         else:
             logger.warning("constraints are not set")
 

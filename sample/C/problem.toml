@@ -8,16 +8,19 @@ params_path = "./tests/constraints.hpp"
 [[statements]]
 path = "./statement/en/statement_1.md"
 lang = "en"
+digit_separator = " "
 markdown_extensions = ["md_in_html", "tables", "fenced_code"]
 
 [[statements]]
 path = "./statement/en/statement_2.md"
 lang = "en"
+digit_separator = " "
 markdown_extensions = ["md_in_html", "tables", "fenced_code"]
 
 [[statements]]
 path = "./statement/ja/statement_1.md"
 lang = "ja"
+digit_separator = ","
 markdown_extensions = ["md_in_html", "tables", "fenced_code"]
 
 [[statements]]
