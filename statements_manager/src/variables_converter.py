@@ -31,6 +31,8 @@ def to_string(value: Any, config: StatementConfig) -> str:
                 return formatted.replace(",", "{,}")
             elif config.digit_separator == " ":
                 return formatted.replace(",", r"\\,")
+            elif config.digit_separator == "none":
+                return formatted.replace(",", "")
             else:
                 logger.error(f"unknown digit separator: {config.digit_separator}")
                 raise KeyError(f"unknown digit separator: {config.digit_separator}")
