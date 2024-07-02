@@ -10,6 +10,7 @@ params_path = "./tests/constraints.hpp"
 path = "./statement/statement.md"
 lang = "ja"
 markdown_extensions = ["md_in_html", "tables", "fenced_code"]
+digit_separator = "none"
 
 # 問題制約を書く
 [constraints]
