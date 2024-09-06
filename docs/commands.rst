@@ -28,7 +28,7 @@ run
 
     問題文の生成対象となるディレクトリを指定します。何も指定しない場合、コマンドが実行された階層を指定したとみなします。
 
-    ``working_dir`` 以下を再帰的に探索し、見つかった ``problem.toml`` それぞれについて問題文の生成が行われます。
+    ``working_dir`` 以下を再帰的に探索し、見つかった ``problem.toml`` それぞれについて問題文の生成が行われます。ただし ``-p`` がついているときは、問題セットにあるすべての問題に対して問題文の生成が行われることがあります。詳しくは ``-p`` の説明を参照してください。
 
 .. option:: -o, --output
     
@@ -39,6 +39,11 @@ run
 .. option:: -p, --make-problemset
 
     問題セットのファイルも出力します。出力形式は ``-o, --output`` オプションで指定されたものに従います。
+
+    .. tip::
+        ``working_dir`` の祖先にある ``problemset.toml`` のうち、最も ``working_dir`` に近いものを読み込みます。
+
+        また、 ``-p`` がついていて ``problemset.toml`` が存在するときは、 ``problemset.toml`` が存在するディレクトリの子孫にあるすべての問題に対して問題文の生成が行われます。
 
 .. option:: -f, --force-dump
 
@@ -64,13 +69,12 @@ run
 
 .. code-block:: bash
 
-    $ ss-manager run ./problems -o pdf -p
+    $ ss-manager run ./problems -o pdf
 
 このコマンドは次のように実行されます。
 
 - ``./problems`` 以下にある問題文を対象として出力ファイルを作成する
 - PDF 形式で出力する
-- 問題セットも出力する
 - 出力ファイルの内容に変化がなければファイルを更新しない
 
 reg-creds
