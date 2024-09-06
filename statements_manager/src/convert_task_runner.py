@@ -85,7 +85,8 @@ class ConvertTaskRunner:
         # どのパスでも生成できなかったらエラー
         logger.error("cannot get docs contents")
         logger.warning(
-            "tips: try 'ss-manager reg-creds' before running on docs mode.\n"
+            "tips: try 'ss-manager reg-creds CREDS_PATH' before running on docs mode.\n"
+            "if you have already registered credentials, try 'ss-manager reg-creds'.\n"
             "how to create credentials file: "
             "see https://statements-manager.readthedocs.io/ja/stable/register_credentials.html"
         )

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import argparse
 import pathlib
 import pickle
@@ -88,7 +90,9 @@ def get_parser() -> argparse.ArgumentParser:
     )
     subparser.add_argument(
         "creds_path",
-        help="path to credentials file (json)\n"
+        nargs="?",
+        help="path to credentials file (json). "
+        "if creds_path is not specified, update existing credentials.\n"
         "how to create credentials file: "
         "see https://statements-manager.readthedocs.io/ja/stable/register_credentials.html",
     )
@@ -111,35 +115,39 @@ def subcommand_run(
 
 
 def subcommand_reg_creds(
-    creds_path: str,
+    creds_path: str | None,
 ) -> None:
-    # 引数は実在するものでなければならない
+    homedir = str(pathlib.Path.home())
+    hidden_dir = pathlib.Path(homedir, ".ss-manager")
+    creds_savepath = hidden_dir / "credentials.json"
+    token_path = hidden_dir / "token.pickle"
+    if creds_path is not None:
+        if not hidden_dir.exists():
+            logger.info(f"create hidden directory: {hidden_dir}")
+            hidden_dir.mkdir()
+
+        # 上書きが発生する場合は確認する
+        if token_path.exists() and not ask_ok(
+            f"{hidden_dir} already exists. Rewrite this?", default_response=False
+        ):
+            return
+    else:
+        creds_path = str(creds_savepath.resolve())
+
+    logger.info("register credentials")
     if not pathlib.Path(creds_path).exists():
         logger.error(f"credentials '{creds_path}' does not exist")
         raise IOError(f"credentials '{creds_path}' does not exist")
-
-    # 隠しディレクトリ
-    homedir = str(pathlib.Path.home())
-    hidden_dir = pathlib.Path(homedir, ".ss-manager")
-    logger.info("register credentials")
-    if not hidden_dir.exists():
-        logger.info(f"create hidden directory: {hidden_dir}")
-        hidden_dir.mkdir()
-
-    # 上書きが発生する場合は確認する
-    token_path = hidden_dir / "token.pickle"
-    if token_path.exists() and not ask_ok(
-        f"{hidden_dir} already exists. Rewrite this?", default_response=False
-    ):
-        return
 
     # ファイルを登録
     token = create_token(creds_path)
     with open(token_path, "wb") as f:
         pickle.dump(token, f)
-    creds_savepath = hidden_dir / "credentials.json"
-    shutil.copy2(creds_path, creds_savepath)
-    logger.info("copied credentials successfully.")
+    if not creds_savepath.exists() or not creds_savepath.samefile(creds_path):
+        shutil.copy2(creds_path, creds_savepath)
+        logger.info("copied credentials successfully.")
+    else:
+        logger.info("registered credentials successfully.")
     logger.debug("reg-creds command ended successfully.")
 
 
