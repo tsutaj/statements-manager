@@ -6,7 +6,7 @@ from pathlib import Path
 from statements_manager.src.convert_task_runner import ConvertTaskRunner
 from statements_manager.src.execute_config import ProblemSetConfig
 from statements_manager.src.output_file_kind import OutputFileKind
-from statements_manager.src.utils import read_toml_file, find_in_parents
+from statements_manager.src.utils import find_in_parents, read_toml_file
 
 logger: Logger = getLogger(__name__)
 
@@ -45,7 +45,7 @@ class Project:
                 logger.warn("problemset.toml not found.")
                 logger.warn(
                     "You can change the design of the problem set. "
-                    + "see the document: https://statements-manager.readthedocs.io/ja/stable/problemset_config.html"
+                    + "see the document: https://statements-manager.readthedocs.io/ja/stable/problemset_config.html"  # noqa
                 )
         logger.debug(f"path to problemset: {problemset_config_filename}")
         problemset_config_dict = read_toml_file(problemset_config_filename)
