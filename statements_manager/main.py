@@ -104,7 +104,7 @@ def subcommand_run(
 ) -> None:
     working_dir = str(pathlib.Path(working_dir).resolve())
     logger.debug(f"run: working_dir = '{working_dir}'")
-    project = Project(working_dir, output)  # Project
+    project = Project(working_dir, output, make_problemset)
 
     project.run_problems(make_problemset, force_dump, constraints_only)
     logger.debug("run command ended successfully.")
