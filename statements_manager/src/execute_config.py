@@ -12,7 +12,7 @@ from statements_manager.src.statement_location_mode import (
     is_valid_url,
     recognize_mode,
 )
-from statements_manager.src.utils import read_text_file, resolve_path
+from statements_manager.src.utils import read_text_file, resolve_path, to_path
 from statements_manager.template import (
     default_sample_template_html,
     default_template_html,
@@ -184,10 +184,10 @@ class ProblemSetConfig(AttributeConstraints):
         dirname = problemset_filename.parent.resolve()
         self.output_path = dirname / "problemset"
         self.template_html: str = read_text_file(
-            self.template.template_path, default_template_html
+            to_path(self.template.template_path), default_template_html
         )
         self.sample_template_html: str = read_text_file(
-            self.template.sample_template_path, default_sample_template_html
+            to_path(self.template.sample_template_path), default_sample_template_html
         )
 
     def get_problem(self, id: str) -> ProblemConfig:

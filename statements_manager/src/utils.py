@@ -9,16 +9,31 @@ from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 
+def to_path(path: str | None) -> Path | None:
+    return Path(path) if path is not None else None
+
+
+def find_in_parents(path: Path) -> Path | None:
+    path = path.resolve()
+    dir, filename = path.parent, path.name
+    while not path.exists():
+        if dir.parent == dir:
+            return None
+        dir = dir.parent
+        path = dir / filename
+    return path
+
+
 def read_toml_file(path: Path | None) -> dict:
     if path is None or not path.exists():
         return {}
     return toml.load(path)
 
 
-def read_text_file(path: str | Path | None, default: str) -> str:
-    if path is None or not Path(path).exists():
+def read_text_file(path: Path | None, default: str) -> str:
+    if path is None or not path.exists():
         return default
-    with open(path) as f:
+    with path.open() as f:
         return f.read()
 
 
