@@ -7,6 +7,9 @@ Google Docs API を使用可能にする
 .. warning:: 
     **Google Docs にある問題文を扱いたい場合は、この操作が必須となります。** 問題文がすべてローカル環境に存在する場合はこの操作は不要です。
 
+Google Docs にある問題文を初めて扱う場合の操作
+==============================================
+
 作業ディレクトリ ``WORKING_DIR`` に対して、以下で説明する credentials というものを登録します。
 
 - `Google Docs - Quickstart <https://developers.google.com/docs/api/quickstart/python>`_ の手順通りに進め、API を使える状態にします。リンク先のサンプルを実行できるかどうかで動作確認が可能です。
@@ -34,3 +37,15 @@ Google Docs API を使用可能にする
     :class: highlight
 
     $ ss-manager reg-creds CREDS_PATH
+
+credentials をすでに利用していてエラーが出る場合の操作
+======================================================
+
+credentials をすでに利用したことがあっても、有効期限が切れたなどの理由で再登録が必要な場合があります。
+
+以下のコマンドを打つことで、再登録できます。不具合が発生する場合は、「Google Docs にある問題文を初めて扱う場合の操作」を再度行ってください。
+
+.. code-block:: bash
+    :class: highlight
+
+    $ ss-manager reg-creds
