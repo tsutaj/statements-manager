@@ -78,7 +78,7 @@ reg-creds
 
 .. code-block:: text
 
-    usage: ss-manager reg-creds [-h] creds_path
+    usage: ss-manager reg-creds [-h] [creds_path]
 
 Google Docs の API credentials を登録します。詳しい登録方法は :ref:`register_credentials` をご覧ください。
 
