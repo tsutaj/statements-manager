@@ -82,5 +82,8 @@ def create_token(creds_path: str, token_path: Union[str, None] = None) -> Any:
             token_obj.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(creds_path, scopes)
-            token_obj = flow.run_local_server(port=0)
+            # TODO: specify port number by argument
+            token_obj = flow.run_local_server(
+                port=37123, open_browser=False, bind_addr="0.0.0.0"
+            )
     return token_obj
