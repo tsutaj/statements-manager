@@ -98,6 +98,10 @@ problem.toml の書き方
         - ``,`` を指定した場合: ``1,000,000`` のように、数字の間に半角カンマが入ります
         - ``none`` を指定した場合: ``1000000`` のように、数字の間に区切り文字が入りません
     
+    .. problemtoml:: exponential_threshold
+
+        制約の値がこの値以上の場合、指数表記に変換されます。何も指定しなかった場合は ``1000000`` が設定されているとみなして実行します。
+    
     .. problemtoml:: markdown_extensions
 
         `Python-Markdown が公式でサポートしている拡張機能 <https://python-markdown.github.io/extensions/>`_ のうち、使用したいものの Entry Point をリスト形式で指定します。
