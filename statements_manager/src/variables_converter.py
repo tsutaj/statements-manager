@@ -15,7 +15,7 @@ logger: Logger = getLogger(__name__)
 
 def to_string(value: Any, config: StatementConfig) -> str:
     if isinstance(value, int):
-        if str(value).endswith("000000"):
+        if abs(value) >= config.exponential_threshold:
             k = math.floor(math.log10(abs(value)))
             if value == 10**k:
                 return f"10^{{{k}}}"
