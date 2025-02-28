@@ -135,7 +135,7 @@ class Renderer:
             return markdown_text
 
         proc = Popen(
-            ["python", self.preprocess_path],
+            [self.preprocess_path],
             stdout=PIPE,
             stdin=PIPE,
             stderr=PIPE,
@@ -158,7 +158,7 @@ class Renderer:
             return html_text
 
         proc = Popen(
-            ["python", self.postprocess_path],
+            [self.postprocess_path],
             stdout=PIPE,
             stdin=PIPE,
             stderr=PIPE,
