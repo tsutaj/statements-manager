@@ -44,6 +44,9 @@ class StatementConfig(AttributeConstraints):
         self.digit_separator: str = self.optional(
             filename, config, "digit_separator", ","
         )
+        self.exponential_threshold: int = self.optional(
+            filename, config, "exponential_threshold", 1000000
+        )
         self.markdown_extensions: list[Any] = self.optional(
             filename, config, "markdown_extensions", []
         )
