@@ -54,7 +54,7 @@ GitHub Actions などの CI サービスと併用することで、リポジト�
         - name: Set up Python 3
             uses: actions/setup-python@v2
             with:
-            python-version: 3.9.2
+            python-version: 3.9
         - name: Install dependencies
             run: |
             python -m pip install --upgrade pip
