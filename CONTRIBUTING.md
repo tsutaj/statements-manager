@@ -20,7 +20,7 @@
 
 このガイドでは、Python で書かれたパッケージに対して初めてコミットする方向けに、開発手法のうちのひとつを説明しています。既に何らかの開発手法について理解されている方は、この節を読む必要はありません。
 
-### 1. Python (>= 3.8) をインストールする
+### 1. Python (>= 3.9.2) をインストールする
 
 [Python 公式ページ](https://www.python.org/downloads/) を参照してください。リンク先のページを見てもよくわからない場合は、お使いの OS をキーワードにして検索すると良いでしょう。(例えば Windows を使用している場合、["Python3 Windows インストール方法"](https://www.google.com/search?channel=fs&client=ubuntu&q=Python3+Windows+%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E6%96%B9%E6%B3%95) で検索する、など)
 

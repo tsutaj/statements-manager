@@ -28,7 +28,7 @@ setup(
     url="https://github.com/tsutaj/statements-manager",
     license="Apache License 2.0",
     description="",
-    python_requires=">=3.8",
+    python_requires=">=3.9.2",
     install_requires=[
         "google-api-python-client",
         "google-auth-httplib2",
