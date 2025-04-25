@@ -4,7 +4,7 @@ import fnmatch
 import math
 import pathlib
 from logging import Logger, getLogger
-from typing import Any
+from typing import Any, Optional
 
 from jinja2 import DictLoader, Environment
 
@@ -77,6 +77,43 @@ class SampleFile:
         with open(self.filename, "r") as f:
             contents = f.read() + "\n"
             return contents
+
+
+class SampleData:
+    def __init__(
+        self,
+        do_numbering: bool,
+        i_sample: int,
+        language: str,
+        total_samples: int,
+    ) -> None:
+        self.do_numbering = do_numbering
+        self.i_sample = i_sample
+        self.language = language
+        self.is_first = i_sample == 1
+        self.is_last = i_sample == total_samples
+        self.input_text: Optional[str] = None
+        self.output_text: Optional[str] = None
+        self.md_text: Optional[str] = None
+        self.explanation_text: Optional[str] = None
+
+    def to_dict(self) -> dict[str, Any]:
+        result = {
+            "do_numbering": self.do_numbering,
+            "i_sample": self.i_sample,
+            "language": self.language,
+            "is_first": self.is_first,
+            "is_last": self.is_last,
+        }
+        if self.input_text is not None:
+            result["input_text"] = self.input_text
+        if self.output_text is not None:
+            result["output_text"] = self.output_text
+        if self.md_text is not None:
+            result["md_text"] = self.md_text
+        if self.explanation_text is not None:
+            result["explanation_text"] = self.explanation_text
+        return result
 
 
 class SamplesConverter:
@@ -182,25 +219,24 @@ class SamplesConverter:
             )
             self.print_warning(sample_name, input_file, output_file, explanation_file)
 
-            sample_data = {
-                "do_numbering": do_numbering,
-                "i_sample": i_sample,
-                "language": problem_config.statement.lang,
-                "is_first": i_sample == 1,
-                "is_last": i_sample == len(sample_names),
-            }
+            sample_data = SampleData(
+                do_numbering=do_numbering,
+                i_sample=i_sample,
+                language=problem_config.statement.lang,
+                total_samples=len(sample_names),
+            )
+
             if input_file.exists():
-                sample_data["input_text"] = fetch_text(input_file)
+                sample_data.input_text = fetch_text(input_file)
             if output_file.exists():
-                sample_data["output_text"] = fetch_text(output_file)
+                sample_data.output_text = fetch_text(output_file)
             if md_file.exists():
-                md_text = fetch_text(md_file)
-                sample_data["md_text"] = md_text
+                sample_data.md_text = fetch_text(md_file)
             if explanation_file.exists():
-                explanation_text = fetch_text(explanation_file)
-                sample_data["explanation_text"] = explanation_text
+                sample_data.explanation_text = fetch_text(explanation_file)
+
             sample_text = env.get_template("template").render(
-                sample_data=sample_data,
+                sample_data=sample_data.to_dict(),
             )
             key = "s" + str(i_sample)
             samples[key] = sample_text
