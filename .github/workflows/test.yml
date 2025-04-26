@@ -31,6 +31,14 @@ jobs:
           pip3 install --upgrade setuptools
           pip3 install .[dev]
 
+      - name: Install wkhtmltopdf
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -y
+          wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+          sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb || true
+          sudo apt-get install -f
+
       - name: Run tests
         run: |
           ss-manager -h
@@ -54,6 +62,13 @@ jobs:
         run: |
           pip3 install --upgrade setuptools
           pip3 install .[dev]
+
+      - name: Install wkhtmltopdf
+        run: |
+          sudo apt-get update -y
+          wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+          sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb || true
+          sudo apt-get install -f
 
       - name: Run tests
         run: |
