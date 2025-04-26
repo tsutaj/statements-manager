@@ -12,6 +12,10 @@ from google.oauth2 import service_account
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 
+def is_ci() -> bool:
+    return "GITHUB_ACTIONS" in os.environ
+
+
 def to_path(path: str | None) -> Path | None:
     return Path(path) if path is not None else None
 
@@ -76,7 +80,7 @@ def create_token_for_ci() -> Any:
 
 
 def create_token(creds_path: str, token_path: Union[str, None] = None) -> Any:
-    if "GITHUB_ACTIONS" in os.environ:
+    if is_ci():
         return create_token_for_ci()
 
     scopes = ["https://www.googleapis.com/auth/documents.readonly"]

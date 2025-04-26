@@ -8,7 +8,7 @@ from logging import Logger, basicConfig, getLogger
 
 from statements_manager.src.output_file_kind import OutputFileKind
 from statements_manager.src.project import Project
-from statements_manager.src.utils import ask_ok, create_token
+from statements_manager.src.utils import ask_ok, create_token, is_ci
 
 logger: Logger = getLogger(__name__)
 
@@ -135,7 +135,7 @@ def subcommand_reg_creds(
         creds_path = str(creds_savepath.resolve())
 
     logger.info("register credentials")
-    if not pathlib.Path(creds_path).exists():
+    if not is_ci() and not pathlib.Path(creds_path).exists():
         logger.error(f"credentials '{creds_path}' does not exist")
         raise IOError(f"credentials '{creds_path}' does not exist")
 
