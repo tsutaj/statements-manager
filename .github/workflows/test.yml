@@ -34,7 +34,6 @@ jobs:
       - name: Run tests
         run: |
           ss-manager -h
-          ss-manager reg-creds
           pytest -v
         shell: bash
 
@@ -59,6 +58,5 @@ jobs:
       - name: Run tests
         run: |
           ss-manager -h
-          ss-manager reg-creds
           pytest -v
         shell: bash
