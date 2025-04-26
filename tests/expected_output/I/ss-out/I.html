@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <title>Problem Statement</title>
+    <meta charset="utf-8">
+    <link href='http://fonts.googleapis.com/css?family=Noto+Serif' rel='stylesheet' type='text/css'>
+    <style type="text/css">
+        html {
+            color: #222222;
+            font-family: "Noto Serif";
+        }
+
+        h1 {
+            font-size: 16pt;
+            border-bottom: solid 2px #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 14pt;
+            border-bottom: solid 2px #e0e0e0;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        h3 {
+            font-size: 14pt;
+            border-bottom: solid 2px #e0e0e0;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        h4 {
+            font-size: 13pt;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        h5 {
+            font-size: 12pt;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        b {
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 12pt;
+        }
+
+        li {
+            font-size: 12pt;
+        }
+
+        pre {
+            font-size: 11pt;
+            padding: 8px;
+            border: solid 1px #e0e0e0;
+            border-radius: 4px;
+        }
+
+        code {
+            color: #e83e8c;
+        }
+
+        code.language-input-format {
+            color: #222222;
+        }
+
+        .testcase_pre {
+            font-size: 11pt;
+            padding: 8px;
+            border: solid 1px #e0e0e0;
+            border-radius: 4px;
+            overflow: auto;
+            max-width: 480;
+            max-height: 340;
+        }
+
+        .error_pre {
+            font-size: 11pt;
+            padding: 8px;
+            border: solid 1px #f0e0e0;
+            border-radius: 4px;
+            overflow: auto;
+            max-height: 340;
+            background-color: #ffeeee;
+        }
+
+        .table tbody>tr>td.vert-aligned {
+            vertical-align: middle;
+        }
+    </style>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [["$", "$"]],
+                processEscapes: true,
+                processClass: 'input-format|language-input-format'
+            }
+        });
+    </script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS_CHTML">
+        </script>
+</head>
+
+<body>
+    
+    <div >
+        <h2>Problem I</h2>
+<h3><u><strong>今川焼きマン - Imagawayaki Man -</strong></u></h3>
+<h3>物語</h3>
+<p>今川焼きマンは、正義のヒーローである。顔は直径 $1$ メートルの今川焼き（主に小麦粉でできた生地の中にたっぷりと餡を詰めて焼いた食べ物であり、見た目は円形であり、美味しい。北海道では、単に「お焼き」と呼ばれることも多い。餡として小豆餡のほかに、カスタードクリームなどを用いることもあり、さまざまな味のバリエーションがある。そのため、いくつ食べても飽きない。小豆餡やカスタードクリームのほかに、抹茶餡やりんごジャムなども美味しい。中にタコを入れたたこ焼きのようなものもあるようだ。どの味も美味しい。下の写真は標準的な今川焼きである。左はクリーム餡、右は小豆餡が入っている。美味しそうである。実際に食べて見たところ、やはり美味しかった。ところで、今川焼きの直径は通常 $10$ センチメートル程度であるので、直径 $1$ メートルの今川焼きはかなり大きなものであることに注意されよ。）でできており、お腹の空いた者に自分の顔を分けて差し出すこともある。そのため、必要に応じて顔を取り替える必要がある。いつでも取り替えられるように、今川焼き工場でおじさんが一人でせっせと一つずつ今川焼きを焼いて日々備えている。</p>
+<p><img src="./assets/imagawayaki.jpg" width="300" /></p>
+<p>ところで、今川焼きは食品であるため、当然ながら賞味期限が存在する。無駄にしないためには、焼いてから時間が経ったものから順に使うことが望ましい。おじさんは下図のように、完成した直径 $1$ メートルの今川焼き (図中の狐色部) を幅 $1$ メートルのレーン (図中の灰色部) の上に隙間なく並べて保存している。</p>
+<p><img src="./assets/lane.png" width="300" /></p>
+<p>ある日、大悪党の背筋マンが工場に現れ、今川焼きマンを困らせようと、自慢の背筋力を使って巨大な今川焼きをせっせと運び、好き勝手に並び替えてしまった。背筋マンは背筋力だけでなく記憶力も良いので、どの今川焼きが元々何番目にあったのか覚えているようだ。負けを認めたくない今川焼きマンは、何とかして、それぞれの今川焼きが何番目に出来たてなのか知りたいが、見た目では分かりそうにない。そこで、背筋マンに「もちろん、僕はちゃんと覚えているよ。でも、背筋マンは本当にちゃんと覚えているのかな？？」と挑発し、さらに「本当に覚えているか僕がテストするよ！」と言って質問を繰り返すことで、何番目に出来たてなのか知ることにした。ただし、あまり質問しすぎると、探っていることを勘付かれてしまうので、ほどほどにしなければならない。あなたには、今川焼きマンを助けるため、質問を繰り返し生成し、それぞれの今川焼きが何番目に出来たてなのかを当てるプログラムを作成してほしい。</p>
+<h3>問題</h3>
+<p>まず、工場に並んでいる今川焼きの個数 $N$ ($1 \leq N \leq 10{,}000$) が標準入力により 1 行で与えられる。これらの今川焼きの製造日時は互いに異なる。つまり、 $1 \leq i \leq N$ を満たす任意の整数 $i$ について、 $i$ 番目に出来たての今川焼きはただひとつ存在する。</p>
+<p>これ以降、任意の 2 整数 $a$, $b$ ($1 \leq a, b \leq N$) において、標準出力に</p>
+<pre class="input-format"><code class="language-input-format"> ? $a$ $b$
+</code></pre>
+<p>と出力すると、「$a$ 番目に出来たての今川焼きの中心から $b$ 番目に出来たての今川焼きの中心までの距離は何メートルか？」という質問を行うことができる。この答えは標準入力に一行で整数としてすぐに与えられる。物語でも述べた通り、レーン上に隙間なく直径 $1$ メートルの今川焼きが並べられているので、左から数えて $i$ 番目の今川焼きの中心から $j$ 番目の今川焼きの中心までの距離は正確に $|i - j|$ メートルである。この質問は $20{,}000$ 回まで繰り返し行うことができる。</p>
+<p>それぞれの今川焼きが何番目に出来たてなのか分かったら、標準出力に最終的な答えを出力しなければならない。出力形式は、各 $i$ ($ 1 \leq i \leq N$) において、左から $i$ 番目 の今川焼きが $x_i$ 番目に出来たてのとき、</p>
+<pre class="input-format"><code class="language-input-format"> ! $x_1$ $x_2$ $x_3$ $\ldots$ $x_N$
+</code></pre>
+<p>または、</p>
+<pre class="input-format"><code class="language-input-format"> ! $x_N$ $x_{N-1}$ $x_{N-2}$ $\ldots$ $x_1$
+</code></pre>
+<p>とすればよい。つまり、左から順に答えても、右から順に答えても構わない。この最終的な解答は、1 度しか行うことができない。この解答が正しい出力だったとき、正答とみなす。</p>
+<p>標準出力を行う毎に、ストリームをフラッシュ (flush) する必要があることに注意されよ。主要な言語でのフラッシュ例を以下に示す。もちろん、これ以外の方法でフラッシュを行っても構わない。</p>
+<p>C 言語:</p>
+<pre><code class="language-c"> #include &lt;stdio.h&gt;
+ fflush(stdout);
+</code></pre>
+<p>C++:</p>
+<pre><code class="language-cpp"> #include &lt;iostream&gt;
+ std::cout.flush();
+</code></pre>
+<p>Java:</p>
+<pre><code class="language-java"> System.out.flush();
+</code></pre>
+<h3>入出力例</h3>
+<table>
+    <thead>
+        <tr>
+            <td>標準入力</td>
+            <td>標準出力</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><pre>3</pre></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><pre>? 1 2</pre></td>
+        </tr>
+        <tr>
+            <td><pre>2</pre></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><pre>? 2 3</pre></td>
+        </tr>
+        <tr>
+            <td><pre>1</pre></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><pre>? 1 3</pre></td>
+        </tr>
+        <tr>
+            <td><pre>1</pre></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><pre>! 2 3 1</pre></td>
+        </tr>
+    </tbody>
+</table>
+    </div>
+    
+</body>
+
+</html>
