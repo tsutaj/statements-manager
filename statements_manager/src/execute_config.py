@@ -186,6 +186,7 @@ class ProblemSetConfig(AttributeConstraints):
         self.encoding: str = self.optional(
             problemset_filename, config, "encoding", "utf-8"
         )
+        logger.info(f"encoding = {self.encoding}")
 
         dirname = problemset_filename.parent.resolve()
         self.output_path = dirname / "problemset"
