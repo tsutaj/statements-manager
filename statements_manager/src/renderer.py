@@ -59,12 +59,14 @@ class Renderer:
         self.replace_sample_format = ReplaceSampleFormatExprExtension()
 
     def replace_vars(
-        self, problem_config: ProblemConfig, statement_str: str | None
+        self, problem_config: ProblemConfig, statement_str: str | None, encoding: str
     ) -> str:
         if statement_str is None:
             logger.error("statement_str is None")
             raise RuntimeError("statement_str is None")
-        vars_manager = VariablesConverter(problem_config, self.sample_template_html)
+        vars_manager = VariablesConverter(
+            problem_config, self.sample_template_html, encoding
+        )
         env = Environment(
             variable_start_string="{@",
             variable_end_string="}",
@@ -188,7 +190,9 @@ class Renderer:
                 contents = problem_config.statement.raw_text
                 contents = self.apply_preprocess(contents)
 
-                rendered_contents = self.replace_vars(problem_config, contents)
+                rendered_contents = self.replace_vars(
+                    problem_config, contents, problemset_config.encoding
+                )
                 markdown_extensions = [
                     self.replace_sample_format,
                     *problem_config.statement.markdown_extensions,
@@ -246,7 +250,9 @@ class Renderer:
             problem_config = problemset_config.get_problem(problem_id)
             if problem_config.statement.rendered_text is None:
                 contents = problem_config.statement.raw_text
-                contents = self.replace_vars(problem_config, contents)
+                contents = self.replace_vars(
+                    problem_config, contents, problemset_config.encoding
+                )
                 problem_config.statement.rendered_text = contents
             problem_config.statement.rendered_text = self.replace_assets_path(
                 problem_config.statement.rendered_text, problem_id, is_problemset

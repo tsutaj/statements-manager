@@ -30,10 +30,10 @@ def read_toml_file(path: Path | None) -> dict:
     return toml.load(path)
 
 
-def read_text_file(path: Path | None, default: str) -> str:
+def read_text_file(path: Path | None, default: str, encoding: str) -> str:
     if path is None or not path.exists():
         return default
-    with path.open() as f:
+    with path.open("r", encoding=encoding) as f:
         return f.read()
 
 

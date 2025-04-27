@@ -40,9 +40,9 @@ def to_string(value: Any, config: StatementConfig) -> str:
         return str(value)
 
 
-def fetch_text(path: pathlib.Path) -> str:
+def fetch_text(path: pathlib.Path, encoding: str) -> str:
     try:
-        return open(path).read()
+        return open(path, encoding=encoding).read()
     except OSError:
         return ""
 
@@ -61,22 +61,6 @@ class ConstraintsConverter:
                 constraints[name] = to_string(value, problem_config.statement)
         else:
             logger.warning("constraints are not set")
-
-
-class SampleFile:
-    def __init__(self, filename: pathlib.Path) -> None:
-        self.filename = filename
-
-    def exists(self) -> bool:
-        return self.filename.exists()
-
-    def print_raw(self) -> str:
-        if not self.exists():
-            return ""
-
-        with open(self.filename, "r") as f:
-            contents = f.read() + "\n"
-            return contents
 
 
 class SampleData:
@@ -176,7 +160,11 @@ class SamplesConverter:
             logger.warning(f"{sample_name}: There is no explanation.")
 
     def convert(
-        self, samples: dict[str, Any], problem_config: ProblemConfig, template: str
+        self,
+        samples: dict[str, Any],
+        problem_config: ProblemConfig,
+        template: str,
+        encoding: str,
     ) -> None:
         """
         - `sample_path` が指定されていない場合: 警告を出して抜ける
@@ -227,13 +215,13 @@ class SamplesConverter:
             )
 
             if input_file.exists():
-                sample_data.input_text = fetch_text(input_file)
+                sample_data.input_text = fetch_text(input_file, encoding)
             if output_file.exists():
-                sample_data.output_text = fetch_text(output_file)
+                sample_data.output_text = fetch_text(output_file, encoding)
             if md_file.exists():
-                sample_data.md_text = fetch_text(md_file)
+                sample_data.md_text = fetch_text(md_file, encoding)
             if explanation_file.exists():
-                sample_data.explanation_text = fetch_text(explanation_file)
+                sample_data.explanation_text = fetch_text(explanation_file, encoding)
 
             sample_text = env.get_template("template").render(
                 sample_data=sample_data.to_dict(),
@@ -245,11 +233,15 @@ class SamplesConverter:
 
 
 class VariablesConverter:
-    def __init__(self, problem_config: ProblemConfig, sample_template: str) -> None:
+    def __init__(
+        self, problem_config: ProblemConfig, sample_template: str, encoding: str
+    ) -> None:
         self.constraints: dict = {}
         self.samples: dict = {}
         self.constraints_converter = ConstraintsConverter()
         self.samples_converter = SamplesConverter()
 
         self.constraints_converter.convert(self.constraints, problem_config)
-        self.samples_converter.convert(self.samples, problem_config, sample_template)
+        self.samples_converter.convert(
+            self.samples, problem_config, sample_template, encoding
+        )

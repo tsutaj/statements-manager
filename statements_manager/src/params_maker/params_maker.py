@@ -9,9 +9,10 @@ logger: Logger = getLogger(__name__)
 
 
 class ParamsMaker:
-    def __init__(self, params: dict[str, Any], output_path: str) -> None:
+    def __init__(self, params: dict[str, Any], output_path: str, encoding: str) -> None:
         self.params = params
         self.output_path = output_path
+        self.encoding = encoding
 
     def run(self) -> None:
         params_lines: list[str] = []
@@ -35,7 +36,7 @@ class ParamsMaker:
         # if params file is the same as the existing one, do nothing
         params_text = "\n".join(params_lines)
         if pathlib.Path(self.output_path).exists():
-            with open(self.output_path, "r") as f:
+            with open(self.output_path, "r", encoding=self.encoding) as f:
                 reference = f.read()
                 if params_text == reference:
                     logger.warning(
@@ -43,7 +44,7 @@ class ParamsMaker:
                     )
                     return
 
-        with open(self.output_path, "w") as f:
+        with open(self.output_path, "w", encoding=self.encoding) as f:
             f.write(params_text)
 
     @abstractmethod

@@ -16,6 +16,13 @@ problemset.toml の書き方
 
 設定項目それぞれについて説明します。
 
+.. problemsettoml:: encoding
+
+    入力ファイルおよび出力ファイルの文字コードを指定します。`Python の codec 文字列 <https://docs.python.org/ja/3/library/codecs.html#standard-encodings>`_ を指定してください。
+    
+    何も設定しなかった場合、 ``utf-8`` が適用されます。
+
+
 .. problemsettoml:: [template]
     
     .. problemsettoml:: template_path
