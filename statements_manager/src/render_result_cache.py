@@ -37,7 +37,7 @@ class RenderResultCache:
     def _load_cache(self) -> dict:
         if not self.cache_path.exists():
             return {}
-        with open(self.cache_path, "r") as f:
+        with open(self.cache_path, "r", encoding="ascii") as f:
             return self._cleanup(json.load(f))
 
     def _setup_cache(self, cache: dict) -> dict:
@@ -101,7 +101,7 @@ class RenderResultCache:
     def save_and_check_diff(self) -> bool:
         json.dump(
             self.cache,
-            open(self.cache_path, "w"),
+            open(self.cache_path, "w", encoding="ascii"),
             indent=4,
             sort_keys=True,
         )
