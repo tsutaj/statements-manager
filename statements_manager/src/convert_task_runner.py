@@ -41,7 +41,8 @@ class ConvertTaskRunner:
     def get_local_contents(self, problem_id: str) -> Tuple[ContentsStatus, str]:
         try:
             with open(
-                self.problemset_config.get_problem(problem_id).statement.path
+                self.problemset_config.get_problem(problem_id).statement.path,
+                encoding=self.problemset_config.encoding,
             ) as f:
                 return (ContentsStatus.OK, f.read())
         except EnvironmentError:
@@ -104,7 +105,7 @@ class ConvertTaskRunner:
             raise ValueError(f"unknown mode: {mode}")
 
     def save_file(self, text: str, output_path: str):
-        with open(output_path, "w") as f:
+        with open(output_path, "w", encoding=self.problemset_config.encoding) as f:
             f.write(text)
 
     # 制約パラメータファイル (e.g. constraints.hpp) の作成
@@ -118,8 +119,9 @@ class ConvertTaskRunner:
             ext: str = Path(problem_config.params_path).suffix
             if ext in lang_to_class:
                 params_maker = lang_to_class[ext](
-                    problem_config.constraints,
-                    problem_config.params_path,
+                    params=problem_config.constraints,
+                    output_path=problem_config.params_path,
+                    encoding=self.problemset_config.encoding,
                 )
                 params_maker.run()
             else:

@@ -183,14 +183,19 @@ class ProblemSetConfig(AttributeConstraints):
         self.known_ids: set[str] = set()
         self.id_groups: list[list[str]] = list()
         self.problem_configs: dict[str, ProblemConfig] = dict()
+        self.encoding: str = self.optional(
+            problemset_filename, config, "encoding", "utf-8"
+        )
 
         dirname = problemset_filename.parent.resolve()
         self.output_path = dirname / "problemset"
         self.template_html: str = read_text_file(
-            to_path(self.template.template_path), default_template_html
+            to_path(self.template.template_path), default_template_html, self.encoding
         )
         self.sample_template_html: str = read_text_file(
-            to_path(self.template.sample_template_path), default_sample_template_html
+            to_path(self.template.sample_template_path),
+            default_sample_template_html,
+            self.encoding,
         )
 
     def get_problem(self, id: str) -> ProblemConfig:
