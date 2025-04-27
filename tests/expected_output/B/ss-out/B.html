@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <title>Problem Statement</title>
+    <meta charset="utf-8">
+    <link href='http://fonts.googleapis.com/css?family=Noto+Serif' rel='stylesheet' type='text/css'>
+    <style type="text/css">
+        html {
+            color: #222222;
+            font-family: "Noto Serif";
+        }
+
+        h1 {
+            font-size: 16pt;
+            border-bottom: solid 2px #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 14pt;
+            border-bottom: solid 2px #e0e0e0;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        h3 {
+            font-size: 14pt;
+            border-bottom: solid 2px #e0e0e0;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        h4 {
+            font-size: 13pt;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        h5 {
+            font-size: 12pt;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        b {
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 12pt;
+        }
+
+        li {
+            font-size: 12pt;
+        }
+
+        pre {
+            font-size: 11pt;
+            padding: 8px;
+            border: solid 1px #e0e0e0;
+            border-radius: 4px;
+        }
+
+        code {
+            color: #e83e8c;
+        }
+
+        code.language-input-format {
+            color: #222222;
+        }
+
+        .testcase_pre {
+            font-size: 11pt;
+            padding: 8px;
+            border: solid 1px #e0e0e0;
+            border-radius: 4px;
+            overflow: auto;
+            max-width: 480;
+            max-height: 340;
+        }
+
+        .error_pre {
+            font-size: 11pt;
+            padding: 8px;
+            border: solid 1px #f0e0e0;
+            border-radius: 4px;
+            overflow: auto;
+            max-height: 340;
+            background-color: #ffeeee;
+        }
+
+        .table tbody>tr>td.vert-aligned {
+            vertical-align: middle;
+        }
+    </style>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [["$", "$"]],
+                processEscapes: true,
+                processClass: 'input-format|language-input-format'
+            }
+        });
+    </script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS_CHTML">
+        </script>
+</head>
+
+<body>
+    
+    <div >
+        <h2>Problem B</h2>
+<h3><u><strong>回文判定</strong></u></h3>
+<p>長さ $N$ の文字列 $S$ が与えられます。文字列は奇数長であることが保証されます。</p>
+<p>与えられる文字列 $S$ が回文であるか判定してください。</p>
+<h3>入力</h3>
+<pre class="input-format"><code class="language-input-format">$N$
+$S$
+</code></pre>
+<ul>
+<li>$1 \leq N \leq 100000$</li>
+<li>$N$ は奇数であることが保証される</li>
+<li>$|S| = N$</li>
+<li>与えられる文字列は英小文字のみからなる</li>
+</ul>
+<h3>出力</h3>
+<p>与えられる文字列が回文であれば <code>Yes</code> を、そうでなければ <code>No</code> を一行で出力してください。<strong>出力の末尾で改行してください。</strong></p>
+<h3>入出力例</h3>
+<h3>入力例 1</h3>
+<pre class="input-format"><code class="language-input-format">apa
+</code></pre>
+<h3>出力例 1</h3>
+<pre class="input-format"><code class="language-input-format">Yes
+</code></pre>
+<h3>入力例 2</h3>
+<pre class="input-format"><code class="language-input-format">bed
+</code></pre>
+<h3>出力例 2</h3>
+<pre class="input-format"><code class="language-input-format">No
+</code></pre>
+    </div>
+    
+</body>
+
+</html>

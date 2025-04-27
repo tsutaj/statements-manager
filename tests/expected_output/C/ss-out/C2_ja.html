@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <title>Problem Statement</title>
+    <meta charset="utf-8">
+    <link href='http://fonts.googleapis.com/css?family=Noto+Serif' rel='stylesheet' type='text/css'>
+    <style type="text/css">
+        html {
+            color: #222222;
+            font-family: "Noto Serif";
+        }
+
+        h1 {
+            font-size: 16pt;
+            border-bottom: solid 2px #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 14pt;
+            border-bottom: solid 2px #e0e0e0;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        h3 {
+            font-size: 14pt;
+            border-bottom: solid 2px #e0e0e0;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        h4 {
+            font-size: 13pt;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        h5 {
+            font-size: 12pt;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        b {
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 12pt;
+        }
+
+        li {
+            font-size: 12pt;
+        }
+
+        pre {
+            font-size: 11pt;
+            padding: 8px;
+            border: solid 1px #e0e0e0;
+            border-radius: 4px;
+        }
+
+        code {
+            color: #e83e8c;
+        }
+
+        code.language-input-format {
+            color: #222222;
+        }
+
+        .testcase_pre {
+            font-size: 11pt;
+            padding: 8px;
+            border: solid 1px #e0e0e0;
+            border-radius: 4px;
+            overflow: auto;
+            max-width: 480;
+            max-height: 340;
+        }
+
+        .error_pre {
+            font-size: 11pt;
+            padding: 8px;
+            border: solid 1px #f0e0e0;
+            border-radius: 4px;
+            overflow: auto;
+            max-height: 340;
+            background-color: #ffeeee;
+        }
+
+        .table tbody>tr>td.vert-aligned {
+            vertical-align: middle;
+        }
+    </style>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [["$", "$"]],
+                processEscapes: true,
+                processClass: 'input-format|language-input-format'
+            }
+        });
+    </script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS_CHTML">
+        </script>
+</head>
+
+<body>
+    
+    <div >
+        <h2>Problem C2</h2>
+<h3><u><strong>Static Range Sum</strong></u></h3>
+<h3>問題文</h3>
+<p>長さ $N$ の非負整数列 $A = (a_0, a_1, \ldots, a_{N-1})$ が与えられます。以下で説明されるクエリを順に $Q$ 回処理してください。</p>
+<ul>
+<li>整数 $l_i$​ と $r_i$​ が与えられるので、$\sum_{k=l_i}^{r_i-1} a_k$​ を出力する。</li>
+</ul>
+<h3>注意</h3>
+<p>問題 C1 と C2 では、$N$ と $Q$ の制約のみが異なります。</p>
+<h3>入力</h3>
+<pre class="input-format"><code class="language-input-format">$N$ $Q$
+$a_0$​ $a_1$​ $\ldots$ $a_{N-1}$​
+$l_1$​ $r_1$​
+$\vdots$
+$l_Q$​ $r_Q$​
+</code></pre>
+<ul>
+<li>入力は全て整数で与えられる</li>
+<li>$1 \leq N \leq 100{,}000$</li>
+<li>$1 \leq Q \leq 100{,}000$</li>
+<li>$-10^{9} \leq a_i \leq 10^{9}$</li>
+<li>$1 \leq l_i &lt; r_i \leq N$</li>
+</ul>
+<h3>入出力例</h3>
+<h3>入力例</h3>
+<pre class="input-format"><code class="language-input-format">5 5
+1 10 100 1000 10000
+2 3
+0 3
+2 5
+3 4
+0 5
+</code></pre>
+<h3>出力例</h3>
+<pre class="input-format"><code class="language-input-format">100
+111
+11100
+1000
+11111
+</code></pre>
+    </div>
+    
+</body>
+
+</html>

@@ -1,12 +1,19 @@
 from __future__ import annotations
 
+import json
+import os
 import pickle
 from pathlib import Path
 from typing import Any, Union
 
 import toml
 from google.auth.transport.requests import Request
+from google.oauth2 import service_account
 from google_auth_oauthlib.flow import InstalledAppFlow
+
+
+def is_ci() -> bool:
+    return "GITHUB_ACTIONS" in os.environ
 
 
 def to_path(path: str | None) -> Path | None:
@@ -67,7 +74,15 @@ def dict_merge(dct, merge_dct):
             dct[k] = merge_dct[k]
 
 
+def create_token_for_ci() -> Any:
+    service_account_info = json.loads(os.environ["SERVICE_ACCOUNT_INFO"])
+    return service_account.Credentials.from_service_account_info(service_account_info)
+
+
 def create_token(creds_path: str, token_path: Union[str, None] = None) -> Any:
+    if is_ci():
+        return create_token_for_ci()
+
     scopes = ["https://www.googleapis.com/auth/documents.readonly"]
     if not Path(creds_path).exists():
         return None
