@@ -141,3 +141,6 @@ constraints.hpp
 virtualenv/
 problemset/
 .idea/
+
+# pre-commit config (ignore from git)
+.pre-commit-config.yaml
