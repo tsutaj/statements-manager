@@ -1,10 +1,11 @@
 import os
+import re
 import shutil
 import subprocess
 import tempfile
-import re
 from pathlib import Path
 from typing import Optional
+
 import pytest
 
 
@@ -43,14 +44,14 @@ def compare_directories(
 
     files_in_actual_dir = [
         p
-        for p in Path(dir_actual).glob(f"**/*")
+        for p in Path(dir_actual).glob("**/*")
         if p.is_file()
         and re.search(rf"\.({extension}|jpg|png)", p.as_posix())
         and not should_exclude(p)
     ]
     files_in_expected_dir = [
         p
-        for p in Path(dir_expected).glob(f"**/*")
+        for p in Path(dir_expected).glob("**/*")
         if p.is_file()
         and re.search(rf"\.({extension}|jpg|png)", p.as_posix())
         and not should_exclude(p)
@@ -67,8 +68,10 @@ def compare_directories(
             "\n".join(
                 [
                     "File sets do not match: ",
-                    f"Exists in actual dir only: {rel_files_in_actual_dir - rel_files_in_expected_dir}",
-                    f"Exists in expected dir only: {rel_files_in_expected_dir - rel_files_in_actual_dir}",
+                    "Exists in actual dir only: ",
+                    f"{rel_files_in_actual_dir - rel_files_in_expected_dir}",
+                    "Exists in expected dir only: ",
+                    f"{rel_files_in_expected_dir - rel_files_in_actual_dir}",
                 ]
             )
         )

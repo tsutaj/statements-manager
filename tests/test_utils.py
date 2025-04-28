@@ -1,5 +1,3 @@
-import pytest
-
 from statements_manager.src.utils import find_in_parents
 
 
