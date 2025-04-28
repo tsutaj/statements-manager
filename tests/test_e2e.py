@@ -1,3 +1,4 @@
+import difflib
 import os
 import re
 import shutil
@@ -7,6 +8,9 @@ from pathlib import Path
 from typing import Optional
 
 import pytest
+from rich.console import Console
+from rich.panel import Panel
+from rich.syntax import Syntax
 
 
 @pytest.fixture
@@ -20,6 +24,28 @@ def create_tempdir():
     """
     with tempfile.TemporaryDirectory() as temp_dir:
         yield temp_dir
+
+
+def show_diff(actual_bytes, expected_bytes):
+    try:
+        actual_text = actual_bytes.decode("utf-8")
+        expected_text = expected_bytes.decode("utf-8")
+        diff = list(
+            difflib.unified_diff(
+                expected_text.splitlines(),
+                actual_text.splitlines(),
+                fromfile="expected",
+                tofile="actual",
+                lineterm="",
+            )
+        )
+        if diff:
+            console = Console(force_terminal=True, force_interactive=False)
+            diff_text = "\n".join(diff)
+            syntax = Syntax(diff_text, "diff", line_numbers=False)
+            console.print(Panel(syntax, title="Diff", expand=False))
+    except UnicodeDecodeError:
+        print("[diff skipped: could not decode as utf-8]")
 
 
 def compare_directories(
@@ -79,6 +105,7 @@ def compare_directories(
 
     # PDF files comparison is not supported yet
     if extension != "pdf":
+        not_matched_exists = False
         for rel_path in rel_files_in_actual_dir:
             file_actual = Path(dir_actual) / rel_path
             file_expected = Path(dir_expected) / rel_path
@@ -86,9 +113,14 @@ def compare_directories(
             with open(file_actual, "rb") as f_actual, open(
                 file_expected, "rb"
             ) as f_expected:
-                if f_actual.read() != f_expected.read():
+                actual_bytes = f_actual.read()
+                expected_bytes = f_expected.read()
+                if actual_bytes != expected_bytes:
                     print(f"File contents do not match: {rel_path}")
-                    return False
+                    show_diff(actual_bytes, expected_bytes)
+                    not_matched_exists = True
+        if not_matched_exists:
+            return False
 
     return True
 

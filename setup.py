@@ -40,6 +40,7 @@ setup(
         "pdfkit>=1.0.0",
         "pymdown-extensions",
         "pyquery>=1.2.4",
+        "rich",
     ],
     packages=find_packages(exclude=("sample", "config")),
     entry_points={
