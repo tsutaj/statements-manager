@@ -51,11 +51,15 @@ class Renderer:
         sample_template_html: str,
         preprocess_path: Union[str, None],
         postprocess_path: Union[str, None],
+        preprocess_command: Union[str, None] = "python",
+        postprocess_command: Union[str, None] = "python",
     ):
         self.template_html = template_html
         self.sample_template_html = sample_template_html
         self.preprocess_path = preprocess_path
         self.postprocess_path = postprocess_path
+        self.preprocess_command = preprocess_command
+        self.postprocess_command = postprocess_command
         self.replace_sample_format = ReplaceSampleFormatExprExtension()
 
     def replace_vars(
@@ -137,7 +141,7 @@ class Renderer:
             return markdown_text
 
         proc = Popen(
-            ["python", self.preprocess_path],
+            [self.preprocess_command, self.preprocess_path],
             stdout=PIPE,
             stdin=PIPE,
             stderr=PIPE,
@@ -160,7 +164,7 @@ class Renderer:
             return html_text
 
         proc = Popen(
-            ["python", self.postprocess_path],
+            [self.postprocess_command, self.postprocess_path],
             stdout=PIPE,
             stdin=PIPE,
             stderr=PIPE,

@@ -39,15 +39,23 @@ problemset.toml の書き方
 
     .. problemsettoml:: preprocess_path
         
-        Markdown ファイルに関して前処理を行う **Python スクリプト** へのパスを指定します。Markdown が HTML 形式にレンダリングされる前に適用したい処理を記述してください。指定されていない場合、前処理は行われません。
+        Markdown ファイルに関して前処理を行うスクリプトへのパスを指定します。Markdown が HTML 形式にレンダリングされる前に適用したい処理を記述してください。指定されていない場合、前処理は行われません。
         
         Markdown ファイルの中身は標準入力で与えられ、前処理の結果は標準出力で返す必要があります。終了コードが 0 以外であった場合は異常終了とみなし、エラーになります。詳細は :blob:`sample/templates/icpc_domestic/preprocess.py` をご覧ください。
+
+    .. problemsettoml:: preprocess_command
+        
+        preprocess_path で指定されたスクリプトを実行するためのコマンドを指定します。デフォルトは ``python`` です。Python 以外のスクリプトを使用する場合や、``python3`` コマンドを使用したい場合などに指定してください。
     
     .. problemsettoml:: postprocess_path
         
-        HTML ファイルに関して後処理を行う **Python スクリプト** へのパスを指定します。HTML 形式にレンダリングされた後に適用したい処理を記述してください。指定されていない場合、後処理は行われません。
+        HTML ファイルに関して後処理を行うスクリプトへのパスを指定します。HTML 形式にレンダリングされた後に適用したい処理を記述してください。指定されていない場合、後処理は行われません。
         
         HTML ファイルの中身は標準入力で与えられ、後処理の結果は標準出力で返す必要があります。終了コードが 0 以外であった場合は異常終了とみなし、エラーになります。詳細は :blob:`sample/templates/icpc_domestic/postprocess.py` をご覧ください。
+
+    .. problemsettoml:: postprocess_command
+        
+        postprocess_path で指定されたスクリプトを実行するためのコマンドを指定します。デフォルトは ``python`` です。Python 以外のスクリプトを使用する場合や、``python3`` コマンドを使用したい場合などに指定してください。
 
 .. problemsettoml:: [pdf]
 
