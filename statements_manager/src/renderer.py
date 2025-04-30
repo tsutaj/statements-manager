@@ -51,8 +51,8 @@ class Renderer:
         sample_template_html: str,
         preprocess_path: Union[str, None],
         postprocess_path: Union[str, None],
-        preprocess_command: Union[str, None] = "python",
-        postprocess_command: Union[str, None] = "python",
+        preprocess_command: str,
+        postprocess_command: str,
     ):
         self.template_html = template_html
         self.sample_template_html = sample_template_html
@@ -141,7 +141,7 @@ class Renderer:
             return markdown_text
 
         proc = Popen(
-            [str(self.preprocess_command), str(self.preprocess_path)],
+            [self.preprocess_command, self.preprocess_path],
             stdout=PIPE,
             stdin=PIPE,
             stderr=PIPE,
@@ -164,7 +164,7 @@ class Renderer:
             return html_text
 
         proc = Popen(
-            [str(self.postprocess_command), str(self.postprocess_path)],
+            [self.postprocess_command, self.postprocess_path],
             stdout=PIPE,
             stdin=PIPE,
             stderr=PIPE,
