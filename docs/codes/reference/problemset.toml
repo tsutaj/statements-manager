@@ -2,7 +2,9 @@
     template_path = "./templates/default.html"
     sample_template_path = "./templates/sample_default.html"
     preprocess_path = "./templates/preprocess.py"
+    preprocess_command = "python3"  # Python 3 コマンドを使用
     postprocess_path = "./templates/postprocess.py"
+    postprocess_command = "python3"  # Python 3 コマンドを使用
 
 [pdf]
     [pdf.common]

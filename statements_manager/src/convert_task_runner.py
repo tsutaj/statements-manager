@@ -35,6 +35,8 @@ class ConvertTaskRunner:
             problemset_config.sample_template_html,
             problemset_config.template.preprocess_path,
             problemset_config.template.postprocess_path,
+            problemset_config.template.preprocess_command,
+            problemset_config.template.postprocess_command,
         )
         self.problemset_dir = problemset_config.output_path
 
