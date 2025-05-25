@@ -29,3 +29,7 @@
 Sorry, currently Japanese only :bow:
 
 https://statements-manager.readthedocs.io/
+
+## License
+
+- Apache-2.0

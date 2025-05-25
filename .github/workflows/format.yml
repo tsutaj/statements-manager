@@ -25,7 +25,8 @@ jobs:
       - name: Run tests
         run: |
           ss-manager -h
-          flake8 statements_manager/ tests/ setup.py
-          isort statements_manager/ tests/ setup.py --check --diff
-          black --check --diff statements_manager/ tests/ setup.py
-          mypy statements_manager/ tests/ setup.py
+          flake8 statements_manager/ tests/
+          isort statements_manager/ tests/ --check --diff
+          black --check --diff statements_manager/ tests/
+          yes | mypy statements_manager/ tests/ --install-types || true
+          mypy statements_manager/ tests/

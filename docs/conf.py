@@ -17,6 +17,7 @@ __year__ = datetime.date.today().year
 project = "statements-manager"
 copyright = f"{__year__}, tsutaj"
 author = "tsutaj"
+license = "Apache-2.0"
 release = f"v{__version__}"
 
 rtd_version = os.environ.get('READTHEDOCS_VERSION')

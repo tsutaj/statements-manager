@@ -110,9 +110,10 @@ def compare_directories(
             file_actual = Path(dir_actual) / rel_path
             file_expected = Path(dir_expected) / rel_path
 
-            with open(file_actual, "rb") as f_actual, open(
-                file_expected, "rb"
-            ) as f_expected:
+            with (
+                open(file_actual, "rb") as f_actual,
+                open(file_expected, "rb") as f_expected,
+            ):
                 actual_bytes = f_actual.read()
                 expected_bytes = f_expected.read()
                 if actual_bytes != expected_bytes:
