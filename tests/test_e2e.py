@@ -142,7 +142,7 @@ def execute_and_verify_match(create_tempdir: str, extension: str):
 
         result = subprocess.run(
             [
-                "python",
+                "python3",
                 "statements_manager/main.py",
                 "run",
                 "-o",
