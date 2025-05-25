@@ -57,7 +57,7 @@ GitHub Actions などの CI サービスと併用することで、リポジト�
             python-version: 3.9
         - name: Install dependencies
             run: |
-            python -m pip install --upgrade pip
+            python3 -m pip install --upgrade pip
             pip install statements-manager
         - name: Run statements-manager
             run: |

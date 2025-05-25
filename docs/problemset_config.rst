@@ -45,7 +45,7 @@ problemset.toml の書き方
 
     .. problemsettoml:: preprocess_command
         
-        preprocess_path で指定されたスクリプトを実行するためのコマンドを指定します。デフォルトは ``python`` です。Python 以外のスクリプトを使用する場合や、``python3`` コマンドを使用したい場合などに指定してください。
+        preprocess_path で指定されたスクリプトを実行するためのコマンドを指定します。デフォルトは ``python3`` です。Python 以外のスクリプトを使用する場合や、``python3`` コマンドを使用したい場合などに指定してください。
     
     .. problemsettoml:: postprocess_path
         
@@ -55,7 +55,7 @@ problemset.toml の書き方
 
     .. problemsettoml:: postprocess_command
         
-        postprocess_path で指定されたスクリプトを実行するためのコマンドを指定します。デフォルトは ``python`` です。Python 以外のスクリプトを使用する場合や、``python3`` コマンドを使用したい場合などに指定してください。
+        postprocess_path で指定されたスクリプトを実行するためのコマンドを指定します。デフォルトは ``python3`` です。Python 以外のスクリプトを使用する場合や、``python3`` コマンドを使用したい場合などに指定してください。
 
 .. problemsettoml:: [pdf]
 
