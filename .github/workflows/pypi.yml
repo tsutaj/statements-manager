@@ -7,6 +7,8 @@ on:
 jobs:
   pypi:
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
     permissions:
       id-token: write
 
@@ -24,7 +26,7 @@ jobs:
       - name: Version check
         run: |
           LATEST_TAG=$(git describe --tags --abbrev=0 | cut -c 2-)
-          LATEST_PIP=$(python3 <<< "import statements_manager as ss; print(ss.__version__)")
+          LATEST_PIP=$(python3 <<< "from importlib.metadata import version; print(version('statements_manager'))")
           if [ $LATEST_TAG != $LATEST_PIP ]; then
             echo "different version: tag = ${LATEST_TAG}, pip = ${LATEST_PIP}"
             exit 1
