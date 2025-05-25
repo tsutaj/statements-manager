@@ -58,3 +58,6 @@ profile = "black"
 
 [tool.mypy]
 # mypy 設定は必要に応じて追加 
+
+[tool.setuptools.packages.find]
+exclude = ["sample", "config"] 
