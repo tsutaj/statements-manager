@@ -49,7 +49,7 @@ $ source ./virtualenv/bin/activate
 (virtualenv) $ # 仮想環境に入った際にはこのように表示されます
 ```
 
-- `pyproject.toml` 経由で、仮想環境に `statements-manager` をインストールする
+- 次のコマンドで、仮想環境に `statements-manager` をインストールする
   - 実装したものをデバッグするには、この環境で実行すると良いです。仮想環境を使用する利点は、あなたが普段使用する Python の環境を汚すことなく開発中のプログラムをインストール・実行できることです。
 
 ```bash
