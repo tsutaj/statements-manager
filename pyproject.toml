@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "statements-manager"
+version = "1.7.20"
+description = "競技プログラミングの作問時に使用する、問題文管理を便利にするツール"
+readme = "README.md"
+authors = [
+  { name = "Yuya Sugie", email = "y.sugie.15739d@gmail.com" }
+]
+license = { file = "LICENSE" }
+requires-python = ">=3.9.12"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.9",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Software Development",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "google-api-python-client",
+    "google-auth-httplib2",
+    "google-auth-oauthlib",
+    "markdown>=3.3.1",
+    "jinja2",
+    "toml",
+    "colorlog",
+    "pdfkit>=1.0.0",
+    "pymdown-extensions",
+    "pyquery>=1.2.4",
+    "rich",
+]
+
+[project.optional-dependencies]
+dev = [
+    "flake8",
+    "isort",
+    "black",
+    "mypy",
+    "pytest"
+]
+
+dynamic = []
+
+[project.scripts]
+ss-manager = "statements_manager.main:main"
+
+[tool.flake8]
+max-line-length = 100
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+# mypy 設定は必要に応じて追加 
