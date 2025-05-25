@@ -56,5 +56,9 @@ max-line-length = 100
 [tool.isort]
 profile = "black"
 
+[[tool.mypy.overrides]]
+module = ["google_auth_oauthlib.*", "pyquery.*", "pdfkit.*", "googleapiclient.*"]
+ignore_missing_imports = true
+
 [tool.setuptools.packages.find]
 exclude = ["sample", "config"]

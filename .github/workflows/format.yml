@@ -28,5 +28,5 @@ jobs:
           flake8 statements_manager/ tests/
           isort statements_manager/ tests/ --check --diff
           black --check --diff statements_manager/ tests/
-          mypy --install-types --non-interactive
+          yes | mypy statements_manager/ tests/ --install-types || true
           mypy statements_manager/ tests/
