@@ -17,6 +17,7 @@ __year__ = datetime.date.today().year
 project = "statements-manager"
 copyright = f"{__year__}, tsutaj"
 author = "tsutaj"
+license = "Apache-2.0"
 release = f"v{__version__}"
 
 rtd_version = os.environ.get('READTHEDOCS_VERSION')
@@ -51,21 +52,3 @@ language = "ja"
 
 html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
-
-
-def setup(app):
-    app.add_object_type(
-        'problemtoml', 'problemtoml',
-        objname='problem config key',
-        indextemplate='pair: %s; problem config key'
-    )
-    app.add_object_type(
-        'problemsettoml', 'problemsettoml',
-        objname='problemset config key',
-        indextemplate='pair: %s; problemset config key'
-    )
-    app.add_object_type(
-        'statementvar', 'statementvar',
-        objname='variable in statement',
-        indextemplate='pair: %s; variable in statement'
-    )

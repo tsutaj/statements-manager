@@ -26,7 +26,7 @@ setup(
     author="Yuya Sugie",
     author_email="y.sugie.15739d@gmail.com",
     url="https://github.com/tsutaj/statements-manager",
-    license="Apache License 2.0",
+    license="Apache-2.0",
     description="",
     python_requires=">=3.9.12",
     install_requires=[
