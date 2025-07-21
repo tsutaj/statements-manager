@@ -112,6 +112,9 @@ class TemplatePathConfig(AttributeConstraints):
         self.postprocess_command: str = self.optional(
             filename, config, "postprocess_command", "python3"
         )
+        self.output_extension: str | None = self.optional(
+            filename, config, "output_extension", None
+        )
 
         dirname = filename.parent.resolve()
         self.template_path = resolve_path(dirname, self.template_path)
