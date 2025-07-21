@@ -57,6 +57,13 @@ problemset.toml の書き方
         
         postprocess_path で指定されたスクリプトを実行するためのコマンドを指定します。デフォルトは ``python3`` です。Python 以外のスクリプトを使用する場合や、``python3`` コマンドを使用したい場合などに指定してください。
 
+    .. problemsettoml:: output_extension
+
+        ``--output custom`` **を指定した場合は必須です。それ以外の場合では無視されます。** ``custom`` についての詳細は :ref:`commands` をご覧ください。
+        
+        ``custom`` を指定したときの、出力ファイルの拡張子を指定します。
+
+
 .. problemsettoml:: [pdf]
 
     PDF 出力時の `wkhtmltopdf <https://wkhtmltopdf.org/>`_ (PDF にレンダリングする際に使用されるサードパーティライブラリ) の設定を書きます。設定項目の詳細については `wkhtmltopdf のリファレンス <https://wkhtmltopdf.org/usage/wkhtmltopdf.txt>`_ をご覧ください。
