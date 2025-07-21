@@ -206,6 +206,6 @@ def test_e2e_tex(temp_dirname: str):
 
 
 # TODO: test on Windows and macOS
-# def test_e2e_pdf(temp_dirname: str):
-#     if "GITHUB_ACTIONS" not in os.environ or os.environ.get("RUNNER_OS") == "Linux":
-#         execute_and_verify_match(temp_dirname, "pdf", "sample", "expected_output")
+def test_e2e_pdf(temp_dirname: str):
+    if "GITHUB_ACTIONS" not in os.environ or os.environ.get("RUNNER_OS") == "Linux":
+        execute_and_verify_match(temp_dirname, "pdf", "sample", "expected_output")
