@@ -8,6 +8,7 @@ class OutputFileKind(enum.Enum):
     MARKDOWN = "md"
     HTML = "html"
     PDF = "pdf"
+    TEX = "tex"
 
     @staticmethod
     def values() -> list[str]:

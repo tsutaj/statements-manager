@@ -227,6 +227,21 @@ class ConvertTaskRunner:
                 self.save_file(md, output_path)
             else:
                 logger.warning("skip dumping md: same result as before")
+        elif output_ext == OutputFileKind.TEX:
+            # Generate TeX with HTML template, preprocessing, and postprocessing
+            tex = self.renderer.generate_markdown(
+                problemset_config=self.problemset_config,
+                problem_ids=problem_ids,
+                is_problemset=is_problemset,
+                use_html_template=True,
+                apply_preprocessing=True,
+                apply_postprocessing=True,
+            )
+            cache.set_content(tex)
+            if cache.need_to_save(force_dump):
+                self.save_file(tex, output_path)
+            else:
+                logger.warning("skip dumping tex: same result as before")
         else:
             logger.error(f"invalid extension '{output_ext.value}'")
             raise ValueError(f"invalid extension '{output_ext.value}'")

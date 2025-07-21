@@ -249,11 +249,19 @@ class Renderer:
         problemset_config: ProblemSetConfig,
         problem_ids: List[str],
         is_problemset: bool,
+        use_html_template: bool = False,
+        apply_preprocessing: bool = False,
+        apply_postprocessing: bool = False,
     ) -> str:
         for problem_id in problem_ids:
             problem_config = problemset_config.get_problem(problem_id)
             if problem_config.statement.rendered_text is None:
                 contents = problem_config.statement.raw_text
+                
+                # Apply preprocessing if requested
+                if apply_preprocessing:
+                    contents = self.apply_preprocess(contents)
+                
                 contents = self.replace_vars(
                     problem_config, contents, problemset_config.encoding
                 )
@@ -262,10 +270,18 @@ class Renderer:
                 problem_config.statement.rendered_text, problem_id, is_problemset
             )
 
+        # Choose template based on use_html_template flag
+        template = self.template_html if use_html_template else default_template_markdown
+        
         md = self.apply_template(
             problemset_config=problemset_config,
             problem_ids=problem_ids,
-            template=default_template_markdown,
+            template=template,
             is_problemset=is_problemset,
         )
+        
+        # Apply postprocessing if requested
+        if apply_postprocessing:
+            md = self.apply_postprocess(md)
+            
         return md
