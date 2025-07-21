@@ -3,7 +3,7 @@
 problemset.toml の書き方
 ========================
 
-必要であれば、HTML・PDF に適用されるテンプレートを指定するためのファイル ``problemset.toml`` を作成します。このファイルが無い場合は、デフォルトのテンプレートが使用されます。
+必要であれば、適用したいテンプレートを指定するためのファイル ``problemset.toml`` を作成します。このファイルが無い場合は、デフォルトのテンプレートが使用されます。
 
 ``problemset.toml`` は、 ``ss-manager run`` を実行するときの ``WORKING_DIR`` の階層と一致しているときにのみ参照されます。
 
@@ -27,21 +27,25 @@ problemset.toml の書き方
     
     .. problemsettoml:: template_path
         
-        HTML および PDF 出力で使用されるテンプレート HTML へのパスを指定します。指定されていない場合、デフォルトのテンプレートが適用されます。
+        問題文に適用されるテンプレートファイルへのパスを指定します。指定されていない場合、デフォルトのテンプレート (HTML 形式) が適用されます。
         
         テンプレートでは、問題文本文に相当する部分に ``{@problem.statement}`` 文を記述する必要があります。詳細は :blob:`sample/templates/default.html` などをご覧ください。
+
+        .. tip::
+
+            Markdown 形式で出力する場合 (``--output md`` を指定した場合) 、 ``template_path`` の設定値は使われません。常にデフォルトの Markdown テンプレートが適用されます。
     
     .. problemsettoml:: sample_template_path
 
-        入出力例の部分に使われるテンプレート HTML へのパスを指定します。指定されていない場合、デフォルトのテンプレートが適用されます。
+        入出力例の部分に使われるテンプレートファイルへのパスを指定します。指定されていない場合、デフォルトのテンプレート (Markdown 形式) が適用されます。
 
         テンプレートの書き方は :blob:`sample/templates/sample_default.html` などをご覧ください。
 
     .. problemsettoml:: preprocess_path
         
-        Markdown ファイルに関して前処理を行うスクリプトへのパスを指定します。Markdown が HTML 形式にレンダリングされる前に適用したい処理を記述してください。指定されていない場合、前処理は行われません。
+        変数やサンプルの埋め込み・HTML への変換 (HTML か PDF に変換する場合)・テンプレートの適用 を行う前のファイルに関して前処理を行うスクリプトへのパスを指定します。指定されていない場合、前処理は行われません。
         
-        Markdown ファイルの中身は標準入力で与えられ、前処理の結果は標準出力で返す必要があります。終了コードが 0 以外であった場合は異常終了とみなし、エラーになります。詳細は :blob:`sample/templates/icpc_domestic/preprocess.py` をご覧ください。
+        ファイルの中身は標準入力で与えられ、前処理の結果は標準出力で返す必要があります。終了コードが 0 以外であった場合は異常終了とみなし、エラーになります。詳細は :blob:`sample/templates/icpc_domestic/preprocess.py` をご覧ください。
 
     .. problemsettoml:: preprocess_command
         
@@ -49,9 +53,9 @@ problemset.toml の書き方
     
     .. problemsettoml:: postprocess_path
         
-        HTML ファイルに関して後処理を行うスクリプトへのパスを指定します。HTML 形式にレンダリングされた後に適用したい処理を記述してください。指定されていない場合、後処理は行われません。
+        変数やサンプルの埋め込み・HTML への変換 (HTML か PDF に変換する場合)・テンプレートの適用 を行った後のファイルに関して後処理を行うスクリプトへのパスを指定します。指定されていない場合、後処理は行われません。
         
-        HTML ファイルの中身は標準入力で与えられ、後処理の結果は標準出力で返す必要があります。終了コードが 0 以外であった場合は異常終了とみなし、エラーになります。詳細は :blob:`sample/templates/icpc_domestic/postprocess.py` をご覧ください。
+        ファイルの中身は標準入力で与えられ、後処理の結果は標準出力で返す必要があります。終了コードが 0 以外であった場合は異常終了とみなし、エラーになります。詳細は :blob:`sample/templates/icpc_domestic/postprocess.py` をご覧ください。
 
     .. problemsettoml:: postprocess_command
         
