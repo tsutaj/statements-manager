@@ -269,3 +269,34 @@ class Renderer:
             is_problemset=is_problemset,
         )
         return md
+
+    def generate_custom(
+        self,
+        problemset_config: ProblemSetConfig,
+        problem_ids: List[str],
+        is_problemset: bool,
+    ) -> str:
+        for problem_id in problem_ids:
+            problem_config = problemset_config.get_problem(problem_id)
+            if problem_config.statement.rendered_text is None:
+                contents = problem_config.statement.raw_text
+                contents = self.apply_preprocess(contents)
+
+                rendered_contents = self.replace_vars(
+                    problem_config, contents, problemset_config.encoding
+                )
+                problem_config.statement.rendered_text = rendered_contents
+
+            # 問題セットの場合、添付ファイルのパスを置換する
+            problem_config.statement.rendered_text = self.replace_assets_path(
+                problem_config.statement.rendered_text, problem_id, is_problemset
+            )
+
+        result = self.apply_template(
+            problemset_config=problemset_config,
+            problem_ids=problem_ids,
+            template=self.template_html,
+            is_problemset=is_problemset,
+        )
+        result = self.apply_postprocess(result)
+        return result

@@ -14,7 +14,7 @@ from rich.syntax import Syntax
 
 
 @pytest.fixture
-def create_tempdir():
+def temp_dirname():
     """
     Create a temporary directory
 
@@ -46,6 +46,13 @@ def show_diff(actual_bytes, expected_bytes):
             console.print(Panel(syntax, title="Diff", expand=False))
     except UnicodeDecodeError:
         print("[diff skipped: could not decode as utf-8]")
+
+
+def output_extension(extension: str) -> str:
+    if extension == "custom":
+        return "tex"
+    else:
+        return extension
 
 
 def compare_directories(
@@ -126,20 +133,25 @@ def compare_directories(
     return True
 
 
-def execute_and_verify_match(create_tempdir: str, extension: str):
+def execute_and_verify_match(
+    temp_dirname: str,
+    extension: str,
+    sample_dirname: str,
+    expected_output_dirname: str,
+):
     """
-    Run 'ss-manager run sample/' command and verify the result
+    Run 'ss-manager run {sample_dirname}' command and verify the result
 
     Notes:
         - If the expected output is changed, you need to update the
-          tests/expected_output directory.
+          tests/{expected_output_dirname} directory.
     """
     current_dir = os.getcwd()
 
     try:
-        sample_dir = Path(current_dir) / "sample"
-        temp_sample_dir = Path(create_tempdir) / "sample"
-        shutil.copytree(sample_dir, temp_sample_dir)
+        sample_dirpath = Path(current_dir) / sample_dirname
+        temp_sample_dirpath = Path(temp_dirname) / sample_dirname
+        shutil.copytree(sample_dirpath, temp_sample_dirpath)
 
         result = subprocess.run(
             [
@@ -149,7 +161,7 @@ def execute_and_verify_match(create_tempdir: str, extension: str):
                 "-o",
                 extension,
                 "-p",
-                str(temp_sample_dir),
+                str(temp_sample_dirpath),
             ],
             capture_output=True,
             text=True,
@@ -157,14 +169,14 @@ def execute_and_verify_match(create_tempdir: str, extension: str):
         )
         assert result.returncode == 0, f"Command execution failed: {result.stderr}"
 
-        actual_output_dir = temp_sample_dir
-        assert actual_output_dir.exists(), "Output directory was not generated"
-        expected_output_dir = Path(current_dir) / "tests" / "expected_output"
+        actual_output_dirpath = temp_sample_dirpath
+        assert actual_output_dirpath.exists(), "Output directory was not generated"
+        expected_output_dirpath = Path(current_dir) / "tests" / expected_output_dirname
 
         assert compare_directories(
-            actual_output_dir,
-            expected_output_dir,
-            extension,
+            actual_output_dirpath,
+            expected_output_dirpath,
+            output_extension(extension),
             exclude_patterns=[
                 ".git",
                 "__pycache__",
@@ -179,15 +191,21 @@ def execute_and_verify_match(create_tempdir: str, extension: str):
         os.chdir(current_dir)
 
 
-def test_e2e_html(create_tempdir: str):
-    execute_and_verify_match(create_tempdir, "html")
+def test_e2e_html(temp_dirname: str):
+    execute_and_verify_match(temp_dirname, "html", "sample", "expected_output")
 
 
-def test_e2e_md(create_tempdir: str):
-    execute_and_verify_match(create_tempdir, "md")
+def test_e2e_md(temp_dirname: str):
+    execute_and_verify_match(temp_dirname, "md", "sample", "expected_output")
+
+
+def test_e2e_tex(temp_dirname: str):
+    execute_and_verify_match(
+        temp_dirname, "custom", "sample_tex", "expected_output_tex"
+    )
 
 
 # TODO: test on Windows and macOS
-def test_e2e_pdf(create_tempdir: str):
+def test_e2e_pdf(temp_dirname: str):
     if "GITHUB_ACTIONS" not in os.environ or os.environ.get("RUNNER_OS") == "Linux":
-        execute_and_verify_match(create_tempdir, "pdf")
+        execute_and_verify_match(temp_dirname, "pdf", "sample", "expected_output")
