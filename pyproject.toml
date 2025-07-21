@@ -7,9 +7,7 @@ name = "statements-manager"
 version = "1.7.21"
 description = "競技プログラミングの作問時に使用する、問題文管理を便利にするツール"
 readme = "README.md"
-authors = [
-  { name = "Yuya Sugie", email = "y.sugie.15739d@gmail.com" }
-]
+authors = [{ name = "Yuya Sugie", email = "y.sugie.15739d@gmail.com" }]
 license-files = ["LICEN[CS]E*"]
 requires-python = ">=3.9.12"
 classifiers = [
@@ -37,13 +35,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = [
-    "flake8",
-    "isort",
-    "black",
-    "mypy",
-    "pytest"
-]
+dev = ["flake8", "isort", "black", "mypy", "pytest"]
 
 dynamic = []
 
@@ -57,8 +49,13 @@ max-line-length = 100
 profile = "black"
 
 [[tool.mypy.overrides]]
-module = ["google_auth_oauthlib.*", "pyquery.*", "pdfkit.*", "googleapiclient.*"]
+module = [
+    "google_auth_oauthlib.*",
+    "pyquery.*",
+    "pdfkit.*",
+    "googleapiclient.*",
+]
 ignore_missing_imports = true
 
 [tool.setuptools.packages.find]
-exclude = ["sample", "config"]
+exclude = ["sample", "sample_tex", "config"]
