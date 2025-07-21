@@ -1,5 +1,5 @@
 # flake8: noqa
-default_template_html = """
+default_template = """
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -133,7 +133,7 @@ default_template_markdown = """
 {% endfor %}
 """
 
-default_sample_template_html = """
+default_sample_template = """
 {% if sample_data.input_text is defined %}
 ### {% if sample_data.language == "ja" %}入力例{% elif sample_data.language == "en" %}Sample Input{% endif %} {% if sample_data.do_numbering %}{{ sample_data.i_sample }}{% endif %}
 ```

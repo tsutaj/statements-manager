@@ -31,8 +31,8 @@ class ConvertTaskRunner:
         self._cwd = Path.cwd()
         self.problemset_config = problemset_config
         self.renderer = Renderer(
-            problemset_config.template_html,
-            problemset_config.sample_template_html,
+            problemset_config.template_content,
+            problemset_config.sample_template_content,
             problemset_config.template.preprocess_path,
             problemset_config.template.postprocess_path,
             problemset_config.template.preprocess_command,

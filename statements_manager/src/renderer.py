@@ -47,15 +47,15 @@ class ReplaceSampleFormatExprExtension(Extension):
 class Renderer:
     def __init__(
         self,
-        template_html: str,
-        sample_template_html: str,
+        template_content: str,
+        sample_template_content: str,
         preprocess_path: Union[str, None],
         postprocess_path: Union[str, None],
         preprocess_command: str,
         postprocess_command: str,
     ):
-        self.template_html = template_html
-        self.sample_template_html = sample_template_html
+        self.template_content = template_content
+        self.sample_template_content = sample_template_content
         self.preprocess_path = preprocess_path
         self.postprocess_path = postprocess_path
         self.preprocess_command = preprocess_command
@@ -69,7 +69,7 @@ class Renderer:
             logger.error("statement_str is None")
             raise RuntimeError("statement_str is None")
         vars_manager = VariablesConverter(
-            problem_config, self.sample_template_html, encoding
+            problem_config, self.sample_template_content, encoding
         )
         env = Environment(
             variable_start_string="{@",
@@ -214,7 +214,7 @@ class Renderer:
         html = self.apply_template(
             problemset_config=problemset_config,
             problem_ids=problem_ids,
-            template=self.template_html,
+            template=self.template_content,
             is_problemset=is_problemset,
         )
         html = self.apply_postprocess(html)
@@ -295,7 +295,7 @@ class Renderer:
         result = self.apply_template(
             problemset_config=problemset_config,
             problem_ids=problem_ids,
-            template=self.template_html,
+            template=self.template_content,
             is_problemset=is_problemset,
         )
         result = self.apply_postprocess(result)
