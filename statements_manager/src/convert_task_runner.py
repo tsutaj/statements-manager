@@ -188,7 +188,8 @@ class ConvertTaskRunner:
         if output_ext == OutputFileKind.CUSTOM:
             if self.problemset_config.template.output_extension is None:
                 logger.error(
-                    "output_extension must be specified in problemset.toml [template] section when using --output custom"
+                    "output_extension must be specified in problemset.toml [template] section "
+                    "when using --output custom",
                 )
                 raise ValueError("output_extension not configured for custom output")
             actual_extension = self.problemset_config.template.output_extension
