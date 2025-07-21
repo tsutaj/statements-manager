@@ -187,7 +187,9 @@ class ConvertTaskRunner:
         # Determine the actual file extension to use
         if output_ext == OutputFileKind.CUSTOM:
             if self.problemset_config.template.output_extension is None:
-                logger.error("output_extension must be specified in problemset.toml [template] section when using --output custom")
+                logger.error(
+                    "output_extension must be specified in problemset.toml [template] section when using --output custom"
+                )
                 raise ValueError("output_extension not configured for custom output")
             actual_extension = self.problemset_config.template.output_extension
         else:
@@ -197,7 +199,7 @@ class ConvertTaskRunner:
             output_path = str(output_dir / ("problemset." + actual_extension))
         else:
             output_path = str(output_dir / (problem_ids[0] + "." + actual_extension))
-        
+
         if output_ext == OutputFileKind.CUSTOM:
             logger.info(f"saving replaced custom format as {actual_extension}")
         else:
@@ -241,11 +243,6 @@ class ConvertTaskRunner:
             else:
                 logger.warning("skip dumping md: same result as before")
         elif output_ext == OutputFileKind.CUSTOM:
-            # Validate that output_extension is configured
-            if self.problemset_config.template.output_extension is None:
-                logger.error("output_extension must be specified in problemset.toml [template] section when using --output custom")
-                raise ValueError("output_extension not configured for custom output")
-            
             custom_result = self.renderer.generate_custom(
                 problemset_config=self.problemset_config,
                 problem_ids=problem_ids,
