@@ -1,0 +1,23 @@
+{% if sample_data.is_first %}
+\subsection{ {% if sample_data.language == "ja" %}入出力例{% elif sample_data.language == "en" %}Input/Output Samples{% endif %} }
+{% endif %}
+
+{% if sample_data.input_text is defined %}
+\begin{itembox}[l]{ {% if sample_data.language == "ja" %}入力例{% elif sample_data.language == "en" %}Sample Input{% endif %} {% if sample_data.do_numbering %}{{ sample_data.i_sample }}{% endif %} }
+{{ sample_data.input_text }}
+\end{itembox}
+{% endif %}
+
+{% if sample_data.output_text is defined %}
+\begin{itembox}[l]{ {% if sample_data.language == "ja" %}出力例{% elif sample_data.language == "en" %}Sample Output{% endif %} {% if sample_data.do_numbering %}{{ sample_data.i_sample }}{% endif %} }
+{{ sample_data.output_text }}
+\end{itembox}
+{% endif %}
+
+{% if sample_data.md_text is defined %}
+{{ sample_data.md_text }}
+{% endif %}
+
+{% if sample_data.explanation_text is defined %}
+{{ sample_data.explanation_text }}
+{% endif %}

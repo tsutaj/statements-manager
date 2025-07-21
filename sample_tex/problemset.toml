@@ -1,0 +1,4 @@
+[template]
+template_path = "./templates/problem.tex"
+sample_template_path = "./templates/sample_io.tex"
+output_extension = "tex"

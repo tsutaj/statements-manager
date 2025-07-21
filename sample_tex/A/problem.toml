@@ -1,0 +1,21 @@
+# problem id (it is used for the name of output html file)
+id = "A"
+
+# output params
+params_path = "./tests/constraints.hpp"
+
+# path to statements
+[[statements]]
+path = "./statement/statement_ja.md"
+lang = "ja"
+markdown_extensions = ["md_in_html", "tables", "fenced_code"]
+
+[[statements]]
+path = "./statement/statement_en.md"
+lang = "en"
+markdown_extensions = ["md_in_html", "tables", "fenced_code"]
+
+# write constraints
+[constraints]
+MIN_AB = 1
+MAX_AB = 1_000_000_000
