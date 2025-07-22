@@ -1,10 +1,15 @@
 from __future__ import annotations
 
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
-from statements_manager.src.convert_task_runner import ConvertTaskRunner, ContentsStatus
-from statements_manager.src.execute_config import ProblemSetConfig, ProblemConfig, StatementConfig
+import pytest
+
+from statements_manager.src.convert_task_runner import ContentsStatus, ConvertTaskRunner
+from statements_manager.src.execute_config import (
+    ProblemConfig,
+    ProblemSetConfig,
+    StatementConfig,
+)
 from statements_manager.src.statement_location_mode import StatementLocationMode
 
 
