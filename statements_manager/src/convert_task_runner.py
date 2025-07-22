@@ -81,7 +81,8 @@ class ConvertTaskRunner:
                         has_suggestions = True
                         if self.fail_on_suggestions:
                             logger.error(
-                                f"proposed element for addition (failed due to --fail-on-suggestions): {statement}"
+                                f"proposed element for addition "
+                                f"(failed due to --fail-on-suggestions): {statement}"
                             )
                         else:
                             logger.warning(
@@ -91,18 +92,19 @@ class ConvertTaskRunner:
                         has_suggestions = True
                         if self.fail_on_suggestions:
                             logger.error(
-                                f"proposed element for deletion (failed due to --fail-on-suggestions): {statement}"
+                                f"proposed element for deletion "
+                                f"(failed due to --fail-on-suggestions): {statement}"
                             )
                         else:
                             logger.warning(f"proposed element for deletion: {statement}")
-            
+
             if has_suggestions and self.fail_on_suggestions:
                 logger.error("Failed: unresolved suggestions found in Google Docs")
                 raise ValueError(
                     "Unresolved suggestions found in Google Docs. "
                     "Remove --fail-on-suggestions option to continue with warnings instead."
                 )
-            
+
             return (ContentsStatus.OK, contents)
         except Exception as e:
             logger.error(f"error occured! ({setting_dir}): {e}")
