@@ -90,13 +90,18 @@ class ConvertTaskRunner:
                     if "suggestedDeletionIds" in element["textRun"]:
                         has_suggestions = True
                         if self.fail_on_suggestions:
-                            logger.error(f"proposed element for deletion (failed due to --fail-on-suggestions): {statement}")
+                            logger.error(
+                                f"proposed element for deletion (failed due to --fail-on-suggestions): {statement}"
+                            )
                         else:
                             logger.warning(f"proposed element for deletion: {statement}")
             
             if has_suggestions and self.fail_on_suggestions:
                 logger.error("Failed: unresolved suggestions found in Google Docs")
-                raise ValueError("Unresolved suggestions found in Google Docs. Remove --fail-on-suggestions option to continue with warnings instead.")
+                raise ValueError(
+                    "Unresolved suggestions found in Google Docs. "
+                    "Remove --fail-on-suggestions option to continue with warnings instead."
+                )
             
             return (ContentsStatus.OK, contents)
         except Exception as e:

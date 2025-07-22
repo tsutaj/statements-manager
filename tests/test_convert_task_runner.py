@@ -97,7 +97,9 @@ class TestDocsContentsSuggestions:
 
     @patch('statements_manager.src.convert_task_runner.build')
     @patch('statements_manager.src.utils.create_token')
-    def test_insertion_suggestions_without_fail_flag(self, mock_token, mock_build, mock_problemset_config, caplog):
+    def test_insertion_suggestions_without_fail_flag(
+        self, mock_token, mock_build, mock_problemset_config, caplog
+    ):
         """insertion提案ありで--fail-on-suggestionsなし: 警告のみ"""
         # Mock setup
         mock_token.return_value = MagicMock()
@@ -121,12 +123,17 @@ class TestDocsContentsSuggestions:
         assert content == "Normal text"  # 提案された部分は除外される
         
         # 警告ログが出力されることを確認
-        assert "proposed element for addition (ignored in rendering): Suggested insertion" in caplog.text
+        assert (
+            "proposed element for addition (ignored in rendering): Suggested insertion"
+            in caplog.text
+        )
         assert "ERROR" not in caplog.text
 
     @patch('statements_manager.src.convert_task_runner.build')
     @patch('statements_manager.src.utils.create_token')
-    def test_deletion_suggestions_without_fail_flag(self, mock_token, mock_build, mock_problemset_config, caplog):
+    def test_deletion_suggestions_without_fail_flag(
+        self, mock_token, mock_build, mock_problemset_config, caplog
+    ):
         """deletion提案ありで--fail-on-suggestionsなし: 警告のみ"""
         # Mock setup
         mock_token.return_value = MagicMock()
@@ -155,7 +162,9 @@ class TestDocsContentsSuggestions:
 
     @patch('statements_manager.src.convert_task_runner.build')
     @patch('statements_manager.src.utils.create_token')
-    def test_insertion_suggestions_with_fail_flag(self, mock_token, mock_build, mock_problemset_config, caplog):
+    def test_insertion_suggestions_with_fail_flag(
+        self, mock_token, mock_build, mock_problemset_config, caplog
+    ):
         """insertion提案ありで--fail-on-suggestions: エラー"""
         # Mock setup
         mock_token.return_value = MagicMock()
@@ -178,12 +187,17 @@ class TestDocsContentsSuggestions:
             runner.get_docs_contents("test_problem")
         
         # エラーログが出力されることを確認
-        assert "proposed element for addition (failed due to --fail-on-suggestions): Suggested insertion" in caplog.text
+        assert (
+            "proposed element for addition (failed due to --fail-on-suggestions): Suggested insertion"
+            in caplog.text
+        )
         assert "Failed: unresolved suggestions found in Google Docs" in caplog.text
 
     @patch('statements_manager.src.convert_task_runner.build')
     @patch('statements_manager.src.utils.create_token')
-    def test_deletion_suggestions_with_fail_flag(self, mock_token, mock_build, mock_problemset_config, caplog):
+    def test_deletion_suggestions_with_fail_flag(
+        self, mock_token, mock_build, mock_problemset_config, caplog
+    ):
         """deletion提案ありで--fail-on-suggestions: エラー"""
         # Mock setup
         mock_token.return_value = MagicMock()
@@ -206,12 +220,17 @@ class TestDocsContentsSuggestions:
             runner.get_docs_contents("test_problem")
         
         # エラーログが出力されることを確認
-        assert "proposed element for deletion (failed due to --fail-on-suggestions): Text to delete" in caplog.text
+        assert (
+            "proposed element for deletion (failed due to --fail-on-suggestions): Text to delete"
+            in caplog.text
+        )
         assert "Failed: unresolved suggestions found in Google Docs" in caplog.text
 
     @patch('statements_manager.src.convert_task_runner.build')
     @patch('statements_manager.src.utils.create_token')
-    def test_both_suggestions_with_fail_flag(self, mock_token, mock_build, mock_problemset_config, caplog):
+    def test_both_suggestions_with_fail_flag(
+        self, mock_token, mock_build, mock_problemset_config, caplog
+    ):
         """両方の提案ありで--fail-on-suggestions: エラー"""
         # Mock setup
         mock_token.return_value = MagicMock()
@@ -235,13 +254,21 @@ class TestDocsContentsSuggestions:
             runner.get_docs_contents("test_problem")
         
         # 両方のエラーログが出力されることを確認
-        assert "proposed element for addition (failed due to --fail-on-suggestions): Suggested insertion" in caplog.text
-        assert "proposed element for deletion (failed due to --fail-on-suggestions): Text to delete" in caplog.text
+        assert (
+            "proposed element for addition (failed due to --fail-on-suggestions): Suggested insertion"
+            in caplog.text
+        )
+        assert (
+            "proposed element for deletion (failed due to --fail-on-suggestions): Text to delete"
+            in caplog.text
+        )
         assert "Failed: unresolved suggestions found in Google Docs" in caplog.text
 
     @patch('statements_manager.src.convert_task_runner.build')
     @patch('statements_manager.src.utils.create_token')
-    def test_no_suggestions_with_fail_flag_enabled(self, mock_token, mock_build, mock_problemset_config, caplog):
+    def test_no_suggestions_with_fail_flag_enabled(
+        self, mock_token, mock_build, mock_problemset_config, caplog
+    ):
         """提案なしで--fail-on-suggestions有効: 正常に処理される"""
         # Mock setup
         mock_token.return_value = MagicMock()
@@ -268,7 +295,9 @@ class TestDocsContentsSuggestions:
 
     @patch('statements_manager.src.convert_task_runner.build')
     @patch('statements_manager.src.utils.create_token')
-    def test_complex_document_with_mixed_suggestions(self, mock_token, mock_build, mock_problemset_config, caplog):
+    def test_complex_document_with_mixed_suggestions(
+        self, mock_token, mock_build, mock_problemset_config, caplog
+    ):
         """複雑なドキュメント（通常テキスト + 各種提案）での動作確認"""
         # Mock setup
         mock_token.return_value = MagicMock()
@@ -295,5 +324,8 @@ class TestDocsContentsSuggestions:
         assert content == "Start of document middle text text to remove end of document"
         
         # 警告ログが出力されることを確認
-        assert "proposed element for addition (ignored in rendering): First suggestion" in caplog.text
+        assert (
+            "proposed element for addition (ignored in rendering): First suggestion"
+            in caplog.text
+        )
         assert "proposed element for deletion: text to remove" in caplog.text
