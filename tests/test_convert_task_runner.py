@@ -22,6 +22,19 @@ class TestDocsContentsSuggestions:
         config = MagicMock(spec=ProblemSetConfig)
         config.encoding = "utf-8"
 
+        # ConvertTaskRunnerの初期化に必要な属性をモック
+        config.template_content = "mock template content"
+        config.sample_template_content = "mock sample template content"
+        config.output_path = "/tmp/test_output"
+
+        # template属性のモック
+        template_mock = MagicMock()
+        template_mock.preprocess_path = None
+        template_mock.postprocess_path = None
+        template_mock.preprocess_command = "python3"
+        template_mock.postprocess_command = "python3"
+        config.template = template_mock
+
         # ProblemConfigのモック
         problem_config = MagicMock(spec=ProblemConfig)
         statement_config = MagicMock(spec=StatementConfig)
@@ -55,7 +68,9 @@ class TestDocsContentsSuggestions:
     ):
         """提案なし: 正常に処理される"""
         # Mock setup
-        mock_token.return_value = MagicMock()
+        token_mock = MagicMock()
+        token_mock.valid = True  # トークンが有効であることを示す
+        mock_token.return_value = token_mock
         mock_service = MagicMock()
         mock_build.return_value = mock_service
 
