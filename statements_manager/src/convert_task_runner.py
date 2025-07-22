@@ -30,6 +30,7 @@ class ConvertTaskRunner:
     def __init__(self, problemset_config: ProblemSetConfig):
         self._cwd = Path.cwd()
         self.problemset_config = problemset_config
+        self.fail_on_suggestions = False
         self.renderer = Renderer(
             problemset_config.template_content,
             problemset_config.sample_template_content,
@@ -68,6 +69,7 @@ class ConvertTaskRunner:
             service = build("docs", "v1", credentials=token)
             document = service.documents().get(documentId=statement_path).execute()
             contents = ""
+            has_suggestions = False
             for content in document.get("body")["content"]:
                 if "paragraph" not in content:
                     continue
@@ -76,11 +78,26 @@ class ConvertTaskRunner:
                     if "suggestedInsertionIds" not in element["textRun"]:
                         contents += statement
                     else:
-                        logger.warning(
-                            f"proposed element for addition (ignored in rendering): {statement}"
-                        )
+                        has_suggestions = True
+                        if self.fail_on_suggestions:
+                            logger.error(
+                                f"proposed element for addition (failed due to --fail-on-suggestions): {statement}"
+                            )
+                        else:
+                            logger.warning(
+                                f"proposed element for addition (ignored in rendering): {statement}"
+                            )
                     if "suggestedDeletionIds" in element["textRun"]:
-                        logger.warning(f"proposed element for deletion: {statement}")
+                        has_suggestions = True
+                        if self.fail_on_suggestions:
+                            logger.error(f"proposed element for deletion (failed due to --fail-on-suggestions): {statement}")
+                        else:
+                            logger.warning(f"proposed element for deletion: {statement}")
+            
+            if has_suggestions and self.fail_on_suggestions:
+                logger.error("Failed: unresolved suggestions found in Google Docs")
+                raise ValueError("Unresolved suggestions found in Google Docs. Remove --fail-on-suggestions option to continue with warnings instead.")
+            
             return (ContentsStatus.OK, contents)
         except Exception as e:
             logger.error(f"error occured! ({setting_dir}): {e}")
@@ -265,8 +282,10 @@ class ConvertTaskRunner:
         make_problemset: bool,
         force_dump: bool,
         constraints_only: bool,
+        fail_on_suggestions: bool,
     ) -> None:
         # 問題文を取ってきて変換
+        self.fail_on_suggestions = fail_on_suggestions
         valid_problem_ids = []
         has_diff = False
         for problem_id in problem_ids:
