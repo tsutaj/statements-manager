@@ -68,7 +68,9 @@ class TestDocsContentsSuggestions:
     ):
         """提案なし: 正常に処理される"""
         # Mock setup - create_tokenが有効なトークンを返すようにする
-        mock_token.return_value = MagicMock()  # Noneではなく、MagicMockオブジェクトを返す
+        mock_token.return_value = (
+            MagicMock()
+        )  # Noneではなく、MagicMockオブジェクトを返す
         mock_service = MagicMock()
         mock_build.return_value = mock_service
 
