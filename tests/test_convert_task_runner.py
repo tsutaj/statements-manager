@@ -34,47 +34,25 @@ class TestDocsContentsSuggestions:
 
     def create_mock_document(self, elements):
         """Google Docs document構造を作成"""
-        return {
-            "body": {
-                "content": [
-                    {
-                        "paragraph": {
-                            "elements": elements
-                        }
-                    }
-                ]
-            }
-        }
+        return {"body": {"content": [{"paragraph": {"elements": elements}}]}}
 
     def normal_element(self, text):
         """通常のテキスト要素"""
-        return {
-            "textRun": {
-                "content": text
-            }
-        }
+        return {"textRun": {"content": text}}
 
     def insertion_element(self, text):
         """挿入提案付きの要素"""
-        return {
-            "textRun": {
-                "content": text,
-                "suggestedInsertionIds": ["suggestion-1"]
-            }
-        }
+        return {"textRun": {"content": text, "suggestedInsertionIds": ["suggestion-1"]}}
 
     def deletion_element(self, text):
         """削除提案付きの要素"""
-        return {
-            "textRun": {
-                "content": text,
-                "suggestedDeletionIds": ["suggestion-1"]
-            }
-        }
+        return {"textRun": {"content": text, "suggestedDeletionIds": ["suggestion-1"]}}
 
-    @patch('statements_manager.src.convert_task_runner.build')
-    @patch('statements_manager.src.utils.create_token')
-    def test_no_suggestions(self, mock_token, mock_build, mock_problemset_config, caplog):
+    @patch("statements_manager.src.convert_task_runner.build")
+    @patch("statements_manager.src.utils.create_token")
+    def test_no_suggestions(
+        self, mock_token, mock_build, mock_problemset_config, caplog
+    ):
         """提案なし: 正常に処理される"""
         # Mock setup
         mock_token.return_value = MagicMock()
@@ -82,9 +60,9 @@ class TestDocsContentsSuggestions:
         mock_build.return_value = mock_service
 
         # 提案なしのdocument
-        mock_document = self.create_mock_document([
-            self.normal_element("Normal text without suggestions")
-        ])
+        mock_document = self.create_mock_document(
+            [self.normal_element("Normal text without suggestions")]
+        )
         mock_service.documents().get().execute.return_value = mock_document
 
         # ConvertTaskRunnerを初期化
@@ -99,8 +77,8 @@ class TestDocsContentsSuggestions:
         # 警告やエラーログがないことを確認
         assert "proposed element" not in caplog.text
 
-    @patch('statements_manager.src.convert_task_runner.build')
-    @patch('statements_manager.src.utils.create_token')
+    @patch("statements_manager.src.convert_task_runner.build")
+    @patch("statements_manager.src.utils.create_token")
     def test_insertion_suggestions_without_fail_flag(
         self, mock_token, mock_build, mock_problemset_config, caplog
     ):
@@ -111,10 +89,12 @@ class TestDocsContentsSuggestions:
         mock_build.return_value = mock_service
 
         # insertion提案ありのdocument
-        mock_document = self.create_mock_document([
-            self.normal_element("Normal text"),
-            self.insertion_element("Suggested insertion")
-        ])
+        mock_document = self.create_mock_document(
+            [
+                self.normal_element("Normal text"),
+                self.insertion_element("Suggested insertion"),
+            ]
+        )
         mock_service.documents().get().execute.return_value = mock_document
 
         # ConvertTaskRunnerを初期化（fail_on_suggestions=False）
@@ -133,8 +113,8 @@ class TestDocsContentsSuggestions:
         )
         assert "ERROR" not in caplog.text
 
-    @patch('statements_manager.src.convert_task_runner.build')
-    @patch('statements_manager.src.utils.create_token')
+    @patch("statements_manager.src.convert_task_runner.build")
+    @patch("statements_manager.src.utils.create_token")
     def test_deletion_suggestions_without_fail_flag(
         self, mock_token, mock_build, mock_problemset_config, caplog
     ):
@@ -145,10 +125,12 @@ class TestDocsContentsSuggestions:
         mock_build.return_value = mock_service
 
         # deletion提案ありのdocument
-        mock_document = self.create_mock_document([
-            self.normal_element("Normal text"),
-            self.deletion_element("Text to delete")
-        ])
+        mock_document = self.create_mock_document(
+            [
+                self.normal_element("Normal text"),
+                self.deletion_element("Text to delete"),
+            ]
+        )
         mock_service.documents().get().execute.return_value = mock_document
 
         # ConvertTaskRunnerを初期化（fail_on_suggestions=False）
@@ -164,8 +146,8 @@ class TestDocsContentsSuggestions:
         assert "proposed element for deletion: Text to delete" in caplog.text
         assert "ERROR" not in caplog.text
 
-    @patch('statements_manager.src.convert_task_runner.build')
-    @patch('statements_manager.src.utils.create_token')
+    @patch("statements_manager.src.convert_task_runner.build")
+    @patch("statements_manager.src.utils.create_token")
     def test_insertion_suggestions_with_fail_flag(
         self, mock_token, mock_build, mock_problemset_config, caplog
     ):
@@ -176,10 +158,12 @@ class TestDocsContentsSuggestions:
         mock_build.return_value = mock_service
 
         # insertion提案ありのdocument
-        mock_document = self.create_mock_document([
-            self.normal_element("Normal text"),
-            self.insertion_element("Suggested insertion")
-        ])
+        mock_document = self.create_mock_document(
+            [
+                self.normal_element("Normal text"),
+                self.insertion_element("Suggested insertion"),
+            ]
+        )
         mock_service.documents().get().execute.return_value = mock_document
 
         # ConvertTaskRunnerを初期化（fail_on_suggestions=True）
@@ -187,7 +171,9 @@ class TestDocsContentsSuggestions:
         runner.fail_on_suggestions = True
 
         # エラーが発生することを確認
-        with pytest.raises(ValueError, match="Unresolved suggestions found in Google Docs"):
+        with pytest.raises(
+            ValueError, match="Unresolved suggestions found in Google Docs"
+        ):
             runner.get_docs_contents("test_problem")
 
         # エラーログが出力されることを確認
@@ -197,8 +183,8 @@ class TestDocsContentsSuggestions:
         )
         assert "Failed: unresolved suggestions found in Google Docs" in caplog.text
 
-    @patch('statements_manager.src.convert_task_runner.build')
-    @patch('statements_manager.src.utils.create_token')
+    @patch("statements_manager.src.convert_task_runner.build")
+    @patch("statements_manager.src.utils.create_token")
     def test_deletion_suggestions_with_fail_flag(
         self, mock_token, mock_build, mock_problemset_config, caplog
     ):
@@ -209,10 +195,12 @@ class TestDocsContentsSuggestions:
         mock_build.return_value = mock_service
 
         # deletion提案ありのdocument
-        mock_document = self.create_mock_document([
-            self.normal_element("Normal text"),
-            self.deletion_element("Text to delete")
-        ])
+        mock_document = self.create_mock_document(
+            [
+                self.normal_element("Normal text"),
+                self.deletion_element("Text to delete"),
+            ]
+        )
         mock_service.documents().get().execute.return_value = mock_document
 
         # ConvertTaskRunnerを初期化（fail_on_suggestions=True）
@@ -220,7 +208,9 @@ class TestDocsContentsSuggestions:
         runner.fail_on_suggestions = True
 
         # エラーが発生することを確認
-        with pytest.raises(ValueError, match="Unresolved suggestions found in Google Docs"):
+        with pytest.raises(
+            ValueError, match="Unresolved suggestions found in Google Docs"
+        ):
             runner.get_docs_contents("test_problem")
 
         # エラーログが出力されることを確認
@@ -230,8 +220,8 @@ class TestDocsContentsSuggestions:
         )
         assert "Failed: unresolved suggestions found in Google Docs" in caplog.text
 
-    @patch('statements_manager.src.convert_task_runner.build')
-    @patch('statements_manager.src.utils.create_token')
+    @patch("statements_manager.src.convert_task_runner.build")
+    @patch("statements_manager.src.utils.create_token")
     def test_both_suggestions_with_fail_flag(
         self, mock_token, mock_build, mock_problemset_config, caplog
     ):
@@ -242,11 +232,13 @@ class TestDocsContentsSuggestions:
         mock_build.return_value = mock_service
 
         # 両方の提案ありのdocument
-        mock_document = self.create_mock_document([
-            self.normal_element("Normal text"),
-            self.insertion_element("Suggested insertion"),
-            self.deletion_element("Text to delete")
-        ])
+        mock_document = self.create_mock_document(
+            [
+                self.normal_element("Normal text"),
+                self.insertion_element("Suggested insertion"),
+                self.deletion_element("Text to delete"),
+            ]
+        )
         mock_service.documents().get().execute.return_value = mock_document
 
         # ConvertTaskRunnerを初期化（fail_on_suggestions=True）
@@ -254,7 +246,9 @@ class TestDocsContentsSuggestions:
         runner.fail_on_suggestions = True
 
         # エラーが発生することを確認
-        with pytest.raises(ValueError, match="Unresolved suggestions found in Google Docs"):
+        with pytest.raises(
+            ValueError, match="Unresolved suggestions found in Google Docs"
+        ):
             runner.get_docs_contents("test_problem")
 
         # 両方のエラーログが出力されることを確認
@@ -268,8 +262,8 @@ class TestDocsContentsSuggestions:
         )
         assert "Failed: unresolved suggestions found in Google Docs" in caplog.text
 
-    @patch('statements_manager.src.convert_task_runner.build')
-    @patch('statements_manager.src.utils.create_token')
+    @patch("statements_manager.src.convert_task_runner.build")
+    @patch("statements_manager.src.utils.create_token")
     def test_no_suggestions_with_fail_flag_enabled(
         self, mock_token, mock_build, mock_problemset_config, caplog
     ):
@@ -280,9 +274,9 @@ class TestDocsContentsSuggestions:
         mock_build.return_value = mock_service
 
         # 提案なしのdocument
-        mock_document = self.create_mock_document([
-            self.normal_element("Normal text without suggestions")
-        ])
+        mock_document = self.create_mock_document(
+            [self.normal_element("Normal text without suggestions")]
+        )
         mock_service.documents().get().execute.return_value = mock_document
 
         # ConvertTaskRunnerを初期化（fail_on_suggestions=True）
@@ -297,8 +291,8 @@ class TestDocsContentsSuggestions:
         # エラーログがないことを確認
         assert "Failed: unresolved suggestions found in Google Docs" not in caplog.text
 
-    @patch('statements_manager.src.convert_task_runner.build')
-    @patch('statements_manager.src.utils.create_token')
+    @patch("statements_manager.src.convert_task_runner.build")
+    @patch("statements_manager.src.utils.create_token")
     def test_complex_document_with_mixed_suggestions(
         self, mock_token, mock_build, mock_problemset_config, caplog
     ):
@@ -309,13 +303,15 @@ class TestDocsContentsSuggestions:
         mock_build.return_value = mock_service
 
         # 複雑なdocument
-        mock_document = self.create_mock_document([
-            self.normal_element("Start of document"),
-            self.insertion_element("First suggestion"),
-            self.normal_element(" middle text "),
-            self.deletion_element("text to remove"),
-            self.normal_element(" end of document")
-        ])
+        mock_document = self.create_mock_document(
+            [
+                self.normal_element("Start of document"),
+                self.insertion_element("First suggestion"),
+                self.normal_element(" middle text "),
+                self.deletion_element("text to remove"),
+                self.normal_element(" end of document"),
+            ]
+        )
         mock_service.documents().get().execute.return_value = mock_document
 
         # fail_on_suggestions=Falseでテスト

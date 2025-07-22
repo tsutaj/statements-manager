@@ -96,7 +96,9 @@ class ConvertTaskRunner:
                                 f"(failed due to --fail-on-suggestions): {statement}"
                             )
                         else:
-                            logger.warning(f"proposed element for deletion: {statement}")
+                            logger.warning(
+                                f"proposed element for deletion: {statement}"
+                            )
 
             if has_suggestions and self.fail_on_suggestions:
                 logger.error("Failed: unresolved suggestions found in Google Docs")
