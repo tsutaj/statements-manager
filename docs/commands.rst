@@ -17,7 +17,7 @@ run
 
 .. code-block:: text
     
-    usage: ss-manager run [-h] [-o {html, md, pdf}] [-p] [-f] [-c] [--continue-on-error] [working_dir]
+    usage: ss-manager run [-h] [-o {html, md, pdf}] [-p] [-f] [-c] [--keep-going] [working_dir]
 
 用意した Markdown ファイルを読み込み、指定された形式の出力ファイルを作成します。また、制約ファイルを出力する設定になっているときは、制約ファイルも出力します。
 
@@ -73,7 +73,7 @@ run
 
     制約ファイルのみを更新します。このオプションを付けた場合、問題文の出力ファイルは更新されません。
 
-.. option:: --continue-on-error
+.. option:: --keep-going
 
     問題文の取得時にエラーが発生した場合でも処理を継続します。このオプションが付いていない場合、問題文の取得エラーが発生すると処理が停止し、非ゼロの終了コードで終了します。
 
@@ -106,7 +106,7 @@ run
 
 .. code-block:: bash
 
-    $ ss-manager run ./problems --continue-on-error
+    $ ss-manager run ./problems --keep-going
 
 このコマンドは次のように実行されます。
 
