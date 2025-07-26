@@ -22,6 +22,11 @@ from statements_manager.src.utils import create_token
 logger: Logger = getLogger(__name__)
 
 
+class GoogleDocsRetrievalError(Exception):
+    """Exception raised when Google Docs retrieval fails"""
+    pass
+
+
 class ContentsStatus(Enum):
     OK, NG = range(2)
 
@@ -84,16 +89,14 @@ class ConvertTaskRunner:
             return (ContentsStatus.OK, contents)
         except Exception as e:
             logger.error(f"error occured! ({setting_dir}): {e}")
-
-        # どのパスでも生成できなかったらエラー
-        logger.error("cannot get docs contents")
-        logger.warning(
-            "tips: try 'ss-manager reg-creds CREDS_PATH' before running on docs mode.\n"
-            "if you have already registered credentials, try 'ss-manager reg-creds'.\n"
-            "how to create credentials file: "
-            "see https://statements-manager.readthedocs.io/ja/stable/register_credentials.html"
-        )
-        return (ContentsStatus.NG, "")
+            logger.error("cannot get docs contents")
+            logger.warning(
+                "tips: try 'ss-manager reg-creds CREDS_PATH' before running on docs mode.\n"
+                "if you have already registered credentials, try 'ss-manager reg-creds'.\n"
+                "how to create credentials file: "
+                "see https://statements-manager.readthedocs.io/ja/stable/register_credentials.html"
+            )
+            raise GoogleDocsRetrievalError(f"Failed to retrieve Google Docs contents: {e}")
 
     # ローカルまたは Google Docs から問題文のテキストファイルを取得
     def get_contents(self, problem_id: str) -> Tuple[ContentsStatus, str]:
@@ -101,7 +104,14 @@ class ConvertTaskRunner:
         if mode == StatementLocationMode.LOCAL:
             return self.get_local_contents(problem_id)
         elif mode == StatementLocationMode.DOCS:
-            return self.get_docs_contents(problem_id)
+            try:
+                return self.get_docs_contents(problem_id)
+            except GoogleDocsRetrievalError:
+                # If continue_on_docs_error is False (default), re-raise the exception
+                # If continue_on_docs_error is True, return NG status to skip processing
+                if not self.problemset_config.continue_on_docs_error:
+                    raise
+                return (ContentsStatus.NG, "")
         else:
             logger.error(f"unknown mode: {mode}")
             raise ValueError(f"unknown mode: {mode}")
@@ -276,11 +286,21 @@ class ConvertTaskRunner:
             if constraints_only:
                 continue
 
-            status, raw_statement = self.get_contents(problem_id)
-            if status == ContentsStatus.NG:
-                logger.info(f"skipped [problem id: {problem_id}]")
-                logger.info("")
-                continue
+            try:
+                status, raw_statement = self.get_contents(problem_id)
+                if status == ContentsStatus.NG:
+                    logger.info(f"skipped [problem id: {problem_id}]")
+                    logger.info("")
+                    continue
+            except GoogleDocsRetrievalError as e:
+                logger.error(f"Failed to process problem {problem_id}: {e}")
+                if self.problemset_config.continue_on_docs_error:
+                    logger.info(f"skipped [problem id: {problem_id}] due to continue_on_docs_error=true")
+                    logger.info("")
+                    continue
+                else:
+                    logger.error("Stopping processing due to Google Docs error. Set 'continue_on_docs_error = true' in problemset.toml to continue processing other problems.")
+                    raise
 
             valid_problem_ids.append(problem_id)
             problem_config.statement.raw_text = raw_statement
