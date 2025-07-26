@@ -289,7 +289,7 @@ class ConvertTaskRunner:
                     )
                     raise RuntimeError(
                         f"Statement retrieval failed for problem '{problem_id}'. "
-                        "Use --keep-going to skip failed retrievals."
+                        "Use -k or --keep-going to skip failed retrievals."
                     )
 
             valid_problem_ids.append(problem_id)

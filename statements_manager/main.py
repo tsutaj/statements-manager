@@ -83,6 +83,7 @@ def get_parser() -> argparse.ArgumentParser:
         help="update constraints file only",
     )
     subparser.add_argument(
+        "-k",
         "--keep-going",
         action="store_true",
         help="continue processing when statement retrieval fails (default: fail immediately)",
