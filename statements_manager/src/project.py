@@ -26,6 +26,7 @@ class Project:
         force_dump: bool,
         constraints_only: bool,
         keep_going: bool,
+        fail_on_suggestions: bool,
     ) -> None:
         """問題文作成を実行する"""
         problem_ids: list[str] = self.problemset_config.get_problem_ids()
@@ -36,6 +37,7 @@ class Project:
             force_dump=force_dump,
             constraints_only=constraints_only,
             keep_going=keep_going,
+            fail_on_suggestions=fail_on_suggestions,
         )
 
     def _fetch_problemset_config(self, make_problemset: bool) -> ProblemSetConfig:
