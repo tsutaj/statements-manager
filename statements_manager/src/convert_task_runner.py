@@ -24,6 +24,7 @@ logger: Logger = getLogger(__name__)
 
 class GoogleDocsRetrievalError(Exception):
     """Exception raised when Google Docs retrieval fails"""
+
     pass
 
 
@@ -35,6 +36,7 @@ class ConvertTaskRunner:
     def __init__(self, problemset_config: ProblemSetConfig):
         self._cwd = Path.cwd()
         self.problemset_config = problemset_config
+        self.continue_on_docs_error = False  # Default value, will be set by run method
         self.renderer = Renderer(
             problemset_config.template_content,
             problemset_config.sample_template_content,
@@ -96,7 +98,9 @@ class ConvertTaskRunner:
                 "how to create credentials file: "
                 "see https://statements-manager.readthedocs.io/ja/stable/register_credentials.html"
             )
-            raise GoogleDocsRetrievalError(f"Failed to retrieve Google Docs contents: {e}")
+            raise GoogleDocsRetrievalError(
+                f"Failed to retrieve Google Docs contents: {e}"
+            )
 
     # ローカルまたは Google Docs から問題文のテキストファイルを取得
     def get_contents(self, problem_id: str) -> Tuple[ContentsStatus, str]:
@@ -109,7 +113,7 @@ class ConvertTaskRunner:
             except GoogleDocsRetrievalError:
                 # If continue_on_docs_error is False (default), re-raise the exception
                 # If continue_on_docs_error is True, return NG status to skip processing
-                if not self.problemset_config.continue_on_docs_error:
+                if not self.continue_on_docs_error:
                     raise
                 return (ContentsStatus.NG, "")
         else:
@@ -275,7 +279,11 @@ class ConvertTaskRunner:
         make_problemset: bool,
         force_dump: bool,
         constraints_only: bool,
+        continue_on_docs_error: bool,
     ) -> None:
+        # Store the option as instance variable for use in get_contents
+        self.continue_on_docs_error = continue_on_docs_error
+
         # 問題文を取ってきて変換
         valid_problem_ids = []
         has_diff = False
@@ -294,12 +302,19 @@ class ConvertTaskRunner:
                     continue
             except GoogleDocsRetrievalError as e:
                 logger.error(f"Failed to process problem {problem_id}: {e}")
-                if self.problemset_config.continue_on_docs_error:
-                    logger.info(f"skipped [problem id: {problem_id}] due to continue_on_docs_error=true")
+                if continue_on_docs_error:
+                    logger.info(
+                        f"skipped [problem id: {problem_id}] due to "
+                        "--continue-on-docs-error option"
+                    )
                     logger.info("")
                     continue
                 else:
-                    logger.error("Stopping processing due to Google Docs error. Set 'continue_on_docs_error = true' in problemset.toml to continue processing other problems.")
+                    logger.error(
+                        "Stopping processing due to Google Docs error. "
+                        "Use '--continue-on-docs-error' option to continue "
+                        "processing other problems."
+                    )
                     raise
 
             valid_problem_ids.append(problem_id)

@@ -1,7 +1,4 @@
 # Configuration for problem statement processing
-# Set to true to continue processing other problems when Google Docs retrieval fails
-# Default: false (stops processing on Google Docs errors)
-continue_on_docs_error = false
 
 [template]
     template_path = "./templates/default.html"

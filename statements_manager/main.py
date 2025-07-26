@@ -82,6 +82,11 @@ def get_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="update constraints file only",
     )
+    subparser.add_argument(
+        "--continue-on-docs-error",
+        action="store_true",
+        help="continue processing other problems when Google Docs retrieval fails",
+    )
 
     subparser = subparsers.add_parser(
         "reg-creds",
@@ -105,12 +110,15 @@ def subcommand_run(
     make_problemset: bool,
     force_dump: bool,
     constraints_only: bool,
+    continue_on_docs_error: bool,
 ) -> None:
     working_dir = str(pathlib.Path(working_dir).resolve())
     logger.debug(f"run: working_dir = '{working_dir}'")
     project = Project(working_dir, output, make_problemset)
 
-    project.run_problems(make_problemset, force_dump, constraints_only)
+    project.run_problems(
+        make_problemset, force_dump, constraints_only, continue_on_docs_error
+    )
     logger.debug("run command ended successfully.")
 
 
@@ -162,6 +170,7 @@ def main() -> None:
             make_problemset=args.make_problemset,
             force_dump=args.force_dump,
             constraints_only=args.constraints_only,
+            continue_on_docs_error=args.continue_on_docs_error,
         )
     elif args.subcommand == "reg-creds":
         subcommand_reg_creds(

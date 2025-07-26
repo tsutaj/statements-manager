@@ -195,12 +195,7 @@ class ProblemSetConfig(AttributeConstraints):
         self.encoding: str = self.optional(
             problemset_filename, config, "encoding", "utf-8"
         )
-        # Add option to control error handling when Google Docs retrieval fails
-        self.continue_on_docs_error: bool = self.optional(
-            problemset_filename, config, "continue_on_docs_error", False
-        )
         logger.info(f"encoding = {self.encoding}")
-        logger.info(f"continue_on_docs_error = {self.continue_on_docs_error}")
 
         dirname = problemset_filename.parent.resolve()
         self.output_path = dirname / "problemset"
