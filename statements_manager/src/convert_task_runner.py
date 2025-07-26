@@ -265,6 +265,7 @@ class ConvertTaskRunner:
         make_problemset: bool,
         force_dump: bool,
         constraints_only: bool,
+        keep_going: bool = False,
     ) -> None:
         # 問題文を取ってきて変換
         valid_problem_ids = []
@@ -278,9 +279,18 @@ class ConvertTaskRunner:
 
             status, raw_statement = self.get_contents(problem_id)
             if status == ContentsStatus.NG:
-                logger.info(f"skipped [problem id: {problem_id}]")
-                logger.info("")
-                continue
+                if keep_going:
+                    logger.info(f"skipped [problem id: {problem_id}]")
+                    logger.info("")
+                    continue
+                else:
+                    logger.error(
+                        f"failed to retrieve statement for problem id: {problem_id}"
+                    )
+                    raise RuntimeError(
+                        f"Statement retrieval failed for problem '{problem_id}'. "
+                        "Use -k or --keep-going to skip failed retrievals."
+                    )
 
             valid_problem_ids.append(problem_id)
             problem_config.statement.raw_text = raw_statement
