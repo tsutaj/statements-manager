@@ -123,7 +123,9 @@ def subcommand_run(
     logger.debug(f"run: working_dir = '{working_dir}'")
     project = Project(working_dir, output, make_problemset)
 
-    project.run_problems(make_problemset, force_dump, constraints_only, keep_going, fail_on_suggestions)
+    project.run_problems(
+        make_problemset, force_dump, constraints_only, keep_going, fail_on_suggestions
+    )
     logger.debug("run command ended successfully.")
 
 
