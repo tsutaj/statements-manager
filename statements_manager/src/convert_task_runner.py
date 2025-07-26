@@ -284,8 +284,13 @@ class ConvertTaskRunner:
                     logger.info("")
                     continue
                 else:
-                    logger.error(f"failed to retrieve statement for problem id: {problem_id}")
-                    raise RuntimeError(f"Statement retrieval failed for problem '{problem_id}'. Use --continue-on-error to skip failed retrievals.")
+                    logger.error(
+                        f"failed to retrieve statement for problem id: {problem_id}"
+                    )
+                    raise RuntimeError(
+                        f"Statement retrieval failed for problem '{problem_id}'. "
+                        "Use --continue-on-error to skip failed retrievals."
+                    )
 
             valid_problem_ids.append(problem_id)
             problem_config.statement.raw_text = raw_statement
