@@ -102,10 +102,7 @@ class ConvertTaskRunner:
 
             if has_suggestions and self.fail_on_suggestions:
                 logger.error("Failed: unresolved suggestions found in Google Docs")
-                raise ValueError(
-                    "Unresolved suggestions found in Google Docs. "
-                    "Remove --fail-on-suggestions option to continue with warnings instead."
-                )
+                return (ContentsStatus.NG, "")
 
             return (ContentsStatus.OK, contents)
         except Exception as e:
