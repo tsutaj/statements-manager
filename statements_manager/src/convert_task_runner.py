@@ -51,7 +51,9 @@ class ConvertTaskRunner:
             logger.error(f"problem_id {problem_id}: statement path does not exist")
             return (ContentsStatus.NG, "")
 
-    def get_docs_contents(self, problem_id: str) -> Tuple[ContentsStatus, str]:
+    def get_docs_contents(
+        self, problem_id: str, fail_on_suggestions: bool = False
+    ) -> Tuple[ContentsStatus, str]:
         statement_path = self.problemset_config.get_problem(problem_id).statement.path
         setting_dir = pathlib.Path.home() / ".ss-manager"
         try:
@@ -68,6 +70,7 @@ class ConvertTaskRunner:
             service = build("docs", "v1", credentials=token)
             document = service.documents().get(documentId=statement_path).execute()
             contents = ""
+            has_suggestions = False
             for content in document.get("body")["content"]:
                 if "paragraph" not in content:
                     continue
@@ -76,11 +79,20 @@ class ConvertTaskRunner:
                     if "suggestedInsertionIds" not in element["textRun"]:
                         contents += statement
                     else:
+                        has_suggestions = True
                         logger.warning(
                             f"proposed element for addition (ignored in rendering): {statement}"
                         )
                     if "suggestedDeletionIds" in element["textRun"]:
+                        has_suggestions = True
                         logger.warning(f"proposed element for deletion: {statement}")
+
+            if has_suggestions and fail_on_suggestions:
+                logger.error(
+                    f"unresolved suggestions found in Google Docs for problem {problem_id}"
+                )
+                return (ContentsStatus.NG, "")
+
             return (ContentsStatus.OK, contents)
         except Exception as e:
             logger.error(f"error occured! ({setting_dir}): {e}")
@@ -96,12 +108,14 @@ class ConvertTaskRunner:
         return (ContentsStatus.NG, "")
 
     # ローカルまたは Google Docs から問題文のテキストファイルを取得
-    def get_contents(self, problem_id: str) -> Tuple[ContentsStatus, str]:
+    def get_contents(
+        self, problem_id: str, fail_on_suggestions: bool = False
+    ) -> Tuple[ContentsStatus, str]:
         mode = self.problemset_config.get_problem(problem_id).statement.mode
         if mode == StatementLocationMode.LOCAL:
             return self.get_local_contents(problem_id)
         elif mode == StatementLocationMode.DOCS:
-            return self.get_docs_contents(problem_id)
+            return self.get_docs_contents(problem_id, fail_on_suggestions)
         else:
             logger.error(f"unknown mode: {mode}")
             raise ValueError(f"unknown mode: {mode}")
@@ -266,6 +280,7 @@ class ConvertTaskRunner:
         force_dump: bool,
         constraints_only: bool,
         keep_going: bool = False,
+        fail_on_suggestions: bool = False,
     ) -> None:
         # 問題文を取ってきて変換
         valid_problem_ids = []
@@ -277,7 +292,7 @@ class ConvertTaskRunner:
             if constraints_only:
                 continue
 
-            status, raw_statement = self.get_contents(problem_id)
+            status, raw_statement = self.get_contents(problem_id, fail_on_suggestions)
             if status == ContentsStatus.NG:
                 if keep_going:
                     logger.info(f"skipped [problem id: {problem_id}]")

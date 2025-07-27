@@ -88,6 +88,11 @@ def get_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="continue processing when statement retrieval fails (default: fail immediately)",
     )
+    subparser.add_argument(
+        "--fail-on-suggestions",
+        action="store_true",
+        help="treat unresolved Google Docs suggestions as failure",
+    )
 
     subparser = subparsers.add_parser(
         "reg-creds",
@@ -112,12 +117,15 @@ def subcommand_run(
     force_dump: bool,
     constraints_only: bool,
     keep_going: bool,
+    fail_on_suggestions: bool,
 ) -> None:
     working_dir = str(pathlib.Path(working_dir).resolve())
     logger.debug(f"run: working_dir = '{working_dir}'")
     project = Project(working_dir, output, make_problemset)
 
-    project.run_problems(make_problemset, force_dump, constraints_only, keep_going)
+    project.run_problems(
+        make_problemset, force_dump, constraints_only, keep_going, fail_on_suggestions
+    )
     logger.debug("run command ended successfully.")
 
 
@@ -170,6 +178,7 @@ def main() -> None:
             force_dump=args.force_dump,
             constraints_only=args.constraints_only,
             keep_going=args.keep_going,
+            fail_on_suggestions=args.fail_on_suggestions,
         )
     elif args.subcommand == "reg-creds":
         subcommand_reg_creds(
