@@ -108,14 +108,6 @@ run
 
   - エラーが発生しても処理を継続したい場合は ``-k`` オプションを指定してください
 
-Google Docs の未解決提案をチェックしたい場合：
-
-.. code-block:: bash
-
-    $ ss-manager run ./problems --fail-on-suggestions
-
-このコマンドでは、Google Docs に未解決の提案がある場合に処理が失敗します。作業終盤に全ての提案が解決されているかを確認する際に便利です。
-
 reg-creds
 =========
 
