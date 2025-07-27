@@ -6,6 +6,35 @@ from unittest.mock import MagicMock, patch
 from statements_manager.src.convert_task_runner import ContentsStatus, ConvertTaskRunner
 
 
+def test_fail_on_suggestions_option_with_sample_h():
+    """
+    Test that --fail-on-suggestions option causes non-zero exit code
+    when running with sample/H (which uses Google Docs)
+    """
+    current_dir = os.getcwd()
+
+    # Run ss-manager with --fail-on-suggestions on sample/H
+    result = subprocess.run(
+        [
+            "python3",
+            "statements_manager/main.py",
+            "run",
+            "--fail-on-suggestions",
+            "sample/H",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        cwd=current_dir,
+    )
+
+    # Should fail with non-zero exit code
+    assert result.returncode != 0, (
+        "Expected non-zero exit code when using --fail-on-suggestions with Google Docs "
+        "that requires authentication or has unresolved suggestions"
+    )
+
+
 def test_get_docs_contents_with_suggestions_fail_enabled():
     """
     Test get_docs_contents method with fail_on_suggestions=True
