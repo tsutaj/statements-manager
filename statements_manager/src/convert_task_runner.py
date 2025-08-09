@@ -57,8 +57,11 @@ class ConvertTaskRunner:
         statement_path = self.problemset_config.get_problem(problem_id).statement.path
         setting_dir = pathlib.Path.home() / ".ss-manager"
         try:
+            creds_path = str(setting_dir / "credentials.json")
+            if not pathlib.Path(creds_path).exists():
+                creds_path = None
             token = create_token(
-                creds_path=str(setting_dir / "credentials.json"),
+                creds_path=creds_path,
                 token_path=str(setting_dir / "token.pickle"),
             )
             if token is None:
@@ -101,10 +104,11 @@ class ConvertTaskRunner:
         logger.error("cannot get docs contents")
         logger.warning(
             "Authentication failed. Please try the following steps:\n"
-            "1. Register credentials: 'ss-manager reg-creds CREDS_PATH'\n"
-            "2. If already registered, refresh credentials: 'ss-manager reg-creds'\n"
+            "1. Register credentials: 'ss-manager reg-creds' (uses embedded OAuth2)\n"
+            "2. Or register with custom credentials: 'ss-manager reg-creds CREDS_PATH'\n"
             "3. Ensure your browser can open for OAuth2 authentication\n"
-            "4. Check that your credentials.json has the required scopes\n"
+            "4. If using custom credentials, check that your credentials.json "
+            "has the required scopes\n"
             "How to create credentials file: "
             "see https://statements-manager.readthedocs.io/ja/stable/register_credentials.html"
         )

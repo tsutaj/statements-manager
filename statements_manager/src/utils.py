@@ -74,20 +74,33 @@ def dict_merge(dct, merge_dct):
             dct[k] = merge_dct[k]
 
 
+DEFAULT_CLIENT_CONFIG = {
+    "installed": {
+        "client_id": "your-client-id.apps.googleusercontent.com",
+        "project_id": "statements-manager",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_secret": "your-client-secret",
+        "redirect_uris": ["http://localhost"],
+    }
+}
+
+
 def create_token_for_ci() -> Any:
     service_account_info = json.loads(os.environ["SERVICE_ACCOUNT_INFO"])
     return service_account.Credentials.from_service_account_info(service_account_info)
 
 
 def create_token(
-    creds_path: str, token_path: Union[str, None] = None, port: int = 0
+    creds_path: Union[str, None] = None,
+    token_path: Union[str, None] = None,
+    port: int = 0,
 ) -> Any:
     if is_ci():
         return create_token_for_ci()
 
     scopes = ["https://www.googleapis.com/auth/documents.readonly"]
-    if not Path(creds_path).exists():
-        return None
 
     # set credentials
     token_obj = None
@@ -101,7 +114,12 @@ def create_token(
         if token_obj and token_obj.expired and token_obj.refresh_token:
             token_obj.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(creds_path, scopes)
+            if creds_path and Path(creds_path).exists():
+                flow = InstalledAppFlow.from_client_secrets_file(creds_path, scopes)
+            else:
+                flow = InstalledAppFlow.from_client_config(
+                    DEFAULT_CLIENT_CONFIG, scopes
+                )
             authorization_url, _ = flow.authorization_url(access_type="offline")
             token_obj = flow.run_local_server(
                 port=port, open_browser=True, bind_addr="0.0.0.0"

@@ -102,7 +102,7 @@ def get_parser() -> argparse.ArgumentParser:
         "creds_path",
         nargs="?",
         help="path to credentials file (json). "
-        "if creds_path is not specified, update existing credentials.\n"
+        "if not specified, use embedded OAuth2 credentials for authentication.\n"
         "how to create credentials file: "
         "see https://statements-manager.readthedocs.io/ja/stable/register_credentials.html",
     )
@@ -146,20 +146,23 @@ def subcommand_reg_creds(
         ):
             return
     else:
-        creds_path = str(creds_savepath.resolve())
+        creds_path = None
 
     logger.info("register credentials")
-    if not pathlib.Path(creds_path).exists():
-        logger.error(f"credentials '{creds_path}' does not exist")
-        raise IOError(f"credentials '{creds_path}' does not exist")
 
-    # ファイルを登録
-    create_token(creds_path, str(token_path))
-    if not creds_savepath.exists() or not creds_savepath.samefile(creds_path):
-        shutil.copy2(creds_path, creds_savepath)
-        logger.info("copied credentials successfully.")
+    if creds_path is not None:
+        if not pathlib.Path(creds_path).exists():
+            logger.error(f"credentials '{creds_path}' does not exist")
+            raise IOError(f"credentials '{creds_path}' does not exist")
+
+        if not creds_savepath.exists() or not creds_savepath.samefile(creds_path):
+            shutil.copy2(creds_path, creds_savepath)
+            logger.info("copied credentials successfully.")
     else:
-        logger.info("registered credentials successfully.")
+        logger.info("using embedded OAuth2 credentials")
+
+    create_token(creds_path, str(token_path))
+    logger.info("registered credentials successfully.")
     logger.debug("reg-creds command ended successfully.")
 
 
