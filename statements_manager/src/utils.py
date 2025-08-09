@@ -1,15 +1,9 @@
 from __future__ import annotations
 
-import json
 import os
-import pickle
 from pathlib import Path
-from typing import Any, Union
 
 import toml
-from google.auth.transport.requests import Request
-from google.oauth2 import service_account
-from google_auth_oauthlib.flow import InstalledAppFlow
 
 
 def is_ci() -> bool:
@@ -72,33 +66,3 @@ def dict_merge(dct, merge_dct):
             dict_merge(dct[k], merge_dct[k])
         else:
             dct[k] = merge_dct[k]
-
-
-def create_token_for_ci() -> Any:
-    service_account_info = json.loads(os.environ["SERVICE_ACCOUNT_INFO"])
-    return service_account.Credentials.from_service_account_info(service_account_info)
-
-
-def create_token(creds_path: str, token_path: Union[str, None] = None) -> Any:
-    if is_ci():
-        return create_token_for_ci()
-
-    scopes = ["https://www.googleapis.com/auth/documents.readonly"]
-    if not Path(creds_path).exists():
-        return None
-
-    # set credentials
-    token_obj = None
-    if token_path and Path(token_path).exists():
-        with open(token_path, "rb") as token:
-            token_obj = pickle.load(token)
-    if not token_obj or not token_obj.valid:
-        if token_obj and token_obj.expired and token_obj.refresh_token:
-            token_obj.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(creds_path, scopes)
-            # TODO: specify port number by argument
-            token_obj = flow.run_local_server(
-                port=37123, open_browser=False, bind_addr="0.0.0.0"
-            )
-    return token_obj

@@ -6,9 +6,19 @@ import pickle
 import shutil
 from logging import Logger, basicConfig, getLogger
 
+from statements_manager.src.auth.oauth_config import (
+    get_credentials_path,
+    get_token_path,
+)
+from statements_manager.src.auth.oauth_login import (
+    is_logged_in,
+    logout,
+    perform_oauth_login,
+)
+from statements_manager.src.auth.oauth_login_lecagy import get_oauth_token_legacy
 from statements_manager.src.output_file_kind import OutputFileKind
 from statements_manager.src.project import Project
-from statements_manager.src.utils import ask_ok, create_token
+from statements_manager.src.utils import ask_ok
 
 logger: Logger = getLogger(__name__)
 
@@ -95,8 +105,26 @@ def get_parser() -> argparse.ArgumentParser:
     )
 
     subparser = subparsers.add_parser(
+        "auth",
+        help="authentication management",
+    )
+    auth_subparsers = subparser.add_subparsers(
+        dest="auth_action", help="authentication actions", required=True
+    )
+    auth_login_parser = auth_subparsers.add_parser(
+        "login", help="authenticate with Google account"
+    )
+    auth_login_parser.add_argument(
+        "--force",
+        action="store_true",
+        help="force re-authentication even if already logged in",
+    )
+    auth_subparsers.add_parser("logout", help="logout and remove stored credentials")
+    auth_subparsers.add_parser("status", help="check current login status")
+
+    subparser = subparsers.add_parser(
         "reg-creds",
-        help="register credentials file",
+        help="register credentials file (legacy - use 'auth login' instead)",
         formatter_class=argparse.RawTextHelpFormatter,
     )
     subparser.add_argument(
@@ -129,13 +157,50 @@ def subcommand_run(
     logger.debug("run command ended successfully.")
 
 
+def subcommand_auth(
+    auth_action: str,
+    force: bool = False,
+) -> None:
+    """Handle OAuth2 authentication actions."""
+    if auth_action == "login":
+        # Perform login
+        if not force and is_logged_in():
+            logger.info("✓ You are already logged in. Use --force to re-authenticate.")
+            return
+
+        success = perform_oauth_login(force_reauth=force)
+        if not success:
+            logger.error("Login failed. Please try again.")
+            exit(1)
+
+        logger.info("✓ Login successful! You can now use the application.")
+    elif auth_action == "logout":
+        success = logout()
+        if not success:
+            exit(1)
+        return
+    elif auth_action == "status":
+        if is_logged_in():
+            logger.info("✓ You are currently logged in.")
+        else:
+            logger.info(
+                "✗ You are not logged in. Run 'ss-manager auth login' to authenticate."
+            )
+        return
+    else:
+        logger.error(f"Unknown auth action: {auth_action}")
+        exit(1)
+
+
 def subcommand_reg_creds(
     creds_path: str | None,
 ) -> None:
-    homedir = str(pathlib.Path.home())
-    hidden_dir = pathlib.Path(homedir, ".ss-manager")
-    creds_savepath = hidden_dir / "credentials.json"
-    token_path = hidden_dir / "token.pickle"
+    logger.warning(
+        "reg-creds is deprecated. Please use 'ss-manager auth login' instead."
+    )
+    creds_savepath = get_credentials_path()
+    token_path = get_token_path()
+    hidden_dir = creds_savepath.parent
     if creds_path is not None:
         if not hidden_dir.exists():
             logger.info(f"create hidden directory: {hidden_dir}")
@@ -155,14 +220,14 @@ def subcommand_reg_creds(
         raise IOError(f"credentials '{creds_path}' does not exist")
 
     # ファイルを登録
-    token = create_token(creds_path)
-    with open(token_path, "wb") as f:
-        pickle.dump(token, f)
     if not creds_savepath.exists() or not creds_savepath.samefile(creds_path):
         shutil.copy2(creds_path, creds_savepath)
         logger.info("copied credentials successfully.")
     else:
         logger.info("registered credentials successfully.")
+    token = get_oauth_token_legacy()
+    with open(token_path, "wb") as f:
+        pickle.dump(token, f)
     logger.debug("reg-creds command ended successfully.")
 
 
@@ -179,6 +244,11 @@ def main() -> None:
             constraints_only=args.constraints_only,
             keep_going=args.keep_going,
             fail_on_suggestions=args.fail_on_suggestions,
+        )
+    elif args.subcommand == "auth":
+        subcommand_auth(
+            auth_action=args.auth_action,
+            force=getattr(args, "force", False),
         )
     elif args.subcommand == "reg-creds":
         subcommand_reg_creds(
