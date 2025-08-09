@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import pathlib
-import pickle
 import shutil
 from logging import Logger, basicConfig, getLogger
 
@@ -155,9 +154,7 @@ def subcommand_reg_creds(
         raise IOError(f"credentials '{creds_path}' does not exist")
 
     # ファイルを登録
-    token = create_token(creds_path)
-    with open(token_path, "wb") as f:
-        pickle.dump(token, f)
+    create_token(creds_path, str(token_path))
     if not creds_savepath.exists() or not creds_savepath.samefile(creds_path):
         shutil.copy2(creds_path, creds_savepath)
         logger.info("copied credentials successfully.")
