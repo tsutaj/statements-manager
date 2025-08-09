@@ -57,9 +57,11 @@ class ConvertTaskRunner:
         statement_path = self.problemset_config.get_problem(problem_id).statement.path
         setting_dir = pathlib.Path.home() / ".ss-manager"
         try:
-            creds_path = str(setting_dir / "credentials.json")
-            if not pathlib.Path(creds_path).exists():
+            creds_path_str = str(setting_dir / "credentials.json")
+            if not pathlib.Path(creds_path_str).exists():
                 creds_path = None
+            else:
+                creds_path = creds_path_str
             token = create_token(
                 creds_path=creds_path,
                 token_path=str(setting_dir / "token.pickle"),
