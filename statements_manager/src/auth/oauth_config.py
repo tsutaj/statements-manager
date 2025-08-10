@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import tempfile
+from dataclasses import dataclass
 from pathlib import Path
 
 # OAuth Secret value used to initiate OAuth2Client class.
@@ -23,16 +24,18 @@ OAUTH2_CLIENT_CONFIG = {
     }
 }
 
-# Required scopes for Google Docs API
-SCOPES = ["https://www.googleapis.com/auth/documents.readonly"]
 
-PORT_NUMBER = 37123
+@dataclass
+class InstalledAppFlowConfig:
+    scopes: list[str]
+    token_path: Path
+    port_number: int
 
 
-def get_token_path() -> Path:
+def get_token_path(filename: str) -> Path:
     homedir = Path.home()
     hidden_dir = homedir / ".ss-manager"
-    token_path = hidden_dir / "token.pickle"
+    token_path = hidden_dir / filename
     return token_path
 
 

@@ -6,16 +6,16 @@ import pickle
 import shutil
 from logging import Logger, basicConfig, getLogger
 
-from statements_manager.src.auth.oauth_config import (
-    get_credentials_path,
-    get_token_path,
-)
+from statements_manager.src.auth.oauth_config import get_credentials_path
 from statements_manager.src.auth.oauth_login import (
     is_logged_in,
     logout,
     perform_oauth_login,
 )
-from statements_manager.src.auth.oauth_login_lecagy import get_oauth_token_legacy
+from statements_manager.src.auth.oauth_login_reg_creds import (
+    get_oauth_token_reg_creds,
+    reg_creds_config,
+)
 from statements_manager.src.output_file_kind import OutputFileKind
 from statements_manager.src.project import Project
 from statements_manager.src.utils import ask_ok
@@ -112,7 +112,10 @@ def get_parser() -> argparse.ArgumentParser:
         dest="auth_action", help="authentication actions", required=True
     )
     auth_login_parser = auth_subparsers.add_parser(
-        "login", help="authenticate with Google account"
+        "login",
+        help="authenticate with Google account. "
+        "By doing so, ss-manager will be able to read and write only Google Docs "
+        "created by ss-manager itself.",
     )
     auth_login_parser.add_argument(
         "--force",
@@ -124,7 +127,8 @@ def get_parser() -> argparse.ArgumentParser:
 
     subparser = subparsers.add_parser(
         "reg-creds",
-        help="register credentials file (legacy - use 'auth login' instead)",
+        help="register credentials file manually. "
+        "By doing so, ss-manager will be able to read and write all Google Docs.",
         formatter_class=argparse.RawTextHelpFormatter,
     )
     subparser.add_argument(
@@ -195,11 +199,8 @@ def subcommand_auth(
 def subcommand_reg_creds(
     creds_path: str | None,
 ) -> None:
-    logger.warning(
-        "reg-creds is deprecated. Please use 'ss-manager auth login' instead."
-    )
     creds_savepath = get_credentials_path()
-    token_path = get_token_path()
+    token_path = reg_creds_config.token_path
     hidden_dir = creds_savepath.parent
     if creds_path is not None:
         if not hidden_dir.exists():
@@ -225,7 +226,7 @@ def subcommand_reg_creds(
         logger.info("copied credentials successfully.")
     else:
         logger.info("registered credentials successfully.")
-    token = get_oauth_token_legacy()
+    token = get_oauth_token_reg_creds()
     with open(token_path, "wb") as f:
         pickle.dump(token, f)
     logger.debug("reg-creds command ended successfully.")

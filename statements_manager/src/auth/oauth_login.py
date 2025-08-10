@@ -10,15 +10,20 @@ from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 from statements_manager.src.auth.oauth_config import (
-    PORT_NUMBER,
-    SCOPES,
+    InstalledAppFlowConfig,
     cleanup_temp_file,
     create_temp_credentials_file,
-    get_credentials_path,
     get_token_path,
 )
 
 logger = getLogger(__name__)
+
+
+login_config = InstalledAppFlowConfig(
+    scopes=["https://www.googleapis.com/auth/drive.file"],
+    token_path=get_token_path("token_login.pickle"),
+    port_number=37124,
+)
 
 
 def perform_oauth_login(force_reauth: bool = False) -> bool:
@@ -31,7 +36,7 @@ def perform_oauth_login(force_reauth: bool = False) -> bool:
     Returns:
         True if login was successful, False otherwise
     """
-    token_path = get_token_path()
+    token_path = login_config.token_path
 
     # Create hidden directory if it doesn't exist
     if not token_path.parent.exists():
@@ -79,11 +84,13 @@ def perform_oauth_login(force_reauth: bool = False) -> bool:
         temp_creds_file = create_temp_credentials_file()
 
         # Create OAuth2 flow
-        flow = InstalledAppFlow.from_client_secrets_file(temp_creds_file, SCOPES)
+        flow = InstalledAppFlow.from_client_secrets_file(
+            temp_creds_file, login_config.scopes
+        )
 
         # Run the OAuth2 flow
         token_obj = flow.run_local_server(
-            port=PORT_NUMBER, open_browser=True, bind_addr="127.0.0.1"
+            port=login_config.port_number, open_browser=True, bind_addr="127.0.0.1"
         )
 
         # Save the token
@@ -111,7 +118,7 @@ def get_oauth_token() -> Optional[Any]:
     Returns:
         The OAuth2 token object if available, None otherwise
     """
-    token_path = get_token_path()
+    token_path = login_config.token_path
 
     if not token_path.exists():
         return None
@@ -158,7 +165,7 @@ def logout() -> bool:
     Returns:
         True if logout was successful, False otherwise
     """
-    token_path = get_token_path()
+    token_path = login_config.token_path
 
     try:
         if token_path.exists():
@@ -166,7 +173,6 @@ def logout() -> bool:
             logger.info("Logged out successfully. Token removed.")
         else:
             logger.info("No active session found.")
-        get_credentials_path().unlink(missing_ok=True)
         return True
     except Exception as e:
         logger.error(f"Failed to logout: {e}")

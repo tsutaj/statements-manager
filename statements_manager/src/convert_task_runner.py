@@ -96,10 +96,10 @@ class ConvertTaskRunner:
         logger.warning(
             "tips: Please run 'ss-manager auth login' to authenticate with your Google account.\n"
             "\n"
-            "If you prefer the legacy method, run 'ss-manager reg-creds CREDS_PATH' "
-            "to register credentials.\n"
-            "how to create credentials file: "
-            "see https://statements-manager.readthedocs.io/ja/stable/register_credentials.html"
+            "If you prefer using the user-registered credential file, "
+            "run 'ss-manager reg-creds CREDS_PATH' to register credentials.\n"
+            "how to create credentials file: see "
+            "https://statements-manager.readthedocs.io/ja/stable/register_credentials.html"
         )
         return (ContentsStatus.NG, "")
 
