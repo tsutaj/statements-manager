@@ -208,10 +208,13 @@ def subcommand_reg_creds(
             hidden_dir.mkdir()
 
         # 上書きが発生する場合は確認する
-        if token_path.exists() and not ask_ok(
-            f"{hidden_dir} already exists. Rewrite this?", default_response=False
-        ):
-            return
+        if token_path.exists():
+            if not ask_ok(
+                f"{hidden_dir} already exists. Rewrite this?", default_response=False
+            ):
+                return
+            else:
+                token_path.unlink()
     else:
         creds_path = str(creds_savepath.resolve())
 
