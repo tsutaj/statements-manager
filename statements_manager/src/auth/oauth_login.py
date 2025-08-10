@@ -148,16 +148,6 @@ def get_oauth_token() -> Optional[Any]:
     return None
 
 
-def is_logged_in() -> bool:
-    """
-    Check if user is currently logged in (has valid token).
-
-    Returns:
-        True if logged in, False otherwise
-    """
-    return get_oauth_token() is not None
-
-
 def logout() -> bool:
     """
     Log out by removing the stored token.

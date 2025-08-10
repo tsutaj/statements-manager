@@ -6,9 +6,10 @@ import pickle
 import shutil
 from logging import Logger, basicConfig, getLogger
 
+from statements_manager.src.auth.login_status import get_login_status
 from statements_manager.src.auth.oauth_config import get_credentials_path
 from statements_manager.src.auth.oauth_login import (
-    is_logged_in,
+    login_config,
     logout,
     perform_oauth_login,
 )
@@ -168,8 +169,8 @@ def subcommand_auth(
     """Handle OAuth2 authentication actions."""
     if auth_action == "login":
         # Perform login
-        if not force and is_logged_in():
-            logger.info("✓ You are already logged in. Use --force to re-authenticate.")
+        if not force and get_login_status(login_config.token_path).is_logged_in:
+            logger.info("✓  You are already logged in. Use --force to re-authenticate.")
             return
 
         success = perform_oauth_login(force_reauth=force)
@@ -177,19 +178,26 @@ def subcommand_auth(
             logger.error("Login failed. Please try again.")
             exit(1)
 
-        logger.info("✓ Login successful! You can now use the application.")
+        logger.info("✓  Login successful! You can now use the application.")
     elif auth_action == "logout":
         success = logout()
         if not success:
             exit(1)
         return
     elif auth_action == "status":
-        if is_logged_in():
-            logger.info("✓ You are currently logged in.")
-        else:
-            logger.info(
-                "✗ You are not logged in. Run 'ss-manager auth login' to authenticate."
-            )
+        logger.info("=== Authentication Status ===")
+
+        logger.info("OAuth2 Login (ss-manager auth login):")
+        auth_login_status = get_login_status(login_config.token_path)
+        for line in auth_login_status.to_strings():
+            logger.info(f"  {line}")
+
+        logger.info("")
+
+        logger.info("Manually registered credentials (ss-manager reg-creds):")
+        reg_creds_status = get_login_status(reg_creds_config.token_path)
+        for line in reg_creds_status.to_strings():
+            logger.info(f"  {line}")
         return
     else:
         logger.error(f"Unknown auth action: {auth_action}")
