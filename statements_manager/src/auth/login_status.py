@@ -6,11 +6,11 @@ from pathlib import Path
 @dataclass
 class LoginStatus:
     token_path: Path
-    is_logged_in: bool
-    token_exists: bool
-    token_valid: bool
-    token_expired: bool
-    has_refresh_token: bool
+    is_logged_in: bool = False
+    token_exists: bool = False
+    token_valid: bool = False
+    token_expired: bool = True
+    has_refresh_token: bool = False
 
     def to_strings(self) -> list[str]:
         lines = []
@@ -31,7 +31,7 @@ class LoginStatus:
         lines.append(
             "✓  Token is available (not expired)"
             if not self.token_expired
-            else "✗  Token is expired"
+            else "✗  Token is not available (or expired)"
         )
         lines.append(
             "✓  Has refresh token" if self.has_refresh_token else "✗  No refresh token"
@@ -40,14 +40,7 @@ class LoginStatus:
 
 
 def get_login_status(token_path: Path) -> LoginStatus:
-    status = LoginStatus(
-        token_path=token_path,
-        token_exists=False,
-        is_logged_in=False,
-        token_valid=False,
-        token_expired=False,
-        has_refresh_token=False,
-    )
+    status = LoginStatus(token_path=token_path)
     try:
         with open(token_path, "rb") as token_file:
             token_obj = pickle.load(token_file)
@@ -58,8 +51,8 @@ def get_login_status(token_path: Path) -> LoginStatus:
             if token_obj.valid:
                 status.token_valid = True
                 status.is_logged_in = True
-            if token_obj.expired:
-                status.token_expired = True
+            if not token_obj.expired and token_obj.valid:
+                status.token_expired = False
             if token_obj.refresh_token is not None:
                 status.has_refresh_token = True
             return status

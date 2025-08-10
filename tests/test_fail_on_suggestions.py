@@ -51,13 +51,13 @@ def test_get_docs_contents_with_suggestions_fail_enabled():
     # Mock the Google Docs API calls
     with (
         patch(
-            "statements_manager.src.convert_task_runner.create_token"
-        ) as mock_create_token,
+            "statements_manager.src.convert_task_runner.get_oauth_token"
+        ) as mock_get_oauth_token,
         patch("statements_manager.src.convert_task_runner.build") as mock_build,
         patch("pathlib.Path.home") as mock_home,
     ):
         # Setup mocks
-        mock_create_token.return_value = MagicMock()
+        mock_get_oauth_token.return_value = MagicMock()
         mock_home.return_value = Path("/fake/home")
 
         mock_service = MagicMock()
@@ -129,13 +129,13 @@ def test_get_docs_contents_without_suggestions():
     # Mock the Google Docs API calls
     with (
         patch(
-            "statements_manager.src.convert_task_runner.create_token"
-        ) as mock_create_token,
+            "statements_manager.src.convert_task_runner.get_oauth_token"
+        ) as mock_get_oauth_token,
         patch("statements_manager.src.convert_task_runner.build") as mock_build,
         patch("pathlib.Path.home") as mock_home,
     ):
         # Setup mocks
-        mock_create_token.return_value = MagicMock()
+        mock_get_oauth_token.return_value = MagicMock()
         mock_home.return_value = Path("/fake/home")
 
         mock_service = MagicMock()

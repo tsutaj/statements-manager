@@ -7,7 +7,11 @@ import shutil
 from logging import Logger, basicConfig, getLogger
 
 from statements_manager.src.auth.login_status import get_login_status
-from statements_manager.src.auth.oauth_config import get_credentials_path
+from statements_manager.src.auth.oauth_config import (
+    get_auth_priority,
+    get_credentials_path,
+    set_auth_priority,
+)
 from statements_manager.src.auth.oauth_login import (
     login_config,
     logout,
@@ -126,6 +130,17 @@ def get_parser() -> argparse.ArgumentParser:
     auth_subparsers.add_parser("logout", help="logout and remove stored credentials")
     auth_subparsers.add_parser("status", help="check current login status")
 
+    auth_use_parser = auth_subparsers.add_parser(
+        "use",
+        help="set authentication method priority",
+    )
+    auth_use_parser.add_argument(
+        "priority",
+        choices=["login", "creds"],
+        help="authentication method to prioritize "
+        "('login' for OAuth2 login, 'creds' for registered credentials)",
+    )
+
     subparser = subparsers.add_parser(
         "reg-creds",
         help="register credentials file manually. "
@@ -163,29 +178,39 @@ def subcommand_run(
 
 
 def subcommand_auth(
-    auth_action: str,
-    force: bool = False,
+    args: argparse.Namespace,
 ) -> None:
     """Handle OAuth2 authentication actions."""
-    if auth_action == "login":
-        # Perform login
-        if not force and get_login_status(login_config.token_path).is_logged_in:
+    if args.auth_action == "login":
+        if not args.force and get_login_status(login_config.token_path).is_logged_in:
             logger.info("✓  You are already logged in. Use --force to re-authenticate.")
             return
 
-        success = perform_oauth_login(force_reauth=force)
+        success = perform_oauth_login(force_reauth=args.force)
         if not success:
             logger.error("Login failed. Please try again.")
             exit(1)
 
         logger.info("✓  Login successful! You can now use the application.")
-    elif auth_action == "logout":
+    elif args.auth_action == "logout":
         success = logout()
         if not success:
             exit(1)
         return
-    elif auth_action == "status":
+    elif args.auth_action == "use":
+        set_auth_priority(args.priority)
+        logger.info(f"✓  Authentication priority set to '{args.priority}'")
+        logger.info("  - 'login': OAuth2 login system (ss-manager auth login)")
+        logger.info("  - 'creds': Registered credentials (ss-manager reg-creds)")
+        return
+    elif args.auth_action == "status":
         logger.info("=== Authentication Status ===")
+
+        current_priority = get_auth_priority()
+        logger.info(f"Current priority: {current_priority}")
+        logger.info("  - 'login': OAuth2 login system (ss-manager auth login)")
+        logger.info("  - 'creds': Registered credentials (ss-manager reg-creds)")
+        logger.info("")
 
         logger.info("OAuth2 Login (ss-manager auth login):")
         auth_login_status = get_login_status(login_config.token_path)
@@ -200,7 +225,7 @@ def subcommand_auth(
             logger.info(f"  {line}")
         return
     else:
-        logger.error(f"Unknown auth action: {auth_action}")
+        logger.error(f"Unknown auth action: {args.auth_action}")
         exit(1)
 
 
@@ -259,8 +284,7 @@ def main() -> None:
         )
     elif args.subcommand == "auth":
         subcommand_auth(
-            auth_action=args.auth_action,
-            force=getattr(args, "force", False),
+            args=args,
         )
     elif args.subcommand == "reg-creds":
         subcommand_reg_creds(

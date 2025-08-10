@@ -6,6 +6,7 @@ import json
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Literal
 
 # OAuth Secret value used to initiate OAuth2Client class.
 # Note: It's ok to save this in git because this is an installed application
@@ -32,6 +33,16 @@ class InstalledAppFlowConfig:
     port_number: int
 
 
+AuthPriority = Literal["login", "creds"]
+
+
+@dataclass
+class AuthPriorityConfig:
+    """Configuration for authentication priority."""
+
+    auth_priority: AuthPriority = "login"
+
+
 def get_token_path(filename: str) -> Path:
     homedir = Path.home()
     hidden_dir = homedir / ".ss-manager"
@@ -46,13 +57,64 @@ def get_credentials_path() -> Path:
     return credential_path
 
 
+def get_auth_config_path() -> Path:
+    """Get the path to the authentication configuration file."""
+    homedir = Path.home()
+    hidden_dir = homedir / ".ss-manager"
+    config_path = hidden_dir / "auth_config.json"
+    return config_path
+
+
+def load_auth_priority_config() -> AuthPriorityConfig:
+    """Load authentication priority configuration from file."""
+    config_path = get_auth_config_path()
+
+    if not config_path.exists():
+        return AuthPriorityConfig()
+
+    try:
+        with open(config_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            auth_priority = data.get("auth_priority", "login")
+            if auth_priority not in ["login", "creds"]:
+                auth_priority = "login"
+            return AuthPriorityConfig(auth_priority=auth_priority)
+    except (json.JSONDecodeError, KeyError, IOError):
+        return AuthPriorityConfig()
+
+
+def save_auth_priority_config(config: AuthPriorityConfig) -> None:
+    """Save authentication priority configuration to file."""
+    config_path = get_auth_config_path()
+
+    # Ensure the directory exists
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+
+    data = {"auth_priority": config.auth_priority}
+
+    with open(config_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)
+
+
+def set_auth_priority(priority: AuthPriority) -> None:
+    """Set the authentication priority."""
+    config = AuthPriorityConfig(auth_priority=priority)
+    save_auth_priority_config(config)
+
+
+def get_auth_priority() -> AuthPriority:
+    """Get the current authentication priority."""
+    config = load_auth_priority_config()
+    return config.auth_priority
+
+
 def create_temp_credentials_file() -> str:
     """
     Create a temporary credentials file from the embedded configuration.
     Returns the path to the temporary file.
     """
     with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
-        json.dump(OAUTH2_CLIENT_CONFIG, f, indent=2)
+        json.dump(OAUTH2_CLIENT_CONFIG, f, indent=4)
         return f.name
 
 
