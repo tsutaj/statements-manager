@@ -218,7 +218,7 @@ def subcommand_auth(
     """Handle OAuth2 authentication actions."""
     if args.auth_action == "login":
         if not args.force and get_login_status(login_config.token_path).is_logged_in:
-            logger.info("✓  You are already logged in. Use --force to re-authenticate.")
+            logger.info("✅ You are already logged in. Use --force to re-authenticate.")
             return
 
         success = perform_oauth_login(force_reauth=args.force)
@@ -226,7 +226,7 @@ def subcommand_auth(
             logger.error("Login failed. Please try again.")
             exit(1)
 
-        logger.info("✓  Login successful! You can now use the application.")
+        logger.info("✅ Login successful! You can now use the application.")
     elif args.auth_action == "logout":
         success = logout()
         if not success:
@@ -234,13 +234,11 @@ def subcommand_auth(
         return
     elif args.auth_action == "use":
         set_auth_priority(args.priority)
-        logger.info(f"✓  Authentication priority set to '{args.priority}'")
+        logger.info(f"✅ Authentication priority set to '{args.priority}'")
         logger.info("  - 'login': OAuth2 login system (ss-manager auth login)")
         logger.info("  - 'creds': Registered credentials (ss-manager reg-creds)")
         return
     elif args.auth_action == "status":
-        logger.info("=== Authentication Status ===")
-
         current_priority = get_auth_priority()
         logger.info(f"Current priority: {current_priority}")
         logger.info("  - 'login': OAuth2 login system (ss-manager auth login)")
@@ -258,6 +256,13 @@ def subcommand_auth(
         reg_creds_status = get_login_status(reg_creds_config.token_path)
         for line in reg_creds_status.to_strings():
             logger.info(f"  {line}")
+
+        logger.info("")
+
+        logger.info(
+            "If a refresh token exists but you are not logged in, "
+            "please run the authentication command again."
+        )
         return
     else:
         logger.error(f"Unknown auth action: {args.auth_action}")
