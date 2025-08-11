@@ -11,13 +11,13 @@ from typing import Any, List, Tuple, cast
 import pdfkit
 from googleapiclient.discovery import build
 
+from statements_manager.src.auth.oauth_routing import get_oauth_token
 from statements_manager.src.execute_config import ProblemSetConfig
 from statements_manager.src.output_file_kind import OutputFileKind
 from statements_manager.src.params_maker.lang_to_class import lang_to_class
 from statements_manager.src.render_result_cache import RenderResultCache
 from statements_manager.src.renderer import Renderer
 from statements_manager.src.statement_location_mode import StatementLocationMode
-from statements_manager.src.utils import create_token
 
 logger: Logger = getLogger(__name__)
 
@@ -55,18 +55,12 @@ class ConvertTaskRunner:
         self, problem_id: str, fail_on_suggestions: bool = False
     ) -> Tuple[ContentsStatus, str]:
         statement_path = self.problemset_config.get_problem(problem_id).statement.path
-        setting_dir = pathlib.Path.home() / ".ss-manager"
         try:
-            token = create_token(
-                creds_path=str(setting_dir / "credentials.json"),
-                token_path=str(setting_dir / "token.pickle"),
-            )
+            token = get_oauth_token()
             if token is None:
                 raise FileNotFoundError("token not found")
 
-            logger.info(
-                f"trying to get docs file using token ({setting_dir / 'token.pickle'})"
-            )
+            logger.info("trying to get docs file using authenticated token")
             service = build("docs", "v1", credentials=token)
             document = service.documents().get(documentId=statement_path).execute()
             contents = ""
@@ -95,15 +89,21 @@ class ConvertTaskRunner:
 
             return (ContentsStatus.OK, contents)
         except Exception as e:
-            logger.error(f"error occured! ({setting_dir}): {e}")
+            logger.error(f"error occured: {e}")
 
         # どのパスでも生成できなかったらエラー
         logger.error("cannot get docs contents")
         logger.warning(
-            "tips: try 'ss-manager reg-creds CREDS_PATH' before running on docs mode.\n"
-            "if you have already registered credentials, try 'ss-manager reg-creds'.\n"
-            "how to create credentials file: "
-            "see https://statements-manager.readthedocs.io/ja/stable/register_credentials.html"
+            "If this document belongs to you and was created by ss-manager, "
+            "run 'ss-manager auth login' to authenticate with your Google account."
+        )
+        logger.warning(
+            "Alternatively, you can use manually registered credentials. "
+            "Run 'ss-manager reg-creds CREDS_PATH' to register your credentials file."
+        )
+        logger.warning(
+            "For instructions on creating a credentials file, see: "
+            "https://statements-manager.readthedocs.io/ja/stable/register_credentials.html"
         )
         return (ContentsStatus.NG, "")
 

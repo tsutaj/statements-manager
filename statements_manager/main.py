@@ -6,9 +6,24 @@ import pickle
 import shutil
 from logging import Logger, basicConfig, getLogger
 
+from statements_manager.src.auth.login_status import get_login_status
+from statements_manager.src.auth.oauth_config import (
+    get_auth_priority,
+    get_credentials_path,
+    set_auth_priority,
+)
+from statements_manager.src.auth.oauth_login import (
+    login_config,
+    logout,
+    perform_oauth_login,
+)
+from statements_manager.src.auth.oauth_login_reg_creds import (
+    get_oauth_token_reg_creds,
+    reg_creds_config,
+)
 from statements_manager.src.output_file_kind import OutputFileKind
 from statements_manager.src.project import Project
-from statements_manager.src.utils import ask_ok, create_token
+from statements_manager.src.utils import ask_ok
 
 logger: Logger = getLogger(__name__)
 
@@ -95,8 +110,41 @@ def get_parser() -> argparse.ArgumentParser:
     )
 
     subparser = subparsers.add_parser(
+        "auth",
+        help="authentication management",
+    )
+    auth_subparsers = subparser.add_subparsers(
+        dest="auth_action", help="authentication actions", required=True
+    )
+    auth_login_parser = auth_subparsers.add_parser(
+        "login",
+        help="authenticate with Google account. "
+        "By doing so, ss-manager will be able to read and write only Google Docs "
+        "created by ss-manager itself.",
+    )
+    auth_login_parser.add_argument(
+        "--force",
+        action="store_true",
+        help="force re-authentication even if already logged in",
+    )
+    auth_subparsers.add_parser("logout", help="logout and remove stored credentials")
+    auth_subparsers.add_parser("status", help="check current login status")
+
+    auth_use_parser = auth_subparsers.add_parser(
+        "use",
+        help="set authentication method priority",
+    )
+    auth_use_parser.add_argument(
+        "priority",
+        choices=["login", "creds"],
+        help="authentication method to prioritize "
+        "('login' for OAuth2 login, 'creds' for registered credentials)",
+    )
+
+    subparser = subparsers.add_parser(
         "reg-creds",
-        help="register credentials file",
+        help="register credentials file manually. "
+        "By doing so, ss-manager will be able to read and write all Google Docs.",
         formatter_class=argparse.RawTextHelpFormatter,
     )
     subparser.add_argument(
@@ -129,23 +177,82 @@ def subcommand_run(
     logger.debug("run command ended successfully.")
 
 
+def subcommand_auth(
+    args: argparse.Namespace,
+) -> None:
+    """Handle OAuth2 authentication actions."""
+    if args.auth_action == "login":
+        if not args.force and get_login_status(login_config.token_path).is_logged_in:
+            logger.info("✅ You are already logged in. Use --force to re-authenticate.")
+            return
+
+        success = perform_oauth_login(force_reauth=args.force)
+        if not success:
+            logger.error("Login failed. Please try again.")
+            exit(1)
+
+        logger.info("✅ Login successful! You can now use the application.")
+    elif args.auth_action == "logout":
+        success = logout()
+        if not success:
+            exit(1)
+        return
+    elif args.auth_action == "use":
+        set_auth_priority(args.priority)
+        logger.info(f"✅ Authentication priority set to '{args.priority}'")
+        logger.info("  - 'login': OAuth2 login system (ss-manager auth login)")
+        logger.info("  - 'creds': Registered credentials (ss-manager reg-creds)")
+        return
+    elif args.auth_action == "status":
+        current_priority = get_auth_priority()
+        logger.info(f"Current priority: {current_priority}")
+        logger.info("  - 'login': OAuth2 login system (ss-manager auth login)")
+        logger.info("  - 'creds': Registered credentials (ss-manager reg-creds)")
+        logger.info("")
+
+        logger.info("OAuth2 Login (ss-manager auth login):")
+        auth_login_status = get_login_status(login_config.token_path)
+        for line in auth_login_status.to_strings():
+            logger.info(f"  {line}")
+
+        logger.info("")
+
+        logger.info("Manually registered credentials (ss-manager reg-creds):")
+        reg_creds_status = get_login_status(reg_creds_config.token_path)
+        for line in reg_creds_status.to_strings():
+            logger.info(f"  {line}")
+
+        logger.info("")
+
+        logger.info(
+            "If a refresh token exists but you are not logged in, "
+            "please run the authentication command again."
+        )
+        return
+    else:
+        logger.error(f"Unknown auth action: {args.auth_action}")
+        exit(1)
+
+
 def subcommand_reg_creds(
     creds_path: str | None,
 ) -> None:
-    homedir = str(pathlib.Path.home())
-    hidden_dir = pathlib.Path(homedir, ".ss-manager")
-    creds_savepath = hidden_dir / "credentials.json"
-    token_path = hidden_dir / "token.pickle"
+    creds_savepath = get_credentials_path()
+    token_path = reg_creds_config.token_path
+    hidden_dir = creds_savepath.parent
     if creds_path is not None:
         if not hidden_dir.exists():
             logger.info(f"create hidden directory: {hidden_dir}")
             hidden_dir.mkdir()
 
         # 上書きが発生する場合は確認する
-        if token_path.exists() and not ask_ok(
-            f"{hidden_dir} already exists. Rewrite this?", default_response=False
-        ):
-            return
+        if token_path.exists():
+            if not ask_ok(
+                f"{hidden_dir} already exists. Rewrite this?", default_response=False
+            ):
+                return
+            else:
+                token_path.unlink()
     else:
         creds_path = str(creds_savepath.resolve())
 
@@ -155,14 +262,14 @@ def subcommand_reg_creds(
         raise IOError(f"credentials '{creds_path}' does not exist")
 
     # ファイルを登録
-    token = create_token(creds_path)
-    with open(token_path, "wb") as f:
-        pickle.dump(token, f)
     if not creds_savepath.exists() or not creds_savepath.samefile(creds_path):
         shutil.copy2(creds_path, creds_savepath)
         logger.info("copied credentials successfully.")
     else:
         logger.info("registered credentials successfully.")
+    token = get_oauth_token_reg_creds()
+    with open(token_path, "wb") as f:
+        pickle.dump(token, f)
     logger.debug("reg-creds command ended successfully.")
 
 
@@ -179,6 +286,10 @@ def main() -> None:
             constraints_only=args.constraints_only,
             keep_going=args.keep_going,
             fail_on_suggestions=args.fail_on_suggestions,
+        )
+    elif args.subcommand == "auth":
+        subcommand_auth(
+            args=args,
         )
     elif args.subcommand == "reg-creds":
         subcommand_reg_creds(

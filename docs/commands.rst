@@ -108,6 +108,57 @@ run
 
   - エラーが発生しても処理を継続したい場合は ``-k`` オプションを指定してください
 
+auth
+====
+
+.. code-block:: text
+
+    usage: ss-manager auth [-h] {login,logout,status,use} ...
+
+Google Docs への認証を管理します。
+
+.. option:: -h, --help
+
+    ヘルプメッセージを出力します。
+
+サブコマンド
+------------
+
+.. option:: login
+
+    OAuth2 を使用して Google アカウントで認証します。ブラウザが開いて Google アカウントでの認証を行います。
+
+    .. warning::
+        この認証方法では、statements-manager を介して自分のアカウントで作成した Google Docs のみを読み書きできます。これはセキュリティ上の制限によるものです。
+
+    .. option:: --force
+
+        既にログインしている場合でも、強制的に再認証を行います。
+
+.. option:: logout
+
+    保存された認証情報を削除し、ログアウトします。
+
+.. option:: status
+
+    現在の認証状況を確認します。次の情報が表示されます。
+
+    - 現在の認証方法の優先順位
+    - OAuth2 ログインの状況
+    - 手動登録した credentials の状況
+
+.. option:: use
+
+    認証方法の優先順位を設定します。これにより、statements-manager が Google Docs にアクセスする際に、どの認証方法を最初に試すかを制御できます。
+    
+    ``use`` に続けて、次のいずれかを指定します。
+
+    - ``login``: ``ss-manager auth login`` で行った認証を優先
+    - ``creds``: ``ss-manager reg-creds`` で登録した credentials を使用する認証を優先
+
+    .. tip::
+        設定した優先順位の認証方法が失敗した場合は、自動的に別の認証方法が試されます。
+
 reg-creds
 =========
 
@@ -115,7 +166,7 @@ reg-creds
 
     usage: ss-manager reg-creds [-h] [creds_path]
 
-Google Docs の API credentials を登録します。詳しい登録方法は :ref:`register_credentials` をご覧ください。
+Google Docs の API credentials を手動で登録します。詳しい登録方法は :ref:`register_credentials` をご覧ください。
 
-.. warning:: 
-    **Google Docs にある問題文を扱いたい場合は、このコマンドによる API credential の登録が必須となります。** 問題文がすべてローカル環境に存在する場合はこの操作は不要です。
+.. tip::
+    この認証方法では、アカウントがアクセスできるすべての Google Docs を利用できます。
