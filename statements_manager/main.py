@@ -23,6 +23,7 @@ from statements_manager.src.auth.oauth_login_reg_creds import (
 )
 from statements_manager.src.output_file_kind import OutputFileKind
 from statements_manager.src.project import Project
+from statements_manager.src.setup_problem import setup_problem
 from statements_manager.src.utils import ask_ok
 
 logger: Logger = getLogger(__name__)
@@ -107,6 +108,40 @@ def get_parser() -> argparse.ArgumentParser:
         "--fail-on-suggestions",
         action="store_true",
         help="treat unresolved Google Docs suggestions as failure",
+    )
+
+    subparser = subparsers.add_parser(
+        "setup",
+        help="setup a new problem directory with problem.toml",
+    )
+    subparser.add_argument(
+        "working_dir",
+        help="directory name for the new problem",
+    )
+    subparser.add_argument(
+        "-i",
+        "--id",
+        help="problem ID (default: directory name)",
+    )
+    subparser.add_argument(
+        "-m",
+        "--mode",
+        choices=["local", "docs"],
+        default="local",
+        help="statement location (default: 'local')",
+    )
+    subparser.add_argument(
+        "-l",
+        "--language",
+        choices=["ja", "en"],
+        nargs="+",
+        default=["en"],
+        help="statement language (default: 'en')",
+    )
+    subparser.add_argument(
+        "-t",
+        "--template",
+        help="path to template file (initial content)",
     )
 
     subparser = subparsers.add_parser(
@@ -287,6 +322,8 @@ def main() -> None:
             keep_going=args.keep_going,
             fail_on_suggestions=args.fail_on_suggestions,
         )
+    elif args.subcommand == "setup":
+        setup_problem(args=args)
     elif args.subcommand == "auth":
         subcommand_auth(
             args=args,
