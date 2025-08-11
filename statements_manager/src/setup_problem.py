@@ -93,7 +93,7 @@ def create_local_statement(
     with open(statement_path, "w", encoding="utf-8") as f:
         f.write(initial_content)
     logger.info(f"Created local statement file: {statement_path}")
-    return str(statement_path.relative_to(dir_path))
+    return str(statement_path.relative_to(dir_path).as_posix())
 
 
 def setup_problem(args: argparse.Namespace) -> None:

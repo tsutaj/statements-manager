@@ -1,4 +1,5 @@
 import pathlib
+import re
 import tempfile
 from collections import Counter
 from unittest.mock import Mock, patch
@@ -462,7 +463,9 @@ class TestSetupProblem:
             # エラーが発生することを確認
             with pytest.raises(
                 FileExistsError,
-                match=f"problem.toml already exists in {pathlib.Path(temp_dir).resolve()}",
+                match=re.escape(
+                    f"problem.toml already exists in {pathlib.Path(temp_dir).resolve()}"
+                ),
             ):
                 setup_problem(args)
 
