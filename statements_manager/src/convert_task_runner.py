@@ -94,11 +94,15 @@ class ConvertTaskRunner:
         # どのパスでも生成できなかったらエラー
         logger.error("cannot get docs contents")
         logger.warning(
-            "tips: Please run 'ss-manager auth login' to authenticate with your Google account.\n"
-            "\n"
-            "If you prefer using the user-registered credential file, "
-            "run 'ss-manager reg-creds CREDS_PATH' to register credentials.\n"
-            "how to create credentials file: see "
+            "If this document belongs to you and was created by ss-manager, "
+            "run 'ss-manager auth login' to authenticate with your Google account."
+        )
+        logger.warning(
+            "Alternatively, you can use manually registered credentials. "
+            "Run 'ss-manager reg-creds CREDS_PATH' to register your credentials file."
+        )
+        logger.warning(
+            "For instructions on creating a credentials file, see: "
             "https://statements-manager.readthedocs.io/ja/stable/register_credentials.html"
         )
         return (ContentsStatus.NG, "")
