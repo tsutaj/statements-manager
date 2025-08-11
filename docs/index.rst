@@ -33,6 +33,13 @@ statements-manager
 
    examples
 
+.. toctree:: 
+   :maxdepth: 1
+   :caption: Legal
+
+   terms_of_service
+   privacy_policy
+
 Links
 =====
 
