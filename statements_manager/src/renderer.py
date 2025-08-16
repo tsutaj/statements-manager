@@ -92,6 +92,11 @@ class Renderer:
                 f"\\1{problem_id}/\\2",
                 contents,
             )
+            contents = re.sub(
+                r"(\\includegraphics\s*(?:\[[^\]]*\])?\s*\{\s*(?:\./+)?assets/)",
+                rf"\1{problem_id}/",
+                contents,
+            )
         return contents
 
     def get_render_context(
