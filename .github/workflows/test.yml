@@ -10,12 +10,27 @@ on:
       - master
 
 jobs:
+  safe-to-test:
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name != 'pull_request_target') ||
+      (!github.event.pull_request.head.repo.fork) ||
+      (
+        (github.event.pull_request.head.repo.fork) &&
+        (github.event.action == 'labeled') &&
+        (github.event.label.name == 'Safe to Test')
+      )
+    steps:
+      - name: Safe to Test
+        run: echo "Safe to Test"
+
   test:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.9", "3.10"]
     runs-on: ${{ matrix.os }}
+    needs: safe-to-test
     env:
       SERVICE_ACCOUNT_INFO: ${{ secrets.SERVICE_ACCOUNT_INFO }}
 
