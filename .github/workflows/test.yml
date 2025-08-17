@@ -28,15 +28,6 @@ jobs:
         (github.event.label.name == 'Safe to Test')
       )
 
-    if: |
-      (github.event_name != 'pull_request_target') ||
-      (!github.event.pull_request.head.repo.fork) ||
-      (
-        (github.event.pull_request.head.repo.fork) &&
-        (github.event.action == 'labeled') &&
-        (github.event.label.name == 'Safe to Test')
-      )
-
     steps:
       - uses: actions/checkout@v3
 
