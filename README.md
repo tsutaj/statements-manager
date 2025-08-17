@@ -1,4 +1,4 @@
-# statements-manager
+# statements-manager-fork
 
 ![format workflow](https://github.com/tsutaj/statements-manager/actions/workflows/format.yml/badge.svg) ![pypi workflow](https://github.com/tsutaj/statements-manager/actions/workflows/pypi.yml/badge.svg) [![Documentation Status](https://readthedocs.org/projects/statements-manager/badge/?version=stable)](https://statements-manager.readthedocs.io/ja/stable/?badge=stable)
 
