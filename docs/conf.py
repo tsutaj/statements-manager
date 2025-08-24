@@ -3,10 +3,17 @@ import os
 
 import pkg_resources
 
+from sphinx_polyversion import load
+from sphinx_polyversion.git import GitRef
+
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
+
+# -- Load versioning data ----------------------------------------------------
+data = load(globals())  # adds variables `current` and `revisions`
+current: GitRef = data["current"]
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
