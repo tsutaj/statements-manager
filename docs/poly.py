@@ -19,20 +19,17 @@ OUTPUT_DIR = "docs/_build"
 #: Source directory
 SOURCE_DIR = "docs/"
 
-#: Arguments to pass to `poetry install`
-# POETRY_ARGS = "--only sphinx --sync".split()
-
 #: Arguments to pass to `sphinx-build`
 SPHINX_ARGS = "-a -v".split()
 
 #: Mock data used for building local version
 MOCK_DATA = {
+    "current": GitRef("local", "", "", GitRefType.BRANCH, datetime.fromtimestamp(3)),
     "revisions": [
+        GitRef("master", "", "", GitRefType.BRANCH, datetime.fromtimestamp(2)),
         GitRef("v2.0.0", "", "", GitRefType.TAG, datetime.fromtimestamp(1)),
         GitRef("v1.8.0", "", "", GitRefType.TAG, datetime.fromtimestamp(0)),
-        GitRef("master", "", "", GitRefType.BRANCH, datetime.fromtimestamp(2)),
     ],
-    "current": GitRef("local", "", "", GitRefType.BRANCH, datetime.fromtimestamp(3)),
 }
 #: Whether to build using only local files and mock data
 MOCK = False
