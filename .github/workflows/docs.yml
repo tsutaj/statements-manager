@@ -45,3 +45,13 @@ jobs:
           name: docs-build
           path: docs/_build
           retention-days: 7
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          dry-run: true
+          local-dir: ./docs/_build
+          server-dir: ./docs/statements-manager
