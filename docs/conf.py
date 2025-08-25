@@ -1,35 +1,34 @@
 import datetime
-import os
 
-import pkg_resources
+from sphinx_polyversion import load
+from sphinx_polyversion.git import GitRef
 
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+# -- Load versioning data ----------------------------------------------------
+data = load(globals())  # adds variables `current` and `revisions`
+current: GitRef = data["current"]
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-__version__ = pkg_resources.get_distribution('statements-manager').version
 __year__ = datetime.date.today().year
 
 project = "statements-manager"
 copyright = f"{__year__}, tsutaj"
 author = "tsutaj"
 license = "Apache-2.0"
-release = f"v{__version__}"
+release = current.name
 
-rtd_version = os.environ.get('READTHEDOCS_VERSION')
-if rtd_version == 'latest':
-    tag = 'master'
-else:
-    tag = 'v{}'.format(__version__)
+tag = current.name
 
 extlinks = {
-    'github': ('https://github.com/%s', '%s'),
-    'blob': (f'https://github.com/tsutaj/statements-manager/blob/{tag}/%s', '%s'),
-    'tree': (f'https://github.com/tsutaj/statements-manager/tree/{tag}/%s', '%s'),
+    "github": ("https://github.com/%s", "%s"),
+    "blob": (f"https://github.com/tsutaj/statements-manager/blob/{tag}/%s", "%s"),
+    "tree": (f"https://github.com/tsutaj/statements-manager/tree/{tag}/%s", "%s"),
 }
 
 # -- General configuration ---------------------------------------------------
@@ -39,7 +38,7 @@ extensions = [
     "sphinx.ext.extlinks",
     "sphinx_rtd_theme",
     "sphinx_copybutton",
-    "sphinxcontrib.images"
+    "sphinxcontrib.images",
 ]
 
 templates_path = ["_templates"]
@@ -53,20 +52,32 @@ language = "ja"
 html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
 
+# Show "Edit on GitHub" instead of "View page source"
+html_context = {
+    **html_context, # type: ignore
+    "display_github": True,
+    "github_user": "tsutaj",
+    "github_repo": "statements-manager",
+    "github_version": f"{tag}/docs/",
+}
+
 
 def setup(app):
     app.add_object_type(
-        'problemtoml', 'problemtoml',
-        objname='problem config key',
-        indextemplate='pair: %s; problem config key'
+        "problemtoml",
+        "problemtoml",
+        objname="problem config key",
+        indextemplate="pair: %s; problem config key",
     )
     app.add_object_type(
-        'problemsettoml', 'problemsettoml',
-        objname='problemset config key',
-        indextemplate='pair: %s; problemset config key'
+        "problemsettoml",
+        "problemsettoml",
+        objname="problemset config key",
+        indextemplate="pair: %s; problemset config key",
     )
     app.add_object_type(
-        'statementvar', 'statementvar',
-        objname='variable in statement',
-        indextemplate='pair: %s; variable in statement'
+        "statementvar",
+        "statementvar",
+        objname="variable in statement",
+        indextemplate="pair: %s; variable in statement",
     )
