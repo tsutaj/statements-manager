@@ -8,7 +8,7 @@ from sphinx_polyversion.pyvenv import Pip, VenvWrapper
 from sphinx_polyversion.sphinx import SphinxBuilder, Placeholder
 
 #: Regex matching the branches to build docs for
-BRANCH_REGEX = r"^master$|^latest$"
+BRANCH_REGEX = r"^master$|^stable$"
 
 #: Regex matching the tags to build docs for
 TAG_REGEX = r"^v1\.7\.\d{2,}$|^v1\.8\.\d+$|^v([2-9]|\d{2,})\.\d+\.\d+$"
@@ -28,8 +28,8 @@ SPHINX_ARGS = "-a -v".split()
 #: Mock data used for building local version
 MOCK_DATA = {
     "revisions": [
-        GitRef("v2.0.0", "", "", GitRefType.TAG, datetime.fromtimestamp(0)),
-        GitRef("v1.8.0", "", "", GitRefType.TAG, datetime.fromtimestamp(1)),
+        GitRef("v2.0.0", "", "", GitRefType.TAG, datetime.fromtimestamp(1)),
+        GitRef("v1.8.0", "", "", GitRefType.TAG, datetime.fromtimestamp(0)),
         GitRef("master", "", "", GitRefType.BRANCH, datetime.fromtimestamp(2)),
     ],
     "current": GitRef("local", "", "", GitRefType.BRANCH, datetime.fromtimestamp(3)),
@@ -96,7 +96,6 @@ DefaultDriver(
         temporary=True,
     ),
     template_dir=root / src / "polyversion-templates",
-    static_dir=root / src / "_static",
     data_factory=data,
     root_data_factory=root_data,
     mock=MOCK_DATA,
