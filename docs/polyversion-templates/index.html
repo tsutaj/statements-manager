@@ -5,8 +5,13 @@
 <head>
     <title>Redirecting to latest version</title>
     <meta charset="utf-8" />
+    {% if "stable" in branches|map(attribute="name")|list %}
+    <meta http-equiv="refresh" content="0; url=./stable/index.html" />
+    <link rel="canonical" href="./stable/index.html" />
+    {% else %}
     <meta http-equiv="refresh" content="0; url=./{{ latest.name }}/index.html" />
     <link rel="canonical" href="./{{ latest.name }}/index.html" />
+    {% endif %}
 </head>
 
 </html>
