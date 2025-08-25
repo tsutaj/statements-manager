@@ -18,6 +18,8 @@ for file in FILES:
     if IS_LOCAL:
         with open(f"{SOURCE_DIR}/{file}", "rb") as f:
             p = f.read()
+            print("!!! debug !!!")
+            print(p.decode("utf-8").splitlines()[:5])
     else:
         p = subprocess.run(
             ["git", "show", f"{BRANCH_NAME}:{SOURCE_DIR}/{file}"], capture_output=True
