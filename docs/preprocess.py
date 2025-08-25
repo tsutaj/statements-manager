@@ -23,6 +23,4 @@ for file in FILES:
             ["git", "show", f"{BRANCH_NAME}:{SOURCE_DIR}/{file}"], capture_output=True
         ).stdout
     with open(f"{DESTINATION_DIR}/{file}", "wb") as f:
-        print("!!! debug !!!")
-        print(p.decode("utf-8").splitlines()[:5])
         f.write(p)

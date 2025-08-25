@@ -35,12 +35,6 @@ jobs:
         run: |
           git fetch -t --all
           git branch master origin/master
-          echo "=== Debug: Git status ==="
-          git status
-          echo "=== Debug: Git branch ==="
-          git branch -a
-          echo "=== Debug: Test git show ==="
-          git show master:docs/conf.py | head -5 || echo "git show failed"
 
       - name: Build documentation
         run: sphinx-polyversion --sequential docs/poly.py
