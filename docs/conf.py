@@ -1,7 +1,4 @@
 import datetime
-import os
-
-import pkg_resources
 
 from sphinx_polyversion import load
 from sphinx_polyversion.git import GitRef
@@ -18,20 +15,15 @@ current: GitRef = data["current"]
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-__version__ = pkg_resources.get_distribution("statements-manager").version
 __year__ = datetime.date.today().year
 
 project = "statements-manager"
 copyright = f"{__year__}, tsutaj"
 author = "tsutaj"
 license = "Apache-2.0"
-release = f"v{__version__}"
+release = current.name
 
-rtd_version = os.environ.get("READTHEDOCS_VERSION")
-if rtd_version == "latest":
-    tag = "master"
-else:
-    tag = "v{}".format(__version__)
+tag = current.name
 
 extlinks = {
     "github": ("https://github.com/%s", "%s"),
@@ -59,6 +51,15 @@ language = "ja"
 
 html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
+
+# Show "Edit on GitHub" instead of "View page source"
+html_context = {
+    **html_context, # type: ignore
+    "display_github": True,
+    "github_user": "tsutaj",
+    "github_repo": "statements-manager",
+    "github_version": f"{tag}/docs/",
+}
 
 
 def setup(app):
