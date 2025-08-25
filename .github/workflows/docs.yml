@@ -53,5 +53,5 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           dry-run: true
-          local-dir: ./docs/_build
-          server-dir: ./docs/statements-manager
+          local-dir: ./docs/_build/
+          server-dir: ./docs/statements-manager/
