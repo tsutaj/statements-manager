@@ -31,8 +31,8 @@ jobs:
       - name: Fetch tags and branches
         run: |
           git fetch -t --all
-          git branch master origin/master
-          git branch stable origin/stable
+          git branch master origin/master 2>/dev/null || echo "master branch already exists"
+          git branch stable origin/stable 2>/dev/null || echo "stable branch already exists"
 
       - name: Build documentation
         run: sphinx-polyversion --sequential docs/poly.py
