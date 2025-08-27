@@ -67,7 +67,6 @@ html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
 
 # Show "Edit on GitHub" instead of "View page source"
-html_context = {}  # Initialize to avoid undefined variable error
 html_context = {
     **html_context,  # type: ignore
     "display_github": True,
