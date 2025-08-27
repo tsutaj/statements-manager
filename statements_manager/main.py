@@ -188,7 +188,7 @@ def get_parser() -> argparse.ArgumentParser:
         help="path to credentials file (json). "
         "if creds_path is not specified, update existing credentials.\n"
         "how to create credentials file: "
-        "see https://statements-manager.readthedocs.io/ja/stable/register_credentials.html",
+        "see https://docs.tsutaj.com/statements-manager/stable/register_credentials.html",
     )
     return parser
 
