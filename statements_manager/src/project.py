@@ -52,7 +52,7 @@ class Project:
                 logger.warn("problemset.toml not found.")
                 logger.warn(
                     "You can change the design of the problem set. "
-                    "see the document: https://statements-manager.readthedocs.io/ja/stable/problemset_config.html"  # noqa
+                    "see the document: https://docs.tsutaj.com/statements-manager/stable/problemset_config.html"  # noqa
                 )
         logger.debug(f"path to problemset: {problemset_config_filename}")
         problemset_config_dict = read_toml_file(problemset_config_filename)

@@ -103,7 +103,7 @@ class ConvertTaskRunner:
         )
         logger.warning(
             "For instructions on creating a credentials file, see: "
-            "https://statements-manager.readthedocs.io/ja/stable/register_credentials.html"
+            "https://docs.tsutaj.com/statements-manager/stable/register_credentials.html"
         )
         return (ContentsStatus.NG, "")
 
