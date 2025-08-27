@@ -1,6 +1,8 @@
 import datetime
 import os
 
+import pkg_resources
+
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:
@@ -15,6 +17,7 @@ if os.environ.get("READTHEDOCS") != "True":
     current: GitRef = data["current"]
 else:
     current = None
+    __version__ = pkg_resources.get_distribution("statements-manager").version
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -25,9 +28,16 @@ project = "statements-manager"
 copyright = f"{__year__}, tsutaj"
 author = "tsutaj"
 license = "Apache-2.0"
-release = current.name if current else "master"
-
-tag = current.name if current else "master"
+if current:
+    release = current.name
+    tag = current.name
+else:
+    release = f"v{__version__}"
+    rtd_version = os.environ.get("READTHEDOCS_VERSION")
+    if rtd_version == "latest":
+        tag = "master"
+    else:
+        tag = f"v{__version__}"
 
 extlinks = {
     "github": ("https://github.com/%s", "%s"),
@@ -57,7 +67,9 @@ html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
 
 # Show "Edit on GitHub" instead of "View page source"
+html_context = {}  # Initialize to avoid undefined variable error
 html_context = {
+    **html_context,  # type: ignore
     "display_github": True,
     "github_user": "tsutaj",
     "github_repo": "statements-manager",
