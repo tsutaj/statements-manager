@@ -1,7 +1,5 @@
 import datetime
-
-from sphinx_polyversion import load
-from sphinx_polyversion.git import GitRef
+import os
 
 # Configuration file for the Sphinx documentation builder.
 #
@@ -9,8 +7,14 @@ from sphinx_polyversion.git import GitRef
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 # -- Load versioning data ----------------------------------------------------
-data = load(globals())  # adds variables `current` and `revisions`
-current: GitRef = data["current"]
+if os.environ.get("READTHEDOCS") != "True":
+    from sphinx_polyversion import load
+    from sphinx_polyversion.git import GitRef
+
+    data = load(globals())  # adds variables `current` and `revisions`
+    current: GitRef = data["current"]
+else:
+    current = None
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -21,9 +25,9 @@ project = "statements-manager"
 copyright = f"{__year__}, tsutaj"
 author = "tsutaj"
 license = "Apache-2.0"
-release = current.name
+release = current.name if current else "master"
 
-tag = current.name
+tag = current.name if current else "master"
 
 extlinks = {
     "github": ("https://github.com/%s", "%s"),
@@ -54,7 +58,6 @@ html_static_path = ["_static"]
 
 # Show "Edit on GitHub" instead of "View page source"
 html_context = {
-    **html_context, # type: ignore
     "display_github": True,
     "github_user": "tsutaj",
     "github_repo": "statements-manager",
