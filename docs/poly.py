@@ -92,7 +92,7 @@ DefaultDriver(
         args=["-r", "docs/requirements.txt"],
         temporary=True,
     ),
-    template_dir=root / src / "polyversion-templates",
+    template_dir=root / src / "polyversion-templates" / "root",
     data_factory=data,
     root_data_factory=root_data,
     mock=MOCK_DATA,
