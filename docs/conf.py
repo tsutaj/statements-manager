@@ -1,16 +1,27 @@
 import datetime
+import os
 
-from sphinx_polyversion import load
-from sphinx_polyversion.git import GitRef
+import pkg_resources
 
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+# -- Utility -----------------------------------------------------------------
+def is_readthedocs():
+    return os.environ.get("READTHEDOCS") == "True"
+
 # -- Load versioning data ----------------------------------------------------
-data = load(globals())  # adds variables `current` and `revisions`
-current: GitRef = data["current"]
+if is_readthedocs():
+    __version__ = pkg_resources.get_distribution("statements-manager").version
+    current = None
+else:
+    from sphinx_polyversion import load
+    from sphinx_polyversion.git import GitRef
+
+    data = load(globals())  # adds variables `current` and `revisions`
+    current: GitRef = data["current"]
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -21,9 +32,15 @@ project = "statements-manager"
 copyright = f"{__year__}, tsutaj"
 author = "tsutaj"
 license = "Apache-2.0"
-release = current.name
-
-tag = current.name
+if is_readthedocs():
+    release = f"v{__version__}"
+    if os.environ.get("READTHEDOCS_VERSION") == "latest":
+        tag = "master"
+    else:
+        tag = f"v{__version__}"
+else:
+    release = current.name
+    tag = current.name
 
 extlinks = {
     "github": ("https://github.com/%s", "%s"),
@@ -53,8 +70,10 @@ html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
 
 # Show "Edit on GitHub" instead of "View page source"
+if is_readthedocs():
+    html_context = {}
 html_context = {
-    **html_context, # type: ignore
+    **html_context,
     "display_github": True,
     "github_user": "tsutaj",
     "github_repo": "statements-manager",
