@@ -36,7 +36,7 @@ class TestToString:
     def test_to_string_custom_none_separator(self):
         config = MockStatementConfig(digit_separator="none")
         result = to_string(1000, config, use_literal_digit_separator=True)
-        assert result == "1none000"
+        assert result == "1000"
 
     def test_to_string_custom_custom_separator(self):
         config = MockStatementConfig(digit_separator="_")
