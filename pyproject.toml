@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "statements-manager"
-version = "2.0.1"
+version = "2.0.2"
 description = "競技プログラミングの作問時に使用する、問題文管理を便利にするツール"
 readme = "README.md"
 authors = [{ name = "Yuya Sugie", email = "y.sugie.15739d@gmail.com" }]
