@@ -30,10 +30,7 @@ def to_string(
         else:
             formatted = format(value, ",")
             if use_literal_digit_separator:
-                if config.digit_separator == "none":
-                    return formatted.replace(",", "")
-                else:
-                    return formatted.replace(",", config.digit_separator)
+                return formatted.replace(",", config.digit_separator)
             else:
                 if config.digit_separator == ",":
                     return formatted.replace(",", "{,}")
