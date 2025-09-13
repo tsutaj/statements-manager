@@ -63,13 +63,20 @@ class Renderer:
         self.replace_sample_format = ReplaceSampleFormatExprExtension()
 
     def replace_vars(
-        self, problem_config: ProblemConfig, statement_str: str | None, encoding: str
+        self,
+        problem_config: ProblemConfig,
+        statement_str: str | None,
+        encoding: str,
+        use_literal_digit_separator: bool = False,
     ) -> str:
         if statement_str is None:
             logger.error("statement_str is None")
             raise RuntimeError("statement_str is None")
         vars_manager = VariablesConverter(
-            problem_config, self.sample_template_content, encoding
+            problem_config,
+            self.sample_template_content,
+            encoding,
+            use_literal_digit_separator,
         )
         env = Environment(
             variable_start_string="{@",
@@ -288,7 +295,10 @@ class Renderer:
                 contents = self.apply_preprocess(contents)
 
                 rendered_contents = self.replace_vars(
-                    problem_config, contents, problemset_config.encoding
+                    problem_config,
+                    contents,
+                    problemset_config.encoding,
+                    use_literal_digit_separator=True,
                 )
                 problem_config.statement.rendered_text = rendered_contents
 

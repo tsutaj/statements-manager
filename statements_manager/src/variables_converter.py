@@ -13,7 +13,9 @@ from statements_manager.src.execute_config import ProblemConfig, StatementConfig
 logger: Logger = getLogger(__name__)
 
 
-def to_string(value: Any, config: StatementConfig) -> str:
+def to_string(
+    value: Any, config: StatementConfig, use_literal_digit_separator: bool = False
+) -> str:
     if isinstance(value, int):
         if abs(value) >= config.exponential_threshold:
             k = math.floor(math.log10(abs(value)))
@@ -27,15 +29,18 @@ def to_string(value: Any, config: StatementConfig) -> str:
                 return f"{value / 10 ** k} \\times 10^{{{k}}}"
         else:
             formatted = format(value, ",")
-            if config.digit_separator == ",":
-                return formatted.replace(",", "{,}")
-            elif config.digit_separator == " ":
-                return formatted.replace(",", r"\\,")
-            elif config.digit_separator == "none":
-                return formatted.replace(",", "")
+            if use_literal_digit_separator:
+                return formatted.replace(",", config.digit_separator)
             else:
-                logger.error(f"unknown digit separator: {config.digit_separator}")
-                raise KeyError(f"unknown digit separator: {config.digit_separator}")
+                if config.digit_separator == ",":
+                    return formatted.replace(",", "{,}")
+                elif config.digit_separator == " ":
+                    return formatted.replace(",", r"\\,")
+                elif config.digit_separator == "none":
+                    return formatted.replace(",", "")
+                else:
+                    logger.error(f"unknown digit separator: {config.digit_separator}")
+                    raise KeyError(f"unknown digit separator: {config.digit_separator}")
     else:
         return str(value)
 
@@ -49,7 +54,10 @@ def fetch_text(path: pathlib.Path, encoding: str) -> str:
 
 class ConstraintsConverter:
     def convert(
-        self, constraints: dict[str, Any], problem_config: ProblemConfig
+        self,
+        constraints: dict[str, Any],
+        problem_config: ProblemConfig,
+        use_literal_digit_separator: bool = False,
     ) -> None:
         """
         - 制約を文字列型に変換しつつ格納
@@ -58,7 +66,9 @@ class ConstraintsConverter:
         if problem_config.constraints is not None:
             for name, value in problem_config.constraints.items():
                 logger.info(f"constraints: {name} => {value}")
-                constraints[name] = to_string(value, problem_config.statement)
+                constraints[name] = to_string(
+                    value, problem_config.statement, use_literal_digit_separator
+                )
         else:
             logger.warning("constraints are not set")
 
@@ -234,14 +244,20 @@ class SamplesConverter:
 
 class VariablesConverter:
     def __init__(
-        self, problem_config: ProblemConfig, sample_template: str, encoding: str
+        self,
+        problem_config: ProblemConfig,
+        sample_template: str,
+        encoding: str,
+        use_literal_digit_separator: bool = False,
     ) -> None:
         self.constraints: dict = {}
         self.samples: dict = {}
         self.constraints_converter = ConstraintsConverter()
         self.samples_converter = SamplesConverter()
 
-        self.constraints_converter.convert(self.constraints, problem_config)
+        self.constraints_converter.convert(
+            self.constraints, problem_config, use_literal_digit_separator
+        )
         self.samples_converter.convert(
             self.samples, problem_config, sample_template, encoding
         )
