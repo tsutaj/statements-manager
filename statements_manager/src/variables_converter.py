@@ -14,7 +14,7 @@ logger: Logger = getLogger(__name__)
 
 
 def to_string(
-    value: Any, config: StatementConfig, is_custom_output: bool = False
+    value: Any, config: StatementConfig, use_literal_digit_separator: bool = False
 ) -> str:
     if isinstance(value, int):
         if abs(value) >= config.exponential_threshold:
@@ -29,7 +29,7 @@ def to_string(
                 return f"{value / 10 ** k} \\times 10^{{{k}}}"
         else:
             formatted = format(value, ",")
-            if is_custom_output:
+            if use_literal_digit_separator:
                 if config.digit_separator == "none":
                     return formatted.replace(",", "")
                 else:
@@ -60,7 +60,7 @@ class ConstraintsConverter:
         self,
         constraints: dict[str, Any],
         problem_config: ProblemConfig,
-        is_custom_output: bool = False,
+        use_literal_digit_separator: bool = False,
     ) -> None:
         """
         - 制約を文字列型に変換しつつ格納
@@ -70,7 +70,7 @@ class ConstraintsConverter:
             for name, value in problem_config.constraints.items():
                 logger.info(f"constraints: {name} => {value}")
                 constraints[name] = to_string(
-                    value, problem_config.statement, is_custom_output
+                    value, problem_config.statement, use_literal_digit_separator
                 )
         else:
             logger.warning("constraints are not set")
@@ -251,7 +251,7 @@ class VariablesConverter:
         problem_config: ProblemConfig,
         sample_template: str,
         encoding: str,
-        is_custom_output: bool = False,
+        use_literal_digit_separator: bool = False,
     ) -> None:
         self.constraints: dict = {}
         self.samples: dict = {}
@@ -259,7 +259,7 @@ class VariablesConverter:
         self.samples_converter = SamplesConverter()
 
         self.constraints_converter.convert(
-            self.constraints, problem_config, is_custom_output
+            self.constraints, problem_config, use_literal_digit_separator
         )
         self.samples_converter.convert(
             self.samples, problem_config, sample_template, encoding

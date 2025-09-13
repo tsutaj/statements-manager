@@ -67,13 +67,16 @@ class Renderer:
         problem_config: ProblemConfig,
         statement_str: str | None,
         encoding: str,
-        is_custom_output: bool = False,
+        use_literal_digit_separator: bool = False,
     ) -> str:
         if statement_str is None:
             logger.error("statement_str is None")
             raise RuntimeError("statement_str is None")
         vars_manager = VariablesConverter(
-            problem_config, self.sample_template_content, encoding, is_custom_output
+            problem_config,
+            self.sample_template_content,
+            encoding,
+            use_literal_digit_separator,
         )
         env = Environment(
             variable_start_string="{@",
@@ -295,7 +298,7 @@ class Renderer:
                     problem_config,
                     contents,
                     problemset_config.encoding,
-                    is_custom_output=True,
+                    use_literal_digit_separator=True,
                 )
                 problem_config.statement.rendered_text = rendered_contents
 
