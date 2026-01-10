@@ -47,6 +47,13 @@ class StatementConfig(AttributeConstraints):
         self.exponential_threshold: int = self.optional(
             filename, config, "exponential_threshold", 1000000
         )
+        if self.exponential_threshold < 1:
+            logger.error(
+                f"exponential_threshold must be >= 1, got {self.exponential_threshold}"
+            )
+            raise ValueError(
+                f"exponential_threshold must be >= 1, got {self.exponential_threshold}"
+            )
         self.markdown_extensions: list[Any] = self.optional(
             filename, config, "markdown_extensions", []
         )
