@@ -17,11 +17,7 @@ def to_string(
     value: Any, config: StatementConfig, use_literal_digit_separator: bool = False
 ) -> str:
     if isinstance(value, int):
-        # Calculate the minimum k such that 10^k >= exponential_threshold
         threshold_k = math.ceil(math.log10(config.exponential_threshold))
-        # Only convert to exponential notation if:
-        # 1. The absolute value is >= exponential_threshold
-        # 2. The number ends with at least threshold_k zeros (i.e., is a multiple of 10^threshold_k)
         if abs(value) >= config.exponential_threshold and str(abs(value)).endswith(
             "0" * threshold_k
         ):
