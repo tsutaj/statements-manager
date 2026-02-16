@@ -53,3 +53,7 @@ jobs:
           dry-run: false
           local-dir: ./docs/_build/
           server-dir: ./docs/statements-manager/
+          exclude: |
+            **/.venv/**
+            **/.doctrees/**
+            **/_sources/**
