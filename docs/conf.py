@@ -1,7 +1,7 @@
 import datetime
 import os
 
-import pkg_resources
+import importlib.metadata
 
 # Configuration file for the Sphinx documentation builder.
 #
@@ -14,7 +14,7 @@ def is_readthedocs():
 
 # -- Load versioning data ----------------------------------------------------
 if is_readthedocs():
-    __version__ = pkg_resources.get_distribution("statements-manager").version
+    __version__ = importlib.metadata.version("statements-manager")
     current = None
 else:
     from sphinx_polyversion import load
