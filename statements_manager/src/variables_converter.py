@@ -17,7 +17,10 @@ def to_string(
     value: Any, config: StatementConfig, use_literal_digit_separator: bool = False
 ) -> str:
     if isinstance(value, int):
-        if abs(value) >= config.exponential_threshold:
+        threshold_k = math.ceil(math.log10(config.exponential_threshold))
+        if abs(value) >= config.exponential_threshold and str(abs(value)).endswith(
+            "0" * threshold_k
+        ):
             k = math.floor(math.log10(abs(value)))
             if value == 10**k:
                 return f"10^{{{k}}}"
