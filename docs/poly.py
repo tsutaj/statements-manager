@@ -89,7 +89,7 @@ DefaultDriver(
     env=Pip.factory(
         venv=Path("docs/.venv"),
         creator=VenvWrapper(),
-        args=["-r", "docs/requirements.txt"],
+        args=["sphinx-copybutton", "sphinxcontrib-images", "sphinx_rtd_theme", "sphinx-polyversion"],
         temporary=True,
     ),
     template_dir=root / src / "polyversion-templates" / "root",
