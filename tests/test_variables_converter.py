@@ -121,3 +121,22 @@ class TestToString:
         config = MockStatementConfig(exponential_threshold=1000000)
         result = to_string(-10000000, config, use_literal_digit_separator=False)
         assert result == "-10^{7}"
+
+    def test_to_string_threshold_999999_same_as_1000000(self):
+        config_999999 = MockStatementConfig(exponential_threshold=999999)
+        config_1000000 = MockStatementConfig(exponential_threshold=1000000)
+        test_values = [
+            998244353,
+            1000000007,
+            10000000,
+            20000000,
+            1500000,
+            -998244353,
+            -10000000,
+            1000000,
+            2000000,
+        ]
+        for value in test_values:
+            assert to_string(value, config_999999) == to_string(
+                value, config_1000000
+            ), f"Mismatch for value={value}"
