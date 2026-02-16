@@ -1,7 +1,7 @@
 import datetime
 import os
 
-import importlib
+import importlib.metadata
 
 # Configuration file for the Sphinx documentation builder.
 #
