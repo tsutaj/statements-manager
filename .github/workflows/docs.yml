@@ -56,7 +56,7 @@ jobs:
 
       - name: Deploy via rsync
         run: |
-          rsync -avz --delete --itemize-changes --dry-run \
+          rsync -avz --delete --itemize-changes \
             --exclude='.doctrees/' \
             --exclude='_sources/' \
             docs/_build/ \
