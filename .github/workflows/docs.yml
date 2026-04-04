@@ -8,8 +8,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 jobs:
   build-docs:
@@ -44,16 +42,16 @@ jobs:
           path: docs/_build
           retention-days: 7
 
-      - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
         with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          dry-run: false
-          local-dir: ./docs/_build/
-          server-dir: ./docs/statements-manager/
-          exclude: |
-            **/.venv/**
-            **/.doctrees/**
-            **/_sources/**
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-known-hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+
+      - name: Deploy via rsync
+        run: |
+          rsync -avz --delete --itemize-changes --dry-run \
+            --exclude='.doctrees/' \
+            --exclude='_sources/' \
+            docs/_build/ \
+            ubuntu@${{ secrets.SSH_HOST }}:${{ secrets.SSH_DEPLOY_PATH }}/
